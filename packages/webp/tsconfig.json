@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "downlevelIteration": true,
+    "module": "esnext",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "strict": true,
+    "moduleResolution": "node",
+    "composite": true,
+    "declarationMap": true,
+    "baseUrl": "./",
+    "rootDir": "./",
+    "outDir": "dist",
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "codecs/*": ["codecs"]
+    }
+  }
+}

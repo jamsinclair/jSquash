@@ -1,0 +1,10 @@
+{
+  "name": "jSquash",
+  "version": "1.0.0",
+  "private": true,
+  "repository": "git@github.com:jamsinclair/jSquash.git",
+  "workspaces": [
+    "packages/*"
+  ],
+  "license": "Apache-2.0"
+}
