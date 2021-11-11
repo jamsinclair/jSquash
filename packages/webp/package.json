@@ -4,6 +4,11 @@
   "main": "index.js",
   "description": "Wasm webp encoder and decoder supporting the browser. Repackaged from Squoosh App.",
   "type": "module",
+  "repository": "jamsinclair/jSquash",
+  "author": {
+    "name": "Jamie Sinclair",
+    "email": "jamsinclairnz+npm@gmail.com"
+  },
   "keywords": [
     "image",
     "optimisation",
