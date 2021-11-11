@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "description": "Wasm webp encoder and decoder supporting the browser. Repackaged from Squoosh App.",
+  "type": "module",
   "keywords": [
     "image",
     "optimisation",
