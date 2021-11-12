@@ -12,9 +12,6 @@
     "baseUrl": "./",
     "rootDir": "./",
     "outDir": "dist",
-    "allowSyntheticDefaultImports": true,
-    "paths": {
-      "codecs/*": ["codecs"]
-    }
+    "allowSyntheticDefaultImports": true
   }
 }

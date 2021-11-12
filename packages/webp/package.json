@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "description": "Wasm webp encoder and decoder supporting the browser. Repackaged from Squoosh App.",
-  "type": "module",
   "repository": "jamsinclair/jSquash",
   "author": {
     "name": "Jamie Sinclair",
@@ -21,12 +20,14 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "npm run clean && tsc && cp -r codec package.json dist"
+    "build": "npm run clean && tsc && cp -r codec package.json .npmignore dist"
   },
   "dependencies": {
     "wasm-feature-detect": "^1.2.11"
   },
   "devDependencies": {
     "typescript": "^4.4.4"
-  }
+  },
+  "type": "module",
+  "sideEffects": false
 }
