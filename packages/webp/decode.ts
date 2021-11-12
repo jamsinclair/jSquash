@@ -10,6 +10,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * Notice: I (Jamie Sinclair) have modified this file to accept an ArrayBuffer instead of typed array
+ */
 import type { WebPModule } from './codec/dec/webp_dec';
 import { initEmscriptenModule } from './utils';
 

@@ -10,6 +10,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * Notice: I (Jamie Sinclair) have modified this file.
+ * Updated to support a partial subset of Jpeg encoding options to be provided.
+ * The jpeg options are defaulted to defaults from the meta.ts file.
+ */
 import type { EncodeOptions } from './meta';
 import type { MozJPEGModule } from './codec/enc/mozjpeg_enc';
 

@@ -10,6 +10,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * Notice: I (Jamie Sinclair) have copied this code from the JPEG encode module
+ * and modified it to decode PNG images.
+ */
+
 import type { InitOutput as PngModule } from './codec/squoosh_png';
 import init, { decode as pngDecode }  from './codec/squoosh_png';
 

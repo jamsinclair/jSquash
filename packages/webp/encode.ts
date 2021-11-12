@@ -10,6 +10,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * Notice: I (Jamie Sinclair) have modified this file.
+ * Updated to support a partial subset of WebP encoding options to be provided.
+ * The WebP options are defaulted to defaults from the meta.ts file.
+ */
 import type { WebPModule } from './codec/enc/webp_enc';
 import type { EncodeOptions } from './meta';
 

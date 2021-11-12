@@ -10,6 +10,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * Notice: I (Jamie Sinclair) have copied this code from the JPEG encode module
+ * and modified it to decode JPEG images.
+ */
+
 import type { MozJPEGModule } from './codec/dec/mozjpeg_dec';
 import { initEmscriptenModule } from './utils';
 
