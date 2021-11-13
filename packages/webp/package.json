@@ -1,6 +1,6 @@
 {
   "name": "@jsquash/webp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "index.js",
   "description": "Wasm webp encoder and decoder supporting the browser. Repackaged from Squoosh App.",
   "repository": "jamsinclair/jSquash",
@@ -20,7 +20,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "npm run clean && tsc && cp -r codec package.json dist"
+    "build": "npm run clean && tsc && cp -r codec package.json README.md dist"
   },
   "dependencies": {
     "wasm-feature-detect": "^1.2.11"
