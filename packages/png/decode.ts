@@ -16,8 +16,8 @@
  * and modified it to decode PNG images.
  */
 
-import type { InitOutput as PngModule } from './codec/squoosh_png';
-import init, { decode as pngDecode }  from './codec/squoosh_png';
+import type { InitOutput as PngModule } from './codecs/squoosh-png/squoosh_png';
+import init, { decode as pngDecode }  from './codecs/squoosh-png/squoosh_png';
 
 let pngModule: PngModule;
 

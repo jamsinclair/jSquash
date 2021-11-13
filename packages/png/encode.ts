@@ -13,23 +13,40 @@
 
 /**
  * Notice: I (Jamie Sinclair) have copied this code from the JPEG encode module
- * and modified it to encode PNG images.
+ * and modified it to encode PNG images and also optimise them.
  */
 
-import type { InitOutput as PngModule } from './codec/squoosh_png';
-import init, { encode as pngEncode }  from './codec/squoosh_png';
+import type { InitOutput as PngModule } from './codecs/squoosh-png/squoosh_png';
+import type { OptimiseOptions } from './meta';
+import init, { encode as pngEncode }  from './codecs/squoosh-png/squoosh_png';
+import { defaultOptions as defaultOptimiseOptions } from 'meta';
+import optimise from './optimise';
 
 let pngModule: PngModule;
 
+type EncodeOptions = OptimiseOptions & {
+  skipOptimisation: boolean;
+};
+
+const defaultOptions: EncodeOptions = {
+  ...defaultOptimiseOptions,
+  skipOptimisation: false,
+};
+
 export default async function encode(
-  data: ImageData
+  data: ImageData,
+  options: Partial<EncodeOptions>
 ): Promise<ArrayBuffer> {
   if (!pngModule) pngModule = await init();
 
   // @ts-ignore - pngEncode expects a Uint8Array, check if mistake or whether we need to convert from Uint8ClampedArray
   const buffer = await pngEncode(data.data, data.width, data.height);
-
   if (!buffer) throw new Error('Encoding error.');
+  
+  const { skipOptimisation, ...optimiseOptions} = { ...defaultOptions, ...options };
+  if (skipOptimisation) {
+    return buffer;
+  }
 
-  return buffer;
+  return optimise(buffer, optimiseOptions);
 }
