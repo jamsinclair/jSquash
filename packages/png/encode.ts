@@ -35,7 +35,7 @@ const defaultOptions: EncodeOptions = {
 
 export default async function encode(
   data: ImageData,
-  options: Partial<EncodeOptions>
+  options: Partial<EncodeOptions> = {}
 ): Promise<ArrayBuffer> {
   if (!pngModule) pngModule = await init();
 
