@@ -1,6 +1,6 @@
 {
   "name": "@jsquash/jpeg",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "description": "Wasm jpeg encoder and decoder supporting the browser. Repackaged from Squoosh App.",
   "repository": "jamsinclair/jSquash",
