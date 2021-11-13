@@ -2,6 +2,8 @@
 
 An easy experience for encoding and decoding JPEG images in the browser. Powered by WebAssembly ⚡️.
 
+Uses the [MozJPEG](https://github.com/mozilla/mozjpeg) library.
+
 A [jSquash](https://github.com/jamsinclair/jSquash) package. Codecs and supporting code derived from the [Squoosh](https://github.com/GoogleChromeLabs/squoosh) app.
 
 ## Installation

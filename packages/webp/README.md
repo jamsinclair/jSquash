@@ -2,6 +2,8 @@
 
 An easy experience for encoding and decoding WebP images in the browser. Powered by WebAssembly ⚡️.
 
+Uses the [libwebp](https://github.com/webmproject/libwebp) library.
+
 A [jSquash](https://github.com/jamsinclair/jSquash) package. Codecs and supporting code derived from the [Squoosh](https://github.com/GoogleChromeLabs/squoosh) app.
 
 ## Installation

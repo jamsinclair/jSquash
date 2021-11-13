@@ -2,6 +2,8 @@
 
 An easy experience for encoding and decoding PNG images in the browser. Powered by WebAssembly ⚡️.
 
+Uses the [rust PNG crate](https://docs.rs/png/0.11.0/png/) and [Oxipng](https://github.com/shssoichiro/oxipng) for png optimisation.
+
 A [jSquash](https://github.com/jamsinclair/jSquash) package. Codecs and supporting code derived from the [Squoosh](https://github.com/GoogleChromeLabs/squoosh) app.
 
 ## Installation
