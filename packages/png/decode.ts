@@ -16,15 +16,23 @@
  * and modified it to decode PNG images.
  */
 
-import type { InitOutput as PngModule } from './codecs/squoosh-png/squoosh_png';
-import init, { decode as pngDecode }  from './codecs/squoosh-png/squoosh_png';
+import type { InitInput, InitOutput as PngModule } from './codecs/squoosh-png/squoosh_png';
+import initPngModule, { decode as pngDecode }  from './codecs/squoosh-png/squoosh_png';
 
-let pngModule: PngModule;
+let pngModule: Promise<PngModule>;
+
+export async function init (moduleOrPath?: InitInput): Promise<PngModule> {
+  if (!pngModule) {
+    pngModule = initPngModule(moduleOrPath);
+  }
+
+  return pngModule;
+}
 
 export default async function decode(
   data: ArrayBuffer,
 ): Promise<ImageData> {
-  if (!pngModule) pngModule = await init();
+  await init();
 
   const imageData = await pngDecode(new Uint8Array(data));
 

@@ -15,6 +15,7 @@
  * Notice: I (Jamie Sinclair) have modified this file.
  * Updated to support a partial subset of WebP encoding options to be provided.
  * The WebP options are defaulted to defaults from the meta.ts file.
+ * Also manually allow instantiation of the Wasm Module.
  */
 import type { WebPModule } from './codec/enc/webp_enc';
 import type { EncodeOptions } from './meta';
@@ -25,20 +26,20 @@ import { simd } from 'wasm-feature-detect';
 
 let emscriptenModule: Promise<WebPModule>;
 
-async function init() {
+export async function init(module?: WebAssembly.Module): Promise<void> {
   if (await simd()) {
     const webpEncoder = await import('./codec/enc/webp_enc_simd');
-    return initEmscriptenModule(webpEncoder.default);
+    emscriptenModule = initEmscriptenModule(webpEncoder.default, module);
   }
   const webpEncoder = await import('./codec/enc/webp_enc');
-  return initEmscriptenModule(webpEncoder.default);
+  emscriptenModule = initEmscriptenModule(webpEncoder.default, module);
 }
 
 export default async function encode(
   data: ImageData,
   options: Partial<EncodeOptions> = {},
 ): Promise<ArrayBuffer> {
-  if (!emscriptenModule) emscriptenModule = init();
+  if (!emscriptenModule) init();
 
   const _options: EncodeOptions = { ...defaultOptions, ...options };
   const module = await emscriptenModule;

@@ -19,13 +19,16 @@
 import type { MozJPEGModule } from './codec/dec/mozjpeg_dec';
 import { initEmscriptenModule } from './utils';
 
+import mozjpeg_dec from './codec/dec/mozjpeg_dec';
+
 let emscriptenModule: Promise<MozJPEGModule>;
 
+export async function init(module?: WebAssembly.Module): Promise<void> {
+  emscriptenModule = initEmscriptenModule(mozjpeg_dec, module);
+}
+
 export default async function decode(buffer: ArrayBuffer): Promise<ImageData> {
-  if (!emscriptenModule) {
-    const decoder = await import('./codec/dec/mozjpeg_dec');
-    emscriptenModule = initEmscriptenModule(decoder.default);
-  }
+  if (!emscriptenModule) init();
 
   const module = await emscriptenModule;
   const result = module.decode(buffer);

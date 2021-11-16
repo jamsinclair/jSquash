@@ -16,13 +16,13 @@
  * and modified it to encode PNG images and also optimise them.
  */
 
-import type { InitOutput as PngModule } from './codecs/squoosh-png/squoosh_png';
+import type { InitInput, InitOutput as PngModule } from './codecs/squoosh-png/squoosh_png';
 import type { OptimiseOptions } from './meta';
-import init, { encode as pngEncode }  from './codecs/squoosh-png/squoosh_png';
+import initPngModule, { encode as pngEncode }  from './codecs/squoosh-png/squoosh_png';
 import { defaultOptions as defaultOptimiseOptions } from 'meta';
 import optimise from './optimise';
 
-let pngModule: PngModule;
+let pngModule: Promise<PngModule>;
 
 type EncodeOptions = OptimiseOptions & {
   skipOptimisation: boolean;
@@ -33,12 +33,19 @@ const defaultOptions: EncodeOptions = {
   skipOptimisation: false,
 };
 
+export async function init (moduleOrPath?: InitInput): Promise<PngModule> {
+  if (!pngModule) {
+    pngModule = initPngModule(moduleOrPath);
+  }
+
+  return pngModule;
+}
+
 export default async function encode(
   data: ImageData,
   options: Partial<EncodeOptions> = {}
 ): Promise<ArrayBuffer> {
-  if (!pngModule) pngModule = await init();
-
+  await init();
   // @ts-ignore - pngEncode expects a Uint8Array, check if mistake or whether we need to convert from Uint8ClampedArray
   const buffer = await pngEncode(data.data, data.width, data.height);
   if (!buffer) throw new Error('Encoding error.');

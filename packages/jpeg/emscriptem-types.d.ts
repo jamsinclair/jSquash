@@ -7,17 +7,6 @@ declare namespace EmscriptenWasm {
 
   type EnvironmentType = 'WEB' | 'NODE' | 'SHELL' | 'WORKER';
 
-  type WebAssemblyImports = Array<{
-    name: string;
-    kind: string;
-  }>;
-
-  type WebAssemblyExports = Array<{
-    module: string;
-    name: string;
-    kind: string;
-  }>;
-
   // Options object for modularized Emscripten files. Shoe-horned by @surma.
   // FIXME: This an incomplete definition!
   interface ModuleOpts {
@@ -26,9 +15,9 @@ declare namespace EmscriptenWasm {
     locateFile?: (url: string) => string;
     onRuntimeInitialized?: () => void;
     instantiateWasm?: (
-      imports: EmscriptenWasm.WebAssemblyImports,
+      imports: WebAssembly.Imports,
       successCallback: (module: WebAssembly.Module) => void,
-    ) => EmscriptenWasm.WebAssemblyExports;
+    ) => WebAssembly.Exports;
   }
 
   interface Module {

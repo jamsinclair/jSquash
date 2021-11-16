@@ -16,42 +16,46 @@
  * if the browser has the `hasHardwareConcurrency` property. This is because it helps 
  * us support environments like Cloudflare Workers that use the V8 engine.
  */
+import type { InitInput } from './codecs/oxipng/pkg/squoosh_oxipng';
 import { defaultOptions, OptimiseOptions } from './meta';
 import { threads } from 'wasm-feature-detect';
 
-async function initMT() {
+async function initMT(moduleOrPath?: InitInput) {
   const {
     default: init,
     initThreadPool,
     optimise,
   } = await import('./codecs/oxipng/pkg-parallel/squoosh_oxipng');
-  await init();
+  await init(moduleOrPath);
   await initThreadPool(globalThis.navigator.hardwareConcurrency);
   return optimise;
 }
 
-async function initST() {
+async function initST(moduleOrPath?: InitInput) {
   const { default: init, optimise } = await import(
     './codecs/oxipng/pkg/squoosh_oxipng'
   );
-  await init();
+  await init(moduleOrPath);
   return optimise;
 }
 
 let wasmReady: ReturnType<typeof initMT | typeof initST>;
 
-export default async function optimise(
-  data: ArrayBuffer,
-  options: Partial<OptimiseOptions> = {},
-): Promise<ArrayBuffer> {
+export function init(moduleOrPath?: InitInput): void {
   if (!wasmReady) {
     const hasHardwareConcurrency = globalThis.navigator?.hardwareConcurrency > 1;
 
     wasmReady = hasHardwareConcurrency ? threads().then((hasThreads: boolean) =>
-      hasThreads ? initMT() : initST(),
-    ) : initST();
+      hasThreads ? initMT(moduleOrPath) : initST(moduleOrPath),
+    ) : initST(moduleOrPath);
   }
+}
 
+export default async function optimise(
+  data: ArrayBuffer,
+  options: Partial<OptimiseOptions> = {},
+): Promise<ArrayBuffer> {
+  init();
   const _options = { ...defaultOptions, ...options };
   const optimise = await wasmReady;
   return optimise(new Uint8Array(data), _options.level, _options.interlace)

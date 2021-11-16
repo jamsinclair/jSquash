@@ -25,13 +25,15 @@ import { initEmscriptenModule } from './utils';
 
 let emscriptenModule: Promise<MozJPEGModule>;
 
+export async function init(module?: WebAssembly.Module): Promise<void> {
+  emscriptenModule = initEmscriptenModule(mozjpeg_enc, module);
+}
+
 export default async function encode(
   data: ImageData,
   options: Partial<EncodeOptions> = {},
 ): Promise<ArrayBuffer> {
-  if (!emscriptenModule) {
-    emscriptenModule = initEmscriptenModule(mozjpeg_enc);
-  }
+  if (!emscriptenModule) init();
 
   const module = await emscriptenModule;
   const _options = { ...defaultOptions, ...options }

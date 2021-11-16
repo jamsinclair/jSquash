@@ -13,17 +13,21 @@
 
 /**
  * Notice: I (Jamie Sinclair) have modified this file to accept an ArrayBuffer instead of typed array
+ * and manually allow instantiation of the Wasm Module.
  */
 import type { WebPModule } from './codec/dec/webp_dec';
+
+import webp_dec from './codec/dec/webp_dec';
 import { initEmscriptenModule } from './utils';
 
 let emscriptenModule: Promise<WebPModule>;
 
+export async function init(module?: WebAssembly.Module): Promise<void> {
+  emscriptenModule = initEmscriptenModule(webp_dec, module);
+}
+
 export default async function decode(buffer: ArrayBuffer): Promise<ImageData> {
-  if (!emscriptenModule) {
-    const decoder = await import('./codec/dec/webp_dec');
-    emscriptenModule = initEmscriptenModule(decoder.default);
-  }
+  if (!emscriptenModule) init();
 
   const module = await emscriptenModule;
   const result = module.decode(buffer);

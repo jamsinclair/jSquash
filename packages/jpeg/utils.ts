@@ -10,11 +10,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export function initEmscriptenModule<T extends EmscriptenWasm.Module>(
+
+/**
+ * Notice: I (Jamie Sinclair) have modified this file to allow manual instantiation of the Wasm Module.
+ */
+
+ export function initEmscriptenModule<T extends EmscriptenWasm.Module>(
   moduleFactory: EmscriptenWasm.ModuleFactory<T>,
+  wasmModule?: WebAssembly.Module,
 ): Promise<T> {
+  let instantiateWasm;
+
+  if (wasmModule) {
+    instantiateWasm = (imports: WebAssembly.Imports, callback: (instance: WebAssembly.Instance) => void) => {
+      const instance = new WebAssembly.Instance(wasmModule, imports);
+      callback(instance);
+      return instance.exports;
+    }
+  }
+
   return moduleFactory({
     // Just to be safe, don't automatically invoke any wasm functions
     noInitialRun: true,
+    instantiateWasm
   });
 }
