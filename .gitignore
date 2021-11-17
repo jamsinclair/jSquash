@@ -105,3 +105,6 @@ dist
 
 # MacOS
 .DS_Store
+
+# C/C++ Files
+*.o
