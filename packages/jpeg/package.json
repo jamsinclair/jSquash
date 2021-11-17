@@ -20,7 +20,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "npm run clean && tsc && cp -r codec package.json README.md dist"
+    "build": "npm run clean && tsc && cp -r codec package.json README.md .npmignore dist"
   },
   "devDependencies": {
     "typescript": "^4.4.4"
