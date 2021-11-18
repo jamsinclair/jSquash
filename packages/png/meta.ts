@@ -10,15 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- export interface OptimiseOptions {
-  level: number;
-  interlace: boolean;
-}
 
 export const label = 'PNG';
 export const mimeType = 'image/png';
 export const extension = 'png';
-export const defaultOptions: OptimiseOptions = {
-  level: 2,
-  interlace: false
-};

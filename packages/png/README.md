@@ -2,7 +2,7 @@
 
 An easy experience for encoding and decoding PNG images in the browser. Powered by WebAssembly ⚡️.
 
-Uses the [rust PNG crate](https://docs.rs/png/0.11.0/png/) and [Oxipng](https://github.com/shssoichiro/oxipng) for png optimisation.
+Uses the [rust PNG crate](https://docs.rs/png/0.11.0/png/).
 
 A [jSquash](https://github.com/jamsinclair/jSquash) package. Codecs and supporting code derived from the [Squoosh](https://github.com/GoogleChromeLabs/squoosh) app.
 
@@ -33,20 +33,12 @@ const formData = new FormData(formEl);
 const imageData = await decode(await formData.get('image').arrayBuffer());
 ```
 
-### encode(data: ImageData, options: EncodeOptions): Promise<ArrayBuffer>
+### encode(data: ImageData): Promise<ArrayBuffer>
 
 Encodes raw RGB image data to PNG format and resolves to an ArrayBuffer of binary data.
 
 #### data
 Type: `ImageData`
-
-#### options
-Type: `Partial<EncodeOptions>`
-
-The encoder options for the output image. [See default values](./encode.ts).
-- `interlace` (boolean) whether to use PNG interlacing or not. Interlacing will increase the size of an optimised image.
-- `level` (number) is the optimisation level between 1 to 6. The higher the level the higher the compression. Any level above 4 is not recommended.
-- `skipOptimisation` (boolean) skip the optimisation step (faster)
 
 #### Example
 ```js
@@ -65,31 +57,4 @@ async function loadImage(src) {
 
 const rawImageData = await loadImage('/example.jpg');
 const pngBuffer = await encode(rawImageData);
-```
-
-### optimise(data: ArrayBuffer, options: OptimiseOptions): Promise<ArrayBuffer>
-
-Optimises a PNG image buffer and resolves to the optimised buffer output
-
-#### data
-Type: `ImageData`
-
-#### options
-Type: `Partial<OptimiseOptions>`
-
-The Oxipng optimisation options for the output image. [See default values](./meta.ts).
-- `interlace` (boolean) whether to use PNG interlacing or not. Interlacing will increase the size of an optimised image.
-- `level` (number) is the optimisation level between 1 to 6. The higher the level, the higher the compression. Any level above 4 is not recommended.
-
-
-#### Example
-```js
-import { optimise } from '@jsquash/png';
-
-const formEl = document.querySelector('form');
-const formData = new FormData(formEl);
-// Assuming user selected an input png file
-const pngImageBuffer = await formData.get('image').arrayBuffer();
-
-const optimisedPngBuffer = await optimise(pngImageBuffer, { level: 3 });
 ```
