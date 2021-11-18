@@ -30,6 +30,7 @@ export async function init(module?: WebAssembly.Module): Promise<void> {
   if (await simd()) {
     const webpEncoder = await import('./codec/enc/webp_enc_simd');
     emscriptenModule = initEmscriptenModule(webpEncoder.default, module);
+    return;
   }
   const webpEncoder = await import('./codec/enc/webp_enc');
   emscriptenModule = initEmscriptenModule(webpEncoder.default, module);
