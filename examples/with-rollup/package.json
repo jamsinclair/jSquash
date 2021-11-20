@@ -1,0 +1,15 @@
+{
+  "name": "with-rollup-example",
+  "scripts": {
+    "start": "rollup -c"
+  },
+  "dependencies": {
+    "@jsquash/jpeg": "file:../../packages/jpeg/dist",
+    "@jsquash/png": "file:../../packages/png/dist",
+    "@jsquash/webp": "file:../../packages/webp/dist",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@web/rollup-plugin-import-meta-assets": "^1.0.7",
+    "rollup": "^2.60.0",
+    "rollup-plugin-serve": "^1.1.0"
+  }
+}
