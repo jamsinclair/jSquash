@@ -26,21 +26,22 @@ import { simd } from 'wasm-feature-detect';
 
 let emscriptenModule: Promise<WebPModule>;
 
-export async function init(module?: WebAssembly.Module): Promise<void> {
+export async function init(module?: WebAssembly.Module): Promise<WebPModule> {
   if (await simd()) {
     const webpEncoder = await import('./codec/enc/webp_enc_simd');
     emscriptenModule = initEmscriptenModule(webpEncoder.default, module);
-    return;
+    return emscriptenModule;
   }
   const webpEncoder = await import('./codec/enc/webp_enc');
   emscriptenModule = initEmscriptenModule(webpEncoder.default, module);
+  return emscriptenModule;
 }
 
 export default async function encode(
   data: ImageData,
   options: Partial<EncodeOptions> = {},
 ): Promise<ArrayBuffer> {
-  if (!emscriptenModule) init();
+  if (!emscriptenModule) emscriptenModule = init();
 
   const _options: EncodeOptions = { ...defaultOptions, ...options };
   const module = await emscriptenModule;
