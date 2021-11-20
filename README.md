@@ -1,6 +1,6 @@
 # jSquash 🥝
 
-> Collection of browser focussed wasm bundles derived from the [Squoosh App](https://github.com/GoogleChromeLabs/squoosh)
+> Collection of WebAssemebly image codecs that support the browser and are derived from the [Squoosh App](https://github.com/GoogleChromeLabs/squoosh)
 
 Squoosh already provides a [Node.js library](https://github.com/GoogleChromeLabs/squoosh/tree/dev/libsquoosh).
 
