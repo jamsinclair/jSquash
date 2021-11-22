@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "build": "../../../tools/build-cpp.sh"
+  }
+}
