@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@jsquash/avif@file:../../packages/avif/dist":
+  version "1.1.4"
+  dependencies:
+    wasm-feature-detect "^1.2.11"
+
 "@jsquash/jpeg@file:../../packages/jpeg/dist":
   version "1.1.4"
 
@@ -11,7 +16,7 @@
     wasm-feature-detect "^1.2.11"
 
 "@jsquash/webp@file:../../packages/webp/dist":
-  version "1.1.1"
+  version "1.1.2"
   dependencies:
     wasm-feature-detect "^1.2.11"
 

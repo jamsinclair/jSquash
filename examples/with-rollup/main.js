@@ -1,9 +1,12 @@
+import * as avif from '@jsquash/avif';
 import * as jpeg from '@jsquash/jpeg';
 import * as png from '@jsquash/png';
 import * as webp from '@jsquash/webp';
 
 async function decode (sourceType, fileBuffer) {
   switch (sourceType) {
+    case 'avif':
+      return await avif.decode(fileBuffer);
     case 'jpeg':
       return await jpeg.decode(fileBuffer);
     case 'png':
@@ -17,6 +20,8 @@ async function decode (sourceType, fileBuffer) {
 
 async function encode (outputType, imageData) {
   switch (outputType) {
+    case 'avif':
+      return await avif.encode(imageData);
     case 'jpeg':
       return await jpeg.encode(imageData);
     case 'png':

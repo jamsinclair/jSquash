@@ -4,6 +4,7 @@
     "start": "webpack serve"
   },
   "dependencies": {
+    "@jsquash/avif": "file:../../packages/avif/dist",
     "@jsquash/jpeg": "file:../../packages/jpeg/dist",
     "@jsquash/png": "file:../../packages/png/dist",
     "@jsquash/webp": "file:../../packages/webp/dist",

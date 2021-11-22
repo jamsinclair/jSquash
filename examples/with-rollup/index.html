@@ -11,10 +11,13 @@
   <form>
     <label>
       Choose your source image:
-      <input type="file" name="file" accept="image/jpeg,image/png,image/webp">
+      <input type="file" name="file" accept=".avif,image/*">
     </label>
     <p>Choose output image type:</p>
     <div>
+      <label>
+        <input type="radio" name="outputType" value="avif" checked> AVIF
+      </label>
       <label>
         <input type="radio" name="outputType" value="jpeg" checked> JPEG
       </label>
