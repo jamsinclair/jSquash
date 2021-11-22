@@ -1,0 +1,15 @@
+name = "upgrade-to-webp"
+type = "javascript"
+route = ''
+zone_id = ''
+usage_model = ''
+compatibility_flags = []
+workers_dev = true
+compatibility_date = "2021-11-06"
+
+[wasm_modules]
+# @Note we need to manually include the wasm modules used for Cloudflare workers
+# These modules will be injected as global vars into the worker
+JPEG_DEC_WASM = "node_modules/@jsquash/jpeg/codec/dec/mozjpeg_dec.wasm"
+PNG_DEC_WASM = "node_modules/@jsquash/png/codec/squoosh_png_bg.wasm"
+WEBP_ENC_WASM = "node_modules/@jsquash/webp/codec/enc/webp_enc_simd.wasm"

@@ -1,0 +1,19 @@
+{
+  "name": "cloudflare-worker-upgrade-to-webp",
+  "version": "1.0.0",
+  "main": "worker.js",
+  "scripts": {
+    "start": "rollup -c && wrangler dev"
+  },
+  "dependencies": {
+    "@jsquash/jpeg": "^1.1.4",
+    "@jsquash/png": "^2.0.0",
+    "@jsquash/webp": "^1.1.2"
+  },
+  "devDependencies": {
+    "@cloudflare/wrangler": "^1.19.5",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@rollup/plugin-replace": "^3.0.0",
+    "rollup": "^2.60.0"
+  }
+}
