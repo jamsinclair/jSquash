@@ -4,7 +4,7 @@
 
 Squoosh already provides a [Node.js library](https://github.com/GoogleChromeLabs/squoosh/tree/dev/libsquoosh).
 
-The aim of this library is to provide an easy experience to encode, decode and modify images with the tools you know and love from Squoosh in the **Browser** 🖥️.
+The aim of this library is to provide an easy experience to encode, decode and modify images with the tools you know and love from Squoosh in the **Browser** and **V8 runtimes** 🖥️.
 
 jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser support focus of these packages.
 
