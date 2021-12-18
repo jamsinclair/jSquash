@@ -1,0 +1,32 @@
+{
+    "name": "@jsquash/resize",
+    "version": "1.0.0",
+    "main": "index.js",
+    "description": "Wasm image resize methods supporting the browser and V8 environments. Repackaged from Squoosh App.",
+    "repository": "jamsinclair/jSquash/packages/resize",
+    "author": {
+      "name": "Jamie Sinclair",
+      "email": "jamsinclairnz+npm@gmail.com"
+    },
+    "keywords": [
+      "image",
+      "resize",
+      "hqx",
+      "squoosh",
+      "wasm",
+      "webassembly",
+      "lanczos3",
+      "crop"
+    ],
+    "license": "Apache-2.0",
+    "scripts": {
+      "clean": "rm -rf dist",
+      "build": "npm run clean && tsc && cp -r lib package.json README.md .npmignore dist"
+    },
+    "devDependencies": {
+      "typescript": "^4.4.4"
+    },
+    "type": "module",
+    "sideEffects": false
+  }
+  
