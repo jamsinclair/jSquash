@@ -10,12 +10,16 @@ let resizeWasmReady: Promise<unknown>;
 let hqxWasmReady: Promise<unknown>;
 
 export function initResize (moduleOrPath?: InitResizeInput) {
-    resizeWasmReady = initResizeWasm(moduleOrPath);
+    if (!resizeWasmReady) {
+      resizeWasmReady = initResizeWasm(moduleOrPath);
+    }
     return resizeWasmReady;
 }
 
 export function initHqx (moduleOrPath?: InitHqxInput) {
-    hqxWasmReady = initHqxWasm(moduleOrPath);
+    if (!hqxWasmReady) {
+      hqxWasmReady = initHqxWasm(moduleOrPath);
+    }
     return hqxWasmReady;
 }
 
@@ -73,11 +77,7 @@ async function hqx(
   input: ImageData,
   opts: HqxResizeOptions,
 ): Promise<ImageData> {
-  if (!hqxWasmReady) {
-    hqxWasmReady = initHqxWasm();
-  }
-
-  await hqxWasmReady;
+  await initHqx();
 
   const widthRatio = opts.width / input.width;
   const heightRatio = opts.height / input.height;
@@ -107,9 +107,7 @@ export default async function resize(
   let options: WorkerResizeOptions = { ...defaultOptions as WorkerResizeOptions, ...overrideOptions }; 
   let input = data;
 
-  if (!resizeWasmReady) {
-    resizeWasmReady = initResizeWasm();
-  }
+  initResize();
 
   if (optsIsHqxOpts(options)) {
     input = await hqx(input, options);
