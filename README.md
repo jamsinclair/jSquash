@@ -29,3 +29,21 @@ jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser suppor
 - [Cloudflare Worker function that upgrades images to webp](/examples/cloudflare-worker)
 - [Web App using image codecs bundled with Rollup](/examples/with-rollup)
 - [Web App using image codecs bundled with Webpack](/examples/with-webpack)
+
+## Known Issues
+
+### Vite Project throws `TypeError: Failed to construct 'URL': Invalid URL`
+
+This affects WASM modules using JS glue code provided by rust wasm-pack.
+
+As a workaround, update your `vite.config.js` file with the `optimizeDeps` property. Put affected module names in the exclude array.
+
+```js
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  optimizeDeps: {
+    exclude: ["@jsquash/png"]
+  }
+})
+```
