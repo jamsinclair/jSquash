@@ -25,13 +25,13 @@ import { threads } from 'wasm-feature-detect';
 
 let emscriptenModule: Promise<AVIFModule>;
 
-async function init() {
+export async function init(module?: WebAssembly.Module) {
   if (await threads()) {
     const avifEncoder = await import('./codec/enc/avif_enc_mt');
-    return initEmscriptenModule<AVIFModule>(avifEncoder.default);
+    return initEmscriptenModule(avifEncoder.default, module);
   }
   const avifEncoder = await import('./codec/enc/avif_enc');
-  return initEmscriptenModule(avifEncoder.default);
+  return initEmscriptenModule(avifEncoder.default, module);
 }
 
 export default async function encode(
