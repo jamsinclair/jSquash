@@ -50,3 +50,21 @@ const imageBuffer = fetch('/images/example.jpg').then(res => res.arrayBuffer());
 const originalImageData = await decode(imageBuffer);
 const resizedImageData = await resize(originalImageData, { height: 300, width: 400 };
 ```
+
+## Manual WASM initialisation (not recommended)
+
+In most situations there is no need to manually initialise the provided WebAssembly modules.
+The generated glue code takes care of this and supports most web bundlers.
+
+One exception is CloudFlare workers. The environment at this time (this could change in the future) does not allow code to be dynamically imported. It needs to be bundled at runtime. WASM modules are set as global variables. [See the Cloudflare workers example](examples/cloudflare-worker);
+
+The main module exports `initHqx` and `initResize` functions that can be used to manually load their respective wasm module.
+
+```js
+import resize, { initResize } from '@jsquash/resize';
+
+const WASM_MODULE = // A WebAssembly.Module object of the compiled wasm binary
+initResize(WASM_MODULE);
+
+resize(image, options);
+```
