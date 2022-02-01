@@ -16,12 +16,12 @@ const CDN_CACHE_AGE = 6 * MONTH_IN_SECONDS; // 6 Months
 
 const decodeImage = async (buffer, format) => {
   if (format === 'jpeg' || format === 'jpg') {
-    // @Note, we need to manually instantiate the wasm module here
+    // @Note, we need to manually initialise the wasm module here
     // CF Workers do not support dynamic imports and inject the WASM binary as a global var
     initJpegWasm(JPEG_DEC_WASM);
     return decodeJpeg(buffer);
   } else if (format === 'png') {
-    // @Note, we need to manually instantiate the wasm module here
+    // @Note, we need to manually initialise the wasm module here
     // CF Workers do not support dynamic imports and inject the WASM binary as a global var
     initPngWasm(PNG_DEC_WASM);
     return decodePng(buffer);
@@ -49,7 +49,7 @@ async function handleRequest(request, ctx) {
 
     if (isWebpSupported) {
       const imageData = await decodeImage(await response.arrayBuffer(), extension);
-      // @Note, we need to manually instantiate the wasm module here
+      // @Note, we need to manually initialise the wasm module here
       // CF Workers do not support dynamic imports and inject the WASM binary as a global var
       await initWebpWasm(WEBP_ENC_WASM);
       const webpImage = await encodeWebp(imageData);
