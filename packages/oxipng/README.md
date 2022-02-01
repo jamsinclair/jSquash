@@ -49,7 +49,7 @@ const optimisedPngBuffer = await optimise(pngImageBuffer, { level: 3 });
 In most situations there is no need to manually initialise the provided WebAssembly modules.
 The generated glue code takes care of this and supports most web bundlers.
 
-One exception is CloudFlare workers. The environment at this time (this could change in the future) does not allow code to be dynamically imported. It needs to be bundled at runtime. WASM modules are set as global variables. [See the Cloudflare workers example](examples/cloudflare-worker);
+One exception is CloudFlare workers. The environment at this time (this could change in the future) does not allow code to be dynamically imported. It needs to be bundled at runtime. WASM modules are set as global variables. [See the Cloudflare workers example](examples/cloudflare-worker).
 
 The `optimise` module exports an `init` function that can be used to manually load the wasm module.
 

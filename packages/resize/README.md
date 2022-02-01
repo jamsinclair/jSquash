@@ -56,7 +56,7 @@ const resizedImageData = await resize(originalImageData, { height: 300, width: 4
 In most situations there is no need to manually initialise the provided WebAssembly modules.
 The generated glue code takes care of this and supports most web bundlers.
 
-One exception is CloudFlare workers. The environment at this time (this could change in the future) does not allow code to be dynamically imported. It needs to be bundled at runtime. WASM modules are set as global variables. [See the Cloudflare workers example](examples/cloudflare-worker);
+One exception is CloudFlare workers. The environment at this time (this could change in the future) does not allow code to be dynamically imported. It needs to be bundled at runtime. WASM modules are set as global variables. [See the Cloudflare workers example](examples/cloudflare-worker).
 
 The main module exports `initHqx` and `initResize` functions that can be used to manually load their respective wasm module.
 
