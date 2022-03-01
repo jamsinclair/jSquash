@@ -1,6 +1,6 @@
 {
   "name": "@jsquash/webp",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "main": "index.js",
   "description": "Wasm webp encoder and decoder supporting the browser. Repackaged from Squoosh App.",
   "repository": "jamsinclair/jSquash",
