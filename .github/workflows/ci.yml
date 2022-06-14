@@ -6,11 +6,13 @@ on:
   pull_request:
     types: [opened, synchronize]
 
-steps:
-  - uses: actions/checkout@v3
-  - uses: actions/setup-node@v3
-    with:
-      node-version: 16
-      cache: 'yarn'
-  - run: yarn
-  - run: yarn build
+jobs:
+  build:
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - run: yarn
+      - run: yarn build
