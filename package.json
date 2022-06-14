@@ -6,6 +6,9 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "build": "turbo run build"
+  },
   "license": "Apache-2.0",
   "devDependencies": {
     "turbo": "^1.2.16"
