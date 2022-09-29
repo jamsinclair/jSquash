@@ -1,2 +1,3 @@
 node_modules
 codec/**/*package.json
+!codec/pkg-parallel/package.json
