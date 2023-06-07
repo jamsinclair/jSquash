@@ -1,5 +1,5 @@
 {
-  "name": "jSquash",
+  "name": "jsquash",
   "version": "1.0.0",
   "private": true,
   "repository": "git@github.com:jamsinclair/jSquash.git",
@@ -11,6 +11,6 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "turbo": "^1.2.16"
+    "turbo": "^1.10.2"
   }
 }
