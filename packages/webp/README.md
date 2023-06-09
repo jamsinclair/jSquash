@@ -77,7 +77,6 @@ The `encode` and `decode` modules both export an `init` function that can be use
 ```js
 import decode, { init as initWebpDecode } from '@jsquash/webp/decode';
 
-const WASM_MODULE = // A WebAssembly.Module object of the compiled wasm binary
-initWebpDecode(WASM_MODULE);
+initWebpDecode(WASM_MODULE); // The global variable of the wasm module needs to be defined in the wrangler.toml file
 const image = await fetch('./image.webp').then(res => res.arrayBuffer()).then(decode);
 ```

@@ -77,7 +77,6 @@ The `encode` and `decode` modules both export an `init` function that can be use
 ```js
 import decode, { init as initAvifDecode } from '@jsquash/avif/decode';
 
-const WASM_MODULE = // A WebAssembly.Module object of the compiled wasm binary
-initAvifDecode(WASM_MODULE);
+initAvifDecode(WASM_MODULE); // The global variable of the wasm module needs to be defined in the wrangler.toml file
 const image = await fetch('./image.avif').then(res => res.arrayBuffer()).then(decode);
 ```

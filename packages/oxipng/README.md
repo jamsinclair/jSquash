@@ -56,7 +56,6 @@ The `optimise` module exports an `init` function that can be used to manually lo
 ```js
 import optimise, { init } from '@jsquash/oxipng/optimise';
 
-const WASM_MODULE = // A WebAssembly.Module object of the compiled wasm binary
-init(WASM_MODULE);
+init(WASM_MODULE); // The global variable of the wasm module needs to be defined in the wrangler.toml file
 const image = await fetch('./image.png').then(res => res.arrayBuffer()).then(optimise);
 ```

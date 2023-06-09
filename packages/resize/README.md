@@ -63,8 +63,7 @@ The main module exports `initHqx` and `initResize` functions that can be used to
 ```js
 import resize, { initResize } from '@jsquash/resize';
 
-const WASM_MODULE = // A WebAssembly.Module object of the compiled wasm binary
-initResize(WASM_MODULE);
+initResize(WASM_MODULE); // The global variable of the wasm module needs to be defined in the wrangler.toml file
 
 resize(image, options);
 ```

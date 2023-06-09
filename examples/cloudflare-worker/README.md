@@ -26,7 +26,6 @@ The `encode` and `decode` modules both export an `init` function that can be use
 ```js
 import decode, { init as initJpegDecode } from '@jsquash/jpeg/decode';
 
-const WASM_MODULE = // A WebAssembly.Module object of the compiled wasm binary
-await initJpegDecode(WASM_MODULE);
+await initJpegDecode(JPEG_DEC_WASM); // The global variable of the wasm module needs to be defined in the wrangler.toml file
 const image = await fetch('./image.jpeg').then(res => res.arrayBuffer()).then(decode);
 ```
