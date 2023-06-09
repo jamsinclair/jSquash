@@ -1,5 +1,6 @@
 {
   "scripts": {
-    "build": "../../../tools/build-cpp.sh"
+    "build": "../../../tools/build-cpp.sh && npm run patch-pre-script",
+    "patch-pre-script": "cat pre.js >> enc/avif_enc.js && cat pre.js >> dec/avif_dec.js"
   }
 }
