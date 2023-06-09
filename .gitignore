@@ -108,3 +108,6 @@ dist
 
 # C/C++ Files
 *.o
+
+# lockfile
+package-lock.json

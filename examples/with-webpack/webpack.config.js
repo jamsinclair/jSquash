@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -18,6 +19,9 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.IgnorePlugin({
+      resourceRegExp: /avif_enc_mt.worker/,
+    }),
     new HtmlWebpackPlugin({
       template: 'index.html'
     })

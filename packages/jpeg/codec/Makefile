@@ -4,6 +4,7 @@ CODEC_OUT_RELATIVE := .libs/libjpeg.a rdswitch.o
 CODEC_OUT := $(addprefix $(CODEC_DIR)/, $(CODEC_OUT_RELATIVE))
 ENVIRONMENT = web,worker
 
+PRE_JS = pre.js
 OUT_JS := enc/mozjpeg_enc.js dec/mozjpeg_dec.js
 OUT_WASM := $(OUT_JS:.js=.wasm)
 
@@ -20,6 +21,7 @@ $(filter dec/%,$(OUT_JS)): dec/mozjpeg_dec.cpp
 		-I $(CODEC_DIR) \
 		${CXXFLAGS} \
 		${LDFLAGS} \
+		--pre-js $(PRE_JS) \
 		--bind \
 		-s ENVIRONMENT=$(ENVIRONMENT) \
 		-s EXPORT_ES6=1 \

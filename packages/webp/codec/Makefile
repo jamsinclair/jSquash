@@ -5,6 +5,7 @@ CODEC_BASELINE_BUILD_DIR := $(CODEC_BUILD_ROOT)/baseline
 CODEC_SIMD_BUILD_DIR := $(CODEC_BUILD_ROOT)/simd
 ENVIRONMENT = web,worker
 
+PRE_JS = pre.js
 OUT_JS = enc/webp_enc.js enc/webp_enc_simd.js dec/webp_dec.js
 OUT_WASM := $(OUT_JS:.js=.wasm)
 
@@ -21,6 +22,7 @@ enc/webp_enc_simd.js: $(CODEC_SIMD_BUILD_DIR)/libwebp.a
 $(OUT_JS):
 	$(LD) \
 		$(LDFLAGS) \
+		--pre-js $(PRE_JS) \
 		--bind \
 		-s ENVIRONMENT=$(ENVIRONMENT) \
 		-s EXPORT_ES6=1 \
