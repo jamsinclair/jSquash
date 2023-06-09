@@ -28,6 +28,7 @@ jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser suppor
 
 - [Cloudflare Worker function that upgrades images to webp](/examples/cloudflare-worker)
 - [Web App using image codecs bundled with Rollup](/examples/with-rollup)
+- [Web App using image codecs bundled with Vite](/examples/with-vite)
 - [Web App using image codecs bundled with Webpack](/examples/with-webpack)
 
 ## Known Issues
