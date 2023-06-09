@@ -32,11 +32,14 @@ jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser suppor
 
 ## Known Issues
 
-### Vite Project throws `TypeError: Failed to construct 'URL': Invalid URL`
+### Issues with Vite and Vue build Environments
 
-This affects WASM modules using JS glue code provided by rust wasm-pack.
+This may present itself as any of the following errors:
+- `TypeError: Failed to construct 'URL': Invalid URL`
+- `RuntimeError: Aborted(both async and sync fetching of the wasm failed). Build with -sASSERTIONS for more info.`
+- Other console errors could also be related to this issue
 
-As a workaround, update your `vite.config.js` file with the `optimizeDeps` property. Put affected module names in the exclude array.
+As a workaround, update your `vite.config.js` file with the `optimizeDeps` property. Put affected module names in the exclude array. Vites dependency optimizer seems to be causing issues with the WASM modules.
 
 ```js
 import { defineConfig } from 'vite'
