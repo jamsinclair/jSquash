@@ -6,6 +6,7 @@
   "dependencies": {
     "@jsquash/avif": "file:../../packages/avif/dist",
     "@jsquash/jpeg": "file:../../packages/jpeg/dist",
+    "@jsquash/jxl": "file:../../packages/jxl/dist",
     "@jsquash/png": "file:../../packages/png/dist",
     "@jsquash/webp": "file:../../packages/webp/dist",
     "html-webpack-plugin": "^5.5.0",

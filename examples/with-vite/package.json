@@ -11,6 +11,7 @@
   "dependencies": {
     "@jsquash/avif": "^1.1.0",
     "@jsquash/jpeg": "^1.2.0",
+    "@jsquash/jxl": "^1.0.0",
     "@jsquash/png": "^2.0.0",
     "@jsquash/webp": "^1.2.0"
   },

@@ -11,7 +11,7 @@
   <form>
     <label>
       Choose your source image:
-      <input type="file" name="file" accept=".avif,image/*">
+      <input type="file" name="file" accept=".avif,.jxl,image/*">
     </label>
     <p>Choose output image type:</p>
     <div>
@@ -20,6 +20,9 @@
       </label>
       <label>
         <input type="radio" name="outputType" value="jpeg" checked> JPEG
+      </label>
+      <label>
+        <input type="radio" name="outputType" value="jxl" checked> JPEG XL
       </label>
       <label>
         <input type="radio" name="outputType" value="png" checked> PNG
