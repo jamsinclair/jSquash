@@ -1,0 +1,32 @@
+{
+  "name": "@jsquash/jxl",
+  "version": "1.0.0",
+  "main": "index.js",
+  "description": "Wasm JPEG XL encoder and decoder supporting the browser. Repackaged from Squoosh App.",
+  "repository": "jamsinclair/jSquash",
+  "author": {
+    "name": "Jamie Sinclair",
+    "email": "jamsinclairnz+npm@gmail.com"
+  },
+  "keywords": [
+    "image",
+    "optimisation",
+    "optimization",
+    "squoosh",
+    "wasm",
+    "webassembly",
+    "jpegxl",
+    "jpeg xl",
+    "jxl"
+  ],
+  "license": "Apache-2.0",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc && cp -r codec package.json README.md LICENSE *.d.ts .npmignore dist"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.4"
+  },
+  "type": "module",
+  "sideEffects": false
+}
