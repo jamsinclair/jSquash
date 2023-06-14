@@ -27,10 +27,17 @@ jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser suppor
 
 ## Examples
 
-- [Cloudflare Worker function that upgrades images to webp](/examples/cloudflare-worker)
 - [Web App using image codecs bundled with Rollup](/examples/with-rollup)
 - [Web App using image codecs bundled with Vite](/examples/with-vite)
 - [Web App using image codecs bundled with Webpack](/examples/with-webpack)
+
+## Usage in Cloudflare Workers
+
+Using jSquash modules with Cloudflare Workers requires some additional steps so that the WASM binaries get included.
+
+Depending on which format you are using check the examples below:
+- [Cloudflare Worker (ES Module Format) function that upgrades images to webp](/examples/cloudflare-worker-esm-format)
+- [Cloudflare Worker (Legacy Service Worker Format) function that upgrades images to webp](/examples/cloudflare-worker)
 
 ## Known Issues
 

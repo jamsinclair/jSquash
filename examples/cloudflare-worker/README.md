@@ -1,6 +1,8 @@
-# Cloudflare Worker Example
+# Cloudflare Worker Example (Service Worker Format)
 
 For this example, we will be using the [Cloudflare Worker](https://workers.cloudflare.com/) platform to upgrade images to WebP.
+
+The example uses the legacy "Service Worker Format" which is still supported by Cloudflare Workers.
 
 We can use the latest Wrangler CLI to run the example locally and deploy it to Cloudflare Workers.
 
@@ -20,6 +22,8 @@ You will need to ensure you configure the Worker to set these as global variable
 # Manually specify the path to the WASM module for each codec
 JPEG_DEC_WASM = "node_modules/@jsquash/jpeg/codec/dec/mozjpeg_dec.wasm"
 ```
+
+If using Wrangler v2 or above, you can also import the WASM modules from the node_modules folder [as seen in the ES Module Format example](/examples/cloudflare-worker-esm-format/README.md#usage-of-jsquash-packages-in-cloudflare-worker).
 
 The `encode` and `decode` modules both export an `init` function that can be used to manually load the wasm module.
 
