@@ -28,10 +28,12 @@ let emscriptenModule: Promise<AVIFModule>;
 export async function init(module?: WebAssembly.Module) {
   if (await threads()) {
     const avifEncoder = await import('./codec/enc/avif_enc_mt');
-    return initEmscriptenModule(avifEncoder.default, module);
+    emscriptenModule = initEmscriptenModule(avifEncoder.default, module);
+    return emscriptenModule;
   }
   const avifEncoder = await import('./codec/enc/avif_enc');
-  return initEmscriptenModule(avifEncoder.default, module);
+  emscriptenModule = initEmscriptenModule(avifEncoder.default, module);
+  return emscriptenModule;
 }
 
 export default async function encode(
