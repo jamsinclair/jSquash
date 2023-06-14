@@ -1,5 +1,11 @@
 # Changelog
 
+## @jquash/avif@1.1.2
+
+### Bug Fixes
+
+- Stops the WebWorker module code from being instantiated when running in a Cloudflare Worker environment
+
 ## @jquash/avif@1.1.1
 
 ### Bug Fixes
