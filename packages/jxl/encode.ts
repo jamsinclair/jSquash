@@ -25,8 +25,10 @@ import { initEmscriptenModule } from './utils';
 
 let emscriptenModule: Promise<JXLModule>;
 
+const isRunningInCloudflareWorker = () => (caches as any).default !== undefined;
+
 async function init(module?: WebAssembly.Module, moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>) {
-  if (await threads()) {
+  if (!isRunningInCloudflareWorker() && await threads()) {
     if (await simd()) {
       const jxlEncoder = await import('./codec/enc/jxl_enc_mt_simd');
       emscriptenModule = initEmscriptenModule(jxlEncoder.default, module, moduleOptionOverrides);

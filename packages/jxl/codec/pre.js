@@ -1,7 +1,6 @@
-const isServiceWorker = globalThis.ServiceWorkerGlobalScope !== undefined;
-const isRunningInCloudFlareWorkers = isServiceWorker && typeof self !== 'undefined' && caches.default !== undefined;
+const isRunningInCloudflareWorker = caches.default !== undefined;
 
-if (isRunningInCloudFlareWorkers) {
+if (isRunningInCloudflareWorker) {
   if (!globalThis.ImageData) {
     // Simple Polyfill for ImageData Object
     globalThis.ImageData = class ImageData {
