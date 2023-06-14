@@ -20,13 +20,13 @@ import type { EncodeOptions } from './meta';
 import type { JXLModule } from './codec/enc/jxl_enc';
 
 import { defaultOptions } from './meta';
-import { simd } from 'wasm-feature-detect';
-import { checkThreadsSupport, initEmscriptenModule } from './utils';
+import { simd, threads } from 'wasm-feature-detect';
+import { initEmscriptenModule } from './utils';
 
 let emscriptenModule: Promise<JXLModule>;
 
 async function init(module?: WebAssembly.Module, moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>) {
-  if (await checkThreadsSupport()) {
+  if (await threads()) {
     if (await simd()) {
       const jxlEncoder = await import('./codec/enc/jxl_enc_mt_simd');
       emscriptenModule = initEmscriptenModule(jxlEncoder.default, module, moduleOptionOverrides);

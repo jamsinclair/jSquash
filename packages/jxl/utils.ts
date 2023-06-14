@@ -14,9 +14,7 @@
 /**
  * Notice: I (Jamie Sinclair) have modified this file
  * - Allows manual instantiation of the Wasm Module.
- * - Adds checkThreadsSupport function which handles Safari 16 edge case
  */
-import { threads } from 'wasm-feature-detect';
 
 export function initEmscriptenModule<T extends EmscriptenWasm.Module>(
   moduleFactory: EmscriptenWasm.ModuleFactory<T>,
@@ -39,21 +37,4 @@ export function initEmscriptenModule<T extends EmscriptenWasm.Module>(
     instantiateWasm,
     ...moduleOptionOverrides
   });
-}
-
-// Sourced from: https://github.com/GoogleChromeLabs/squoosh/blob/ecc715fe557ce57ba57f2535e87d68411bbf7de2/src/features/encoders/jxl/worker/jxlEncode.ts
-export async function checkThreadsSupport() {
-  const supportsWasmThreads = await threads();
-  if (!supportsWasmThreads) return false;
-
-  // Safari 16 shipped with WASM threads support, but it didn't ship with nested workers support.
-  // This meant Squoosh failed in Safari 16, since we call our wasm from inside a worker to begin with.
-
-  // Right now, this check is only run from a worker.
-  // More implementation is needed to run it from a page.
-  if (!('importScripts' in self)) {
-    return false;
-  }
-
-  return 'Worker' in self;;
 }
