@@ -56,14 +56,14 @@ const resizedImageData = await resize(originalImageData, { height: 300, width: 4
 In most situations there is no need to manually initialise the provided WebAssembly modules.
 The generated glue code takes care of this and supports most web bundlers.
 
-One exception is CloudFlare workers. The environment at this time (this could change in the future) does not allow code to be dynamically imported. It needs to be bundled at runtime. WASM modules are set as global variables. [See the Cloudflare workers example](/examples/cloudflare-worker).
+One situation where this arises is when using the modules in Cloudflare Workers ([See the README for more info](/README.md#usage-in-cloudflare-workers)).
 
 The main module exports `initHqx` and `initResize` functions that can be used to manually load their respective wasm module.
 
 ```js
 import resize, { initResize } from '@jsquash/resize';
 
-initResize(WASM_MODULE); // The global variable of the wasm module needs to be defined in the wrangler.toml file
+initResize(WASM_MODULE); // The `WASM_MODULE` variable will need to be sourced by yourself and passed as an ArrayBuffer.
 
 resize(image, options);
 ```

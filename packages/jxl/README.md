@@ -72,14 +72,14 @@ const jpegBuffer = await encode(rawImageData);
 In most situations there is no need to manually initialise the provided WebAssembly modules.
 The generated glue code takes care of this and supports most web bundlers.
 
-One exception is CloudFlare workers. The environment at this time (this could change in the future) does not allow code to be dynamically imported. It needs to be bundled at runtime. WASM modules are set as global variables. [See the Cloudflare workers example](/examples/cloudflare-worker).
+One situation where this arises is when using the modules in Cloudflare Workers ([See the README for more info](/README.md#usage-in-cloudflare-workers)).
 
 The `encode` and `decode` modules both export an `init` function that can be used to manually load the wasm module.
 
 ```js
 import decode, { init as initJXLDecode } from '@jsquash/jxl/decode';
 
-initJXLDecode(WASM_MODULE); // The global variable of the wasm module needs to be defined in the wrangler.toml file
+initJXLDecode(WASM_MODULE); // The `WASM_MODULE` variable will need to be sourced by yourself and passed as an ArrayBuffer.
 const image = await fetch('./image.jpeg').then(res => res.arrayBuffer()).then(decode);
 ```
 
