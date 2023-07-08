@@ -18,7 +18,7 @@ Steps to reproduce the behavior:
 4. See error
 
 **Reproduction URL**
-Providing a minimal reproduction in a code playground, like [CodeSandbox](codesandbox.io/), is incredibly helpful and speeds up the progress of a solution being found.
+Providing a minimal reproduction in a code playground, like [CodeSandbox](https://codesandbox.io/), is incredibly helpful and speeds up the progress of a solution being found.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
