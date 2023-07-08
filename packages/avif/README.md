@@ -1,5 +1,7 @@
 # @jsquash/avif
 
+[![npm version](https://badge.fury.io/js/@jsquash%2Favif.svg)](https://badge.fury.io/js/@jsquash%2Favif)
+
 An easy experience for encoding and decoding AVIF images in the browser. Powered by WebAssembly ⚡️.
 
 Uses the [libavif](https://github.com/AOMediaCodec/libavif) library.

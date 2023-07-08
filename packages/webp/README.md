@@ -1,5 +1,7 @@
 # @jsquash/webp
 
+[![npm version](https://badge.fury.io/js/@jsquash%2Fwebp.svg)](https://badge.fury.io/js/@jsquash%2Fwebp)
+
 An easy experience for encoding and decoding WebP images in the browser. Powered by WebAssembly ⚡️.
 
 Uses the [libwebp](https://github.com/webmproject/libwebp) library.

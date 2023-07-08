@@ -1,5 +1,7 @@
 # @jsquash/jxl
 
+[![npm version](https://badge.fury.io/js/@jsquash%2Fjxl.svg)](https://badge.fury.io/js/@jsquash%2Fjxl)
+
 An easy experience for encoding and decoding JPEG XL images in the browser. Powered by WebAssembly ⚡️.
 
 ⚠️ No stable browser release supports displaying JPEG XL yet. This package is intended for experimentation and testing.

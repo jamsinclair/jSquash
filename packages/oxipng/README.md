@@ -1,5 +1,7 @@
 # @jsquash/oxipng
 
+[![npm version](https://badge.fury.io/js/@jsquash%2Foxipng.svg)](https://badge.fury.io/js/@jsquash%2Foxipng)
+
 An easy experience for optimising PNG images in the browser. Powered by WebAssembly ⚡️ and Rust.
 
 Uses the lovely [Oxipng](https://github.com/shssoichiro/oxipng) for png optimisation.

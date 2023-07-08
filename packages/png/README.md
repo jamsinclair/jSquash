@@ -1,5 +1,7 @@
 # @jsquash/png
 
+[![npm version](https://badge.fury.io/js/@jsquash%2Fpng.svg)](https://badge.fury.io/js/@jsquash%2Fpng)
+
 An easy experience for encoding and decoding PNG images in the browser. Powered by WebAssembly ⚡️.
 
 Uses the [rust PNG crate](https://docs.rs/png/0.11.0/png/).

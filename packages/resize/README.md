@@ -1,5 +1,7 @@
 # @jsquash/resize
 
+[![npm version](https://badge.fury.io/js/@jsquash%2Fresize.svg)](https://badge.fury.io/js/@jsquash%2Fresize)
+
 An easy experience for resizing images in the browser or V8 environment. Powered by WebAssembly ⚡️ and Rust.
 
 ℹ️ You will need to have an already decoded ImageData object to resize. This can be accomplished by using other jSquash modules or using the Canvas API, if available.

@@ -1,5 +1,7 @@
 # @jsquash/jpeg
 
+[![npm version](https://badge.fury.io/js/@jsquash%2Fjpeg.svg)](https://badge.fury.io/js/@jsquash%2Fjpeg)
+
 An easy experience for encoding and decoding JPEG images in the browser. Powered by WebAssembly ⚡️.
 
 Uses the [MozJPEG](https://github.com/mozilla/mozjpeg) library.
