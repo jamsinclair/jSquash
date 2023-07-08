@@ -9,6 +9,9 @@
     "squoosh_png.js",
     "squoosh_png.d.ts"
   ],
+  "scripts": {
+    "patch-pre-script": "cat pre.js >> squoosh_png.js"
+  },
   "module": "squoosh_png.js",
   "types": "squoosh_png.d.ts",
   "sideEffects": false
