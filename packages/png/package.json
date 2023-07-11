@@ -1,6 +1,6 @@
 {
   "name": "@jsquash/png",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "index.js",
   "description": "Wasm png encoder and decoder supporting the browser. Repackaged from Squoosh App.",
   "repository": "jamsinclair/jSquash",
