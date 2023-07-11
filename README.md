@@ -25,6 +25,8 @@ jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser suppor
 - [@jSquash/webp](/packages/webp) - An encoder and decoder for WebP images using [libwebp](https://github.com/webmproject/libwebp)
 - ...more to come
 
+⚠️ All packages are ESM modules. You may need to manually transpile the packages if your build environment still relies on Commonjs formats.
+
 ## Usage in Cloudflare Workers
 
 Using jSquash modules with Cloudflare Workers requires some additional steps so that the WASM binaries get included.
@@ -41,7 +43,7 @@ Depending on which format you are using check the examples below:
 
 ## Known Issues
 
-### Issues with Vite and Vue build Environments
+### Issues with Vite and Vue build environments
 
 This may present itself as any of the following errors:
 - `TypeError: Failed to construct 'URL': Invalid URL`
@@ -59,3 +61,23 @@ export default defineConfig({
   }
 })
 ```
+
+### Issues with Nuxt build environments
+
+This may present itself as a `Cannot find module` error. This is likely because Nuxt is anticipating third party modules to be in the Commonjs format.
+
+Setting the following Nuxt config with the jSquash packages that your app uses seems to resolve it.
+
+```js
+export default defineNuxtConfig({
+  build: {
+    transpile: ["@jsquash/png"],
+  },
+  vite: {
+    optimizeDeps: {
+      exclude: ["@jsquash/png"],
+    },
+  },
+});
+```
+
