@@ -81,3 +81,4 @@ export default defineNuxtConfig({
 });
 ```
 
+There is a known Vite bug breaking production code compilation when using a worker that references another worker, see [issue #19](https://github.com/jamsinclair/jSquash/issues/19) for more information.
