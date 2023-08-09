@@ -84,7 +84,7 @@ export async function startWorkers(module, memory, builder) {
         //
         // The only way to work around that is to have side effect code
         // in an entry point such as Worker file itself.
-        const worker = new Worker(new URL('./workerHelpers.js', import.meta.url), {
+        const worker = new Worker(import.meta.resolve("./workerHelpers.js"), {
           type: 'module'
         });
         worker.postMessage(workerInit);
