@@ -1,6 +1,6 @@
 # Changelog
 
-## @jquash/jpg@1.2.0
+## @jsquash/jpg@1.2.0
 
 ### Added 
 

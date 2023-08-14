@@ -1,19 +1,19 @@
 # Changelog
 
-## @jquash/png@2.1.2
+## @jsquash/png@2.1.2
 
 Re-release of 2.1.1 with correct dist files
 ### Fixes
 
 - Check for caches object on `globalThis` before using it
 
-## @jquash/png@2.1.1
+## @jsquash/png@2.1.1
 
 ### Fixes
 
 - Check for caches object on `globalThis` before using it
 
-## @jquash/png@2.1.0
+## @jsquash/png@2.1.0
 
 ### Added
 
