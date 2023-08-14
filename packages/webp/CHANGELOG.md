@@ -1,6 +1,6 @@
 # Changelog
 
-## @jquash/webp@1.2.0
+## @jsquash/webp@1.2.0
 
 ### Added 
 

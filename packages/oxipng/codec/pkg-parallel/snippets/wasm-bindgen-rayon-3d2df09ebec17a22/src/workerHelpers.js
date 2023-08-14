@@ -51,7 +51,7 @@ waitForMsgType(self, 'wasm_bindgen_worker_init').then(async data => {
   // OTOH, even though it can't be inlined, it should be still reasonably
   // cheap since the requested file is already in cache (it was loaded by
   // the main thread).
-  const pkg = await import('../../..');
+  const pkg = await import('../../../squoosh_oxipng.js');
   await pkg.default(data.module, data.memory);
   postMessage({ type: 'wasm_bindgen_worker_ready' });
   pkg.wbg_rayon_start_worker(data.receiver);
