@@ -11,6 +11,9 @@
  * limitations under the License.
  */
 
+// - Updated dynamic import, `../../../` to solve Vite Build issue
+// - Removed comments that were causing build issues with Vite
+
 function waitForMsgType(target, type) {
   return new Promise(resolve => {
     target.addEventListener('message', function onMsg({ data }) {
