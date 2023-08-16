@@ -23,9 +23,6 @@
     "clean": "rm -rf dist",
     "build": "npm run clean && tsc && cp -r codec package.json README.md CHANGELOG.md .npmignore dist"
   },
-  "dependencies": {
-    "wasm-feature-detect": "^1.2.11"
-  },
   "devDependencies": {
     "typescript": "^4.4.4"
   },

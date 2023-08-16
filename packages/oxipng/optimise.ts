@@ -18,18 +18,6 @@
  */
 import type { InitInput } from './codec/pkg/squoosh_oxipng';
 import { defaultOptions, OptimiseOptions } from './meta';
-import { threads } from 'wasm-feature-detect';
-
-async function initMT(moduleOrPath?: InitInput) {
-  const {
-    default: init,
-    initThreadPool,
-    optimise,
-  } = await import('./codec/pkg-parallel/squoosh_oxipng');
-  await init(moduleOrPath);
-  await initThreadPool(globalThis.navigator.hardwareConcurrency);
-  return optimise;
-}
 
 async function initST(moduleOrPath?: InitInput) {
   const { default: init, optimise } = await import(
@@ -39,15 +27,11 @@ async function initST(moduleOrPath?: InitInput) {
   return optimise;
 }
 
-let wasmReady: ReturnType<typeof initMT | typeof initST>;
+let wasmReady: ReturnType<typeof initST>;
 
 export function init(moduleOrPath?: InitInput): void {
   if (!wasmReady) {
-    const hasHardwareConcurrency = globalThis.navigator?.hardwareConcurrency > 1;
-
-    wasmReady = hasHardwareConcurrency ? threads().then((hasThreads: boolean) =>
-      hasThreads ? initMT(moduleOrPath) : initST(moduleOrPath),
-    ) : initST(moduleOrPath);
+    wasmReady = initST(moduleOrPath);
   }
 }
 
