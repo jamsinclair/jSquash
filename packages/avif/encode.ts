@@ -15,24 +15,17 @@
  * Notice: I (Jamie Sinclair) have modified this file.
  * Updated to support a partial subset of Avif encoding options to be provided.
  * The avif options are defaulted to defaults from the meta.ts file.
+ * Removed multi-threading support.
  */
 import type { EncodeOptions } from './meta';
 import type { AVIFModule } from './codec/enc/avif_enc';
 
 import { defaultOptions } from './meta';
 import { initEmscriptenModule } from './utils';
-import { threads } from 'wasm-feature-detect';
 
 let emscriptenModule: Promise<AVIFModule>;
 
-const isRunningInCloudflareWorker = () => (caches as any).default !== undefined;
-
 export async function init(module?: WebAssembly.Module) {
-  if (!isRunningInCloudflareWorker() && await threads()) {
-    const avifEncoder = await import('./codec/enc/avif_enc_mt');
-    emscriptenModule = initEmscriptenModule(avifEncoder.default, module);
-    return emscriptenModule;
-  }
   const avifEncoder = await import('./codec/enc/avif_enc');
   emscriptenModule = initEmscriptenModule(avifEncoder.default, module);
   return emscriptenModule;
