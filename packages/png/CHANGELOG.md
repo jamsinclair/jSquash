@@ -1,6 +1,6 @@
 # Changelog
 
-## @jsquash/png@2.1.3
+## @jsquash/png@2.1.4
 
 ### Fixes
 
