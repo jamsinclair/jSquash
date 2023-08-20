@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/png@2.1.3
+
+### Fixes
+
+- Removes unused wasm-feature-detect dependency
+
 ## @jsquash/png@2.1.2
 
 Re-release of 2.1.1 with correct dist files

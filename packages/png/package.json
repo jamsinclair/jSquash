@@ -1,6 +1,6 @@
 {
   "name": "@jsquash/png",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "main": "index.js",
   "description": "Wasm png encoder and decoder supporting the browser. Repackaged from Squoosh App.",
   "repository": "jamsinclair/jSquash",
@@ -21,9 +21,6 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run clean && tsc && cp -r codec package.json README.md CHANGELOG.md .npmignore dist"
-  },
-  "dependencies": {
-    "wasm-feature-detect": "^1.2.11"
   },
   "devDependencies": {
     "typescript": "^4.4.4"
