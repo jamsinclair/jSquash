@@ -85,6 +85,10 @@ export default defineNuxtConfig({
 
 There is a known Vite bug breaking production code compilation when using a worker that references another worker, see [issue #19](https://github.com/jamsinclair/jSquash/issues/19) for more information.
 
+```
+Unexpected early exit. This happens when Promises returned by plugins cannot resolve. Unfinished hook action(s) on exit:
+```
+
 In the meantime, you can install special builds that don't use workers to work around this issue:
 - [@jsquash/avif@1.1.2-single-thread-only](https://www.npmjs.com/package/@jsquash/avif/v/1.1.2-single-thread-only)
 - [@jsquash/jxl@1.0.2-single-thread-only](https://www.npmjs.com/package/@jsquash/jxl/v/1.0.2-single-thread-only)
