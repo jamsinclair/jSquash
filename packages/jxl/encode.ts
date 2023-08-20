@@ -15,29 +15,17 @@
  * Notice: I (Jamie Sinclair) have modified this file.
  * Updated to support a partial subset of JPEG XL encoding options to be provided.
  * The options are defaulted to defaults from the meta.ts file.
+ * Removed multi-threading support.
  */
 import type { EncodeOptions } from './meta';
 import type { JXLModule } from './codec/enc/jxl_enc';
 
 import { defaultOptions } from './meta';
-import { simd, threads } from 'wasm-feature-detect';
 import { initEmscriptenModule } from './utils';
 
 let emscriptenModule: Promise<JXLModule>;
 
-const isRunningInCloudflareWorker = () => (caches as any).default !== undefined;
-
 async function init(module?: WebAssembly.Module, moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>) {
-  if (!isRunningInCloudflareWorker() && await threads()) {
-    if (await simd()) {
-      const jxlEncoder = await import('./codec/enc/jxl_enc_mt_simd');
-      emscriptenModule = initEmscriptenModule(jxlEncoder.default, module, moduleOptionOverrides);
-      return emscriptenModule;
-    }
-    const jxlEncoder = await import('./codec/enc/jxl_enc_mt');
-    emscriptenModule = initEmscriptenModule(jxlEncoder.default, module, moduleOptionOverrides);
-    return emscriptenModule;
-  }
   const jxlEncoder = await import('./codec/enc/jxl_enc');
   emscriptenModule = initEmscriptenModule(jxlEncoder.default, module, moduleOptionOverrides);
   return emscriptenModule;
