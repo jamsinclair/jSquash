@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/oxipng@next
+
+### Misc.
+
+- Removes *.d.ts.map files from the package
+
 ## @jsquash/oxipng@1.0.1
 
 ### Bug Fixes

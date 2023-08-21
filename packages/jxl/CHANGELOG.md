@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/jxl@next
+
+### Misc.
+
+- Removes *.d.ts.map files from the package
+
 ## @jsquash/jxl@1.0.3
 
 ### Fixes
