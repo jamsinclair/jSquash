@@ -22,7 +22,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "npm run clean && tsc && cp -r codec package.json README.md LICENSE *.d.ts .npmignore dist"
+    "build": "npm run clean && tsc && cp -r codec package.json README.md LICENSE *.d.ts .npmignore dist",
+    "prepublishOnly": "[[ \"$PWD\" != 'dist' ]] && echo 'Please run npm publish from the dist directory' && exit 1"
   },
   "dependencies": {
     "wasm-feature-detect": "^1.5.1"
