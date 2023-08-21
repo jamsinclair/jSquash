@@ -12,7 +12,6 @@
     "baseUrl": "./",
     "rootDir": "./",
     "outDir": "dist",
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": false
+    "allowSyntheticDefaultImports": true
   }
 }
