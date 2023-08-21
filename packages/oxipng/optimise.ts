@@ -58,6 +58,6 @@ export default async function optimise(
   init();
   const _options = { ...defaultOptions, ...options };
   const optimise = await wasmReady;
-  return optimise(new Uint8Array(data), _options.level, _options.interlace)
+  return optimise(new Uint8Array(data), _options.level, _options.interlace, !!_options.optimiseAlpha)
     .buffer;
 }

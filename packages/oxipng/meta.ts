@@ -10,9 +10,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- export interface OptimiseOptions {
+/**
+ * Changes from source code:
+ * - Added defaultOptions
+ * - Added `optimiseAlpha` option
+ */
+export interface OptimiseOptions {
   level: number;
   interlace: boolean;
+  optimiseAlpha?: boolean;
 }
 
 export const label = 'OXIPNG';
@@ -20,5 +26,5 @@ export const mimeType = 'image/png';
 export const extension = 'png';
 export const defaultOptions: OptimiseOptions = {
   level: 2,
-  interlace: false
+  interlace: false,
 };
