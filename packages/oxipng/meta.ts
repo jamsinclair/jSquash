@@ -18,7 +18,7 @@
 export interface OptimiseOptions {
   level: number;
   interlace: boolean;
-  optimiseAlpha?: boolean;
+  optimiseAlpha: boolean;
 }
 
 export const label = 'OXIPNG';
@@ -27,4 +27,5 @@ export const extension = 'png';
 export const defaultOptions: OptimiseOptions = {
   level: 2,
   interlace: false,
+  optimiseAlpha: false,
 };
