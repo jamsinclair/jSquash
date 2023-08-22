@@ -1,2 +1,3 @@
 node_modules
 codecs/**/*package.json
+*.d.ts.map

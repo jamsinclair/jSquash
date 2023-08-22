@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/png@next
+
+### Misc.
+
+- Removes *.d.ts.map files from the package
+
 ## @jsquash/png@2.1.4
 
 ### Fixes

@@ -12,9 +12,9 @@
  */
 
 /**
- * Notice: I (Jamie Sinclair) have modified the code to only use Multi-threading only 
- * if the browser has the `hardwareConcurrency` property. This is because it helps 
- * us support environments like Cloudflare Workers that use the V8 engine.
+ * Notice: I (Jamie Sinclair) have modified the code
+ * - Use mutli-threading only in a Worker context
+ * - Use multi-threading only if the browser has hardware concurrency > 1
  */
 import type { InitInput } from './codec/pkg/squoosh_oxipng';
 import { defaultOptions, OptimiseOptions } from './meta';
@@ -41,23 +41,29 @@ async function initST(moduleOrPath?: InitInput) {
 
 let wasmReady: ReturnType<typeof initMT | typeof initST>;
 
-export function init(moduleOrPath?: InitInput): void {
+export async function init(moduleOrPath?: InitInput): Promise<ReturnType<typeof initMT | typeof initST>> {
   if (!wasmReady) {
     const hasHardwareConcurrency = globalThis.navigator?.hardwareConcurrency > 1;
+    const isWorker = typeof self !== 'undefined' && typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
 
-    wasmReady = hasHardwareConcurrency ? threads().then((hasThreads: boolean) =>
-      hasThreads ? initMT(moduleOrPath) : initST(moduleOrPath),
-    ) : initST(moduleOrPath);
+    // We only use multi-threading if the browser has threads and we're in a Worker context
+    // This is a caveat of threading library we use (wasm-bindgen-rayon)
+    if (isWorker && hasHardwareConcurrency && await threads()) {
+      wasmReady = initMT(moduleOrPath);
+    } else {
+      wasmReady = initST(moduleOrPath);
+    }
   }
+
+  return wasmReady;
 }
 
 export default async function optimise(
   data: ArrayBuffer,
   options: Partial<OptimiseOptions> = {},
 ): Promise<ArrayBuffer> {
-  init();
   const _options = { ...defaultOptions, ...options };
-  const optimise = await wasmReady;
+  const optimise = await init();;
   return optimise(new Uint8Array(data), _options.level, _options.interlace, !!_options.optimiseAlpha)
     .buffer;
 }

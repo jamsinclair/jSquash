@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/avif@next
+
+### Misc.
+
+- Removes *.d.ts.map files from the package
+
 ## @jsquash/avif@1.1.2
 
 ### Bug Fixes
