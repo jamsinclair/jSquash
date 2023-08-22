@@ -46,14 +46,16 @@ const pngImageBuffer = await formData.get('image').arrayBuffer();
 const optimisedPngBuffer = await optimise(pngImageBuffer, { level: 3 });
 ```
 
-## Activating Multithreading
+## Activate Multithreading
 
 By default, the optimise function will use a single thread to optimise the image. If you want to speed this up you can enable multithreading with the following.
 
 1. Move your calls to `optimise` into a [WebWorker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers).
-1. Configure your web server to use the following headers (this is [a security requirement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements)):
+1. Configure your web server to use the following headers (this is [a security requirement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements))
     - `Cross-Origin-Opener-Policy: same-origin`
     - `Cross-Origin-Embedder-Policy: require-corp`
+
+This will still only take effect in browsers that support multithreading. If the browser does not support it, it will fallback to single threaded mode
 
 ## Manual WASM initialisation (not recommended)
 
