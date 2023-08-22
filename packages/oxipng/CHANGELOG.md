@@ -1,5 +1,15 @@
 # Changelog
 
+## @jsquash/oxipng@next
+
+### Breaking Changes
+
+- Upgrades several major versions to oxipng 8.0.0
+
+### Adds
+
+- Adds support for `optimiseAlpha` option to control whether alpha channels are optimised or not
+
 ## @jsquash/oxipng@1.0.2
 
 ### Fixes
