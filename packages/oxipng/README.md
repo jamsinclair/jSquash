@@ -32,7 +32,7 @@ Type: `Partial<OptimiseOptions>`
 The Oxipng optimisation options for the output image. [See default values](./meta.ts).
 - `interlace` (boolean) whether to use PNG interlacing or not. Interlacing will increase the size of an optimised image.
 - `level` (number) is the optimisation level between 1 to 6. The higher the level, the higher the compression. Any level above 4 is not recommended.
-
+- `optimiseAlpha` (boolean) whether to allow transparent pixels to be altered to improve compression.
 
 #### Example
 ```js
