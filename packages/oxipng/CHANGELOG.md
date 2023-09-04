@@ -1,6 +1,6 @@
 # Changelog
 
-## @jsquash/oxipng@next
+## @jsquash/oxipng@2.0.0
 
 ### Breaking Changes
 
