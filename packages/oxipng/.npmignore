@@ -1,4 +1,11 @@
 node_modules
+package-lock.json
 codec/**/*package.json
 !codec/pkg-parallel/package.json
 *.d.ts.map
+codec/src
+codec/rust-toolchain
+codec/build.sh
+Cargo.lock
+Cargo.toml
+tsconfig.tsbuildinfo

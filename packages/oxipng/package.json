@@ -1,6 +1,6 @@
 {
   "name": "@jsquash/oxipng",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "main": "index.js",
   "description": "Wasm png optimiser supporting the browser. Repackaged from Squoosh App.",
   "repository": "jamsinclair/jSquash/packages/oxipng",
