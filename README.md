@@ -28,6 +28,26 @@ jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser suppor
 
 ⚠️ All packages are ESM modules. You may need to manually transpile the packages if your build environment still relies on Commonjs formats.
 
+## Usage in the Browser
+
+You can use the packages directly from the Unpkg CDN and can be the easiest way to get started.
+
+```js
+import { decode } from "https://unpkg.com/@jsquash/jpeg?module";
+import { encode } from "https://unpkg.com/@jsquash/webp?module";
+
+const imageResponse = await fetch("https://picsum.photos/200/300.jpg");
+const imageData = await decode(await imageResponse.arrayBuffer());
+const webpImageBuffer = await encode(imageData);
+```
+
+To target a specific version, you can use the `@version` syntax.
+```js
+import { encode } from "https://unpkg.com/@jsquash/webp@1.2.0?module";
+```
+
+Checkout the [with CDN](/examples/with-cdn) example for a working demo.
+
 ## Usage in Cloudflare Workers
 
 Using jSquash modules with Cloudflare Workers requires some additional steps so that the WASM binaries get included.
