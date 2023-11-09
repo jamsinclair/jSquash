@@ -4,7 +4,7 @@
 
 Squoosh already provides a [Node.js library](https://github.com/GoogleChromeLabs/squoosh/tree/dev/libsquoosh).
 
-The aim of this library is to provide an easy experience to encode, decode and modify images with the tools you know and love from Squoosh in the **Browser** and **V8 runtimes** 🖥️.
+The aim of this library is to provide an easy experience to encode, decode and modify images with the tools you know and love from Squoosh in the **Browser** and **Web Worker** environments.
 
 jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser support focus of these packages.
 
@@ -13,6 +13,7 @@ jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser suppor
 - The codecs and tools are built for both Web and Web Worker environments
 - No dynamic code execution, the packages can be run in strict environments that do not allow code evaluation. Like Cloudflare Workers.
 - Does not rely on TextEncoder/TextDecoder API (could reduce performance) but allows it to be run in simpler V8 runtimes that only support UTF-8 (Cloudflare Workers, Vercel Edge Functions etc.)
+- No support for Node.js, Deno or Bun
 
 ## Packages
 
