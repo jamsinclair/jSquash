@@ -111,3 +111,6 @@ dist
 
 # lockfile
 package-lock.json
+
+# examples
+example.webp
