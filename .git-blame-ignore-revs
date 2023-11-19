@@ -1,0 +1,3 @@
+# .git-blame-ignore-revs
+# Ran prettier across all files in packages/
+7d8977b3a45b17bffdf8b2d46e3597391ba3bfe3
