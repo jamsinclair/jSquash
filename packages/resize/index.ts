@@ -1,26 +1,28 @@
 import type { WorkerResizeOptions } from './meta';
 import type { InitInput as InitResizeInput } from './lib/resize/squoosh_resize';
-import type { InitInput as InitHqxInput} from './lib/hqx/squooshhqx';
+import type { InitInput as InitHqxInput } from './lib/hqx/squooshhqx';
 import { getContainOffsets } from './util';
-import initResizeWasm, { resize as wasmResize } from './lib/resize/squoosh_resize';
+import initResizeWasm, {
+  resize as wasmResize,
+} from './lib/resize/squoosh_resize';
 import initHqxWasm, { resize as wasmHqx } from './lib/hqx/squooshhqx';
 import { defaultOptions } from './meta';
 
 let resizeWasmReady: Promise<unknown>;
 let hqxWasmReady: Promise<unknown>;
 
-export function initResize (moduleOrPath?: InitResizeInput) {
-    if (!resizeWasmReady) {
-      resizeWasmReady = initResizeWasm(moduleOrPath);
-    }
-    return resizeWasmReady;
+export function initResize(moduleOrPath?: InitResizeInput) {
+  if (!resizeWasmReady) {
+    resizeWasmReady = initResizeWasm(moduleOrPath);
+  }
+  return resizeWasmReady;
 }
 
-export function initHqx (moduleOrPath?: InitHqxInput) {
-    if (!hqxWasmReady) {
-      hqxWasmReady = initHqxWasm(moduleOrPath);
-    }
-    return hqxWasmReady;
+export function initHqx(moduleOrPath?: InitHqxInput) {
+  if (!hqxWasmReady) {
+    hqxWasmReady = initHqxWasm(moduleOrPath);
+  }
+  return hqxWasmReady;
 }
 
 interface HqxResizeOptions extends WorkerResizeOptions {
@@ -102,9 +104,15 @@ async function hqx(
 
 export default async function resize(
   data: ImageData,
-  overrideOptions: Partial<WorkerResizeOptions> & { width: number, height: number },
+  overrideOptions: Partial<WorkerResizeOptions> & {
+    width: number;
+    height: number;
+  },
 ): Promise<ImageData> {
-  let options: WorkerResizeOptions = { ...defaultOptions as WorkerResizeOptions, ...overrideOptions }; 
+  let options: WorkerResizeOptions = {
+    ...(defaultOptions as WorkerResizeOptions),
+    ...overrideOptions,
+  };
   let input = data;
 
   initResize();

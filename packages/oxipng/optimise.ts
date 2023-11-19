@@ -41,14 +41,20 @@ async function initST(moduleOrPath?: InitInput) {
 
 let wasmReady: ReturnType<typeof initMT | typeof initST>;
 
-export async function init(moduleOrPath?: InitInput): Promise<ReturnType<typeof initMT | typeof initST>> {
+export async function init(
+  moduleOrPath?: InitInput,
+): Promise<ReturnType<typeof initMT | typeof initST>> {
   if (!wasmReady) {
-    const hasHardwareConcurrency = globalThis.navigator?.hardwareConcurrency > 1;
-    const isWorker = typeof self !== 'undefined' && typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
+    const hasHardwareConcurrency =
+      globalThis.navigator?.hardwareConcurrency > 1;
+    const isWorker =
+      typeof self !== 'undefined' &&
+      typeof WorkerGlobalScope !== 'undefined' &&
+      self instanceof WorkerGlobalScope;
 
     // We only use multi-threading if the browser has threads and we're in a Worker context
     // This is a caveat of threading library we use (wasm-bindgen-rayon)
-    if (isWorker && hasHardwareConcurrency && await threads()) {
+    if (isWorker && hasHardwareConcurrency && (await threads())) {
       wasmReady = initMT(moduleOrPath);
     } else {
       wasmReady = initST(moduleOrPath);
@@ -63,7 +69,11 @@ export default async function optimise(
   options: Partial<OptimiseOptions> = {},
 ): Promise<ArrayBuffer> {
   const _options = { ...defaultOptions, ...options };
-  const optimise = await init();;
-  return optimise(new Uint8Array(data), _options.level, _options.interlace, _options.optimiseAlpha)
-    .buffer;
+  const optimise = await init();
+  return optimise(
+    new Uint8Array(data),
+    _options.level,
+    _options.interlace,
+    _options.optimiseAlpha,
+  ).buffer;
 }

@@ -28,7 +28,7 @@ let emscriptenModule: Promise<AVIFModule>;
 const isRunningInCloudflareWorker = () => (caches as any).default !== undefined;
 
 export async function init(module?: WebAssembly.Module) {
-  if (!isRunningInCloudflareWorker() && await threads()) {
+  if (!isRunningInCloudflareWorker() && (await threads())) {
     const avifEncoder = await import('./codec/enc/avif_enc_mt');
     emscriptenModule = initEmscriptenModule(avifEncoder.default, module);
     return emscriptenModule;
@@ -45,7 +45,7 @@ export default async function encode(
   if (!emscriptenModule) emscriptenModule = init();
 
   const module = await emscriptenModule;
-  const _options = { ...defaultOptions, ...options }
+  const _options = { ...defaultOptions, ...options };
   const output = module.encode(data.data, data.width, data.height, _options);
 
   if (!output) {

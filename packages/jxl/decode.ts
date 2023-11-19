@@ -21,8 +21,15 @@ import { initEmscriptenModule } from './utils';
 
 let emscriptenModule: Promise<JXLModule>;
 
-export async function init(module?: WebAssembly.Module, moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>): Promise<JXLModule> {
-  emscriptenModule = initEmscriptenModule(jxlDecoder, module, moduleOptionOverrides);
+export async function init(
+  module?: WebAssembly.Module,
+  moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
+): Promise<JXLModule> {
+  emscriptenModule = initEmscriptenModule(
+    jxlDecoder,
+    module,
+    moduleOptionOverrides,
+  );
   return emscriptenModule;
 }
 
