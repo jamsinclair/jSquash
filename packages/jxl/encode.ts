@@ -16,12 +16,12 @@
  * Updated to support a partial subset of JPEG XL encoding options to be provided.
  * The options are defaulted to defaults from the meta.ts file.
  */
-import type { EncodeOptions } from './meta';
-import type { JXLModule } from './codec/enc/jxl_enc';
+import type { EncodeOptions } from './meta.js';
+import type { JXLModule } from './codec/enc/jxl_enc.js';
 
-import { defaultOptions } from './meta';
+import { defaultOptions } from './meta.js';
 import { simd, threads } from 'wasm-feature-detect';
-import { initEmscriptenModule } from './utils';
+import { initEmscriptenModule } from './utils.js';
 
 let emscriptenModule: Promise<JXLModule>;
 
@@ -33,7 +33,7 @@ async function init(
 ) {
   if (!isRunningInCloudflareWorker() && (await threads())) {
     if (await simd()) {
-      const jxlEncoder = await import('./codec/enc/jxl_enc_mt_simd');
+      const jxlEncoder = await import('./codec/enc/jxl_enc_mt_simd.js');
       emscriptenModule = initEmscriptenModule(
         jxlEncoder.default,
         module,
@@ -41,7 +41,7 @@ async function init(
       );
       return emscriptenModule;
     }
-    const jxlEncoder = await import('./codec/enc/jxl_enc_mt');
+    const jxlEncoder = await import('./codec/enc/jxl_enc_mt.js');
     emscriptenModule = initEmscriptenModule(
       jxlEncoder.default,
       module,
@@ -49,7 +49,7 @@ async function init(
     );
     return emscriptenModule;
   }
-  const jxlEncoder = await import('./codec/enc/jxl_enc');
+  const jxlEncoder = await import('./codec/enc/jxl_enc.js');
   emscriptenModule = initEmscriptenModule(
     jxlEncoder.default,
     module,

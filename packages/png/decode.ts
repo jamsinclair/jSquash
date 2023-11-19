@@ -16,8 +16,11 @@
  * and modified it to decode PNG images.
  */
 
-import type { InitInput, InitOutput as PngModule } from './codec/squoosh_png';
-import initPngModule, { decode as pngDecode } from './codec/squoosh_png';
+import type {
+  InitInput,
+  InitOutput as PngModule,
+} from './codec/squoosh_png.js';
+import initPngModule, { decode as pngDecode } from './codec/squoosh_png.js';
 
 let pngModule: Promise<PngModule>;
 

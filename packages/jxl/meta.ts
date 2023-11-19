@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { EncodeOptions } from './codec/enc/jxl_enc';
+import type { EncodeOptions } from './codec/enc/jxl_enc.js';
 
 export { EncodeOptions };
 

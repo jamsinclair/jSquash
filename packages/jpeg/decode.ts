@@ -16,10 +16,10 @@
  * and modified it to decode JPEG images.
  */
 
-import type { MozJPEGModule } from './codec/dec/mozjpeg_dec';
-import { initEmscriptenModule } from './utils';
+import type { MozJPEGModule } from './codec/dec/mozjpeg_dec.js';
+import { initEmscriptenModule } from './utils.js';
 
-import mozjpeg_dec from './codec/dec/mozjpeg_dec';
+import mozjpeg_dec from './codec/dec/mozjpeg_dec.js';
 
 let emscriptenModule: Promise<MozJPEGModule>;
 

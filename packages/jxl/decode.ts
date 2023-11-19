@@ -16,8 +16,8 @@
  * and modified it to decode JPEG XL images.
  */
 
-import jxlDecoder, { JXLModule } from './codec/dec/jxl_dec';
-import { initEmscriptenModule } from './utils';
+import jxlDecoder, { JXLModule } from './codec/dec/jxl_dec.js';
+import { initEmscriptenModule } from './utils.js';
 
 let emscriptenModule: Promise<JXLModule>;
 

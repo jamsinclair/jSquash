@@ -14,5 +14,6 @@
   },
   "module": "squoosh_png.js",
   "types": "squoosh_png.d.ts",
-  "sideEffects": false
+  "sideEffects": false,
+  "type": "module"
 }
