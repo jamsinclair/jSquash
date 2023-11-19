@@ -1,0 +1,8 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "import"],
+  "root": true,
+  "rules": {
+    "import/extensions": ["error", "always"]
+  }
+}
