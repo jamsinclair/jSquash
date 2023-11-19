@@ -7,10 +7,13 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "lint": "prettier -l \"packages/**/*.{js,ts}\"",
+    "format": "prettier -lw \"packages/**/*.{js,ts}\""
   },
   "license": "Apache-2.0",
   "devDependencies": {
+    "prettier": "^3.1.0",
     "turbo": "^1.10.2"
   }
 }
