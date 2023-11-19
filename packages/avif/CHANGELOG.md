@@ -1,6 +1,10 @@
 # Changelog
 
-## @jsquash/avif@next
+## @jsquash/avif@1.2.0
+
+### Adds
+
+- Adds Node.js ESM support
 
 ### Misc.
 

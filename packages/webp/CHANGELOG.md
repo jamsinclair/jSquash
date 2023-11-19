@@ -1,6 +1,10 @@
 # Changelog
 
-## @jsquash/webp@next
+## @jsquash/webp@1.3.0
+
+### Adds
+
+- Adds Node.js ESM support
 
 ### Misc.
 

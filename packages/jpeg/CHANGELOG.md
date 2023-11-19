@@ -1,6 +1,10 @@
 # Changelog
 
-## @jsquash/jpeg@next
+## @jsquash/jpeg@1.3.0
+
+### Adds
+
+- Adds Node.js ESM support
 
 ### Misc.
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/oxipng@2.1.0
+
+### Adds
+
+- Adds Node.js ESM support
+
 ## @jsquash/oxipng@2.0.0
 
 ### Breaking Changes

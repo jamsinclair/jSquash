@@ -1,6 +1,10 @@
 # Changelog
 
-## @jsquash/jxl@next
+## @jsquash/jxl@1.1.0
+
+### Adds
+
+- Adds Node.js ESM support
 
 ### Misc.
 

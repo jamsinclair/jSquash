@@ -1,6 +1,10 @@
 # Changelog
 
-## @jsquash/png@next
+## @jsquash/png@2.2.0
+
+### Adds
+
+- Adds Node.js ESM support
 
 ### Misc.
 
