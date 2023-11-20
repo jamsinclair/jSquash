@@ -25,8 +25,15 @@ import { initEmscriptenModule } from './utils.js';
 
 let emscriptenModule: Promise<MozJPEGModule>;
 
-export async function init(module?: WebAssembly.Module): Promise<void> {
-  emscriptenModule = initEmscriptenModule(mozjpeg_enc, module);
+export async function init(
+  module?: WebAssembly.Module,
+  moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
+): Promise<void> {
+  emscriptenModule = initEmscriptenModule(
+    mozjpeg_enc,
+    module,
+    moduleOptionOverrides,
+  );
 }
 
 export default async function encode(

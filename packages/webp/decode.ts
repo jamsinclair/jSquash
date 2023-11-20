@@ -22,8 +22,15 @@ import { initEmscriptenModule } from './utils.js';
 
 let emscriptenModule: Promise<WebPModule>;
 
-export async function init(module?: WebAssembly.Module): Promise<void> {
-  emscriptenModule = initEmscriptenModule(webp_dec, module);
+export async function init(
+  module?: WebAssembly.Module,
+  moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
+): Promise<void> {
+  emscriptenModule = initEmscriptenModule(
+    webp_dec,
+    module,
+    moduleOptionOverrides,
+  );
 }
 
 export default async function decode(buffer: ArrayBuffer): Promise<ImageData> {

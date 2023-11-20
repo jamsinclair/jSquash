@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/avif@1.3.0
+
+### Adds
+
+- Adds ability to customise Emscripten module options, e.g. define your own `locateFile` method.
+
 ## @jsquash/avif@1.2.0
 
 ### Adds

@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/jpeg@1.4.0
+
+### Adds
+
+- Adds ability to customise Emscripten module options, e.g. define your own `locateFile` method.
+
 ## @jsquash/jpeg@1.3.0
 
 ### Adds
