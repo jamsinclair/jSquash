@@ -1,13 +1,11 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "baseBranch": "origin/main",
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["./dist"]
     },
     "build:codec": {
-      "dependsOn": ["^build"],
       "outputs": ["./codec"]
     }
   }
