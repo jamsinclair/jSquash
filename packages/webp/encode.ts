@@ -26,14 +26,25 @@ import { simd } from 'wasm-feature-detect';
 
 let emscriptenModule: Promise<WebPModule>;
 
-export async function init(module?: WebAssembly.Module): Promise<WebPModule> {
+export async function init(
+  module?: WebAssembly.Module,
+  moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
+): Promise<WebPModule> {
   if (await simd()) {
     const webpEncoder = await import('./codec/enc/webp_enc_simd.js');
-    emscriptenModule = initEmscriptenModule(webpEncoder.default, module);
+    emscriptenModule = initEmscriptenModule(
+      webpEncoder.default,
+      module,
+      moduleOptionOverrides,
+    );
     return emscriptenModule;
   }
   const webpEncoder = await import('./codec/enc/webp_enc.js');
-  emscriptenModule = initEmscriptenModule(webpEncoder.default, module);
+  emscriptenModule = initEmscriptenModule(
+    webpEncoder.default,
+    module,
+    moduleOptionOverrides,
+  );
   return emscriptenModule;
 }
 

@@ -18,6 +18,7 @@
 export function initEmscriptenModule<T extends EmscriptenWasm.Module>(
   moduleFactory: EmscriptenWasm.ModuleFactory<T>,
   wasmModule?: WebAssembly.Module,
+  moduleOptionOverrides: Partial<EmscriptenWasm.ModuleOpts> = {},
 ): Promise<T> {
   let instantiateWasm;
 
@@ -36,5 +37,6 @@ export function initEmscriptenModule<T extends EmscriptenWasm.Module>(
     // Just to be safe, don't automatically invoke any wasm functions
     noInitialRun: true,
     instantiateWasm,
+    ...moduleOptionOverrides,
   });
 }

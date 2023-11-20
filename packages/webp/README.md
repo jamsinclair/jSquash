@@ -82,3 +82,19 @@ import decode, { init as initWebpDecode } from '@jsquash/webp/decode';
 initWebpDecode(WASM_MODULE); // The `WASM_MODULE` variable will need to be sourced by yourself and passed as an ArrayBuffer.
 const image = await fetch('./image.webp').then(res => res.arrayBuffer()).then(decode);
 ```
+
+You can also pass custom options to the `init` function to customise the behaviour of the module. See the [Emscripten documentation](https://emscripten.org/docs/api_reference/module.html#Module) for more information.
+
+```js
+import decode, { init as initWebpDecode } from '@jsquash/webp/decode';
+
+initWebpDecode(null, {
+  // Customise the path to load the wasm file
+  locateFile: (path, prefix) => `https://example.com/${prefix}/${path}`,
+});
+const image = await fetch('./image.webp').then(res => res.arrayBuffer()).then(decode);
+```
+
+## Known Issues
+
+See [jSquash Project README](https://github.com/jamsinclair/jSquash#known-issues)

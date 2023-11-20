@@ -32,18 +32,29 @@ const isRunningInNode = () =>
 const isRunningInCloudflareWorker = () =>
   (globalThis.caches as any)?.default !== undefined;
 
-export async function init(module?: WebAssembly.Module) {
+export async function init(
+  module?: WebAssembly.Module,
+  moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
+) {
   if (
     !isRunningInNode() &&
     !isRunningInCloudflareWorker() &&
     (await threads())
   ) {
     const avifEncoder = await import('./codec/enc/avif_enc_mt.js');
-    emscriptenModule = initEmscriptenModule(avifEncoder.default, module);
+    emscriptenModule = initEmscriptenModule(
+      avifEncoder.default,
+      module,
+      moduleOptionOverrides,
+    );
     return emscriptenModule;
   }
   const avifEncoder = await import('./codec/enc/avif_enc.js');
-  emscriptenModule = initEmscriptenModule(avifEncoder.default, module);
+  emscriptenModule = initEmscriptenModule(
+    avifEncoder.default,
+    module,
+    moduleOptionOverrides,
+  );
   return emscriptenModule;
 }
 

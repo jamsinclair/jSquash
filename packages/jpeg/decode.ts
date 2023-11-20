@@ -23,8 +23,15 @@ import mozjpeg_dec from './codec/dec/mozjpeg_dec.js';
 
 let emscriptenModule: Promise<MozJPEGModule>;
 
-export async function init(module?: WebAssembly.Module): Promise<void> {
-  emscriptenModule = initEmscriptenModule(mozjpeg_dec, module);
+export async function init(
+  module?: WebAssembly.Module,
+  moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
+): Promise<void> {
+  emscriptenModule = initEmscriptenModule(
+    mozjpeg_dec,
+    module,
+    moduleOptionOverrides,
+  );
 }
 
 export default async function decode(buffer: ArrayBuffer): Promise<ImageData> {
