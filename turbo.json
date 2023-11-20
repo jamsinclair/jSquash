@@ -5,6 +5,10 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["./dist"]
+    },
+    "build:codec": {
+      "dependsOn": ["^build"],
+      "outputs": ["./codec"]
     }
   }
 }
