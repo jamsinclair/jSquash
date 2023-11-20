@@ -1,6 +1,8 @@
-const isRunningInCloudflareWorker = globalThis.caches && globalThis.caches.default !== undefined;
+const isServiceWorker = globalThis.ServiceWorkerGlobalScope !== undefined;
+const isRunningInCloudFlareWorkers = isServiceWorker && typeof self !== 'undefined' && globalThis.caches && globalThis.caches.default !== undefined;
+const isRunningInNode = typeof process === 'object' && process.release && process.release.name === 'node';
 
-if (isRunningInCloudflareWorker) {
+if (isRunningInCloudFlareWorkers || isRunningInNode) {
   if (!globalThis.ImageData) {
     // Simple Polyfill for ImageData Object
     globalThis.ImageData = class ImageData {
@@ -16,7 +18,7 @@ if (isRunningInCloudflareWorker) {
     import.meta.url = 'https://localhost';
   }
 
-  if (self.location === undefined) {
+  if (typeof self !== 'undefined' && self.location === undefined) {
     self.location = { href: '' };
   }
 }

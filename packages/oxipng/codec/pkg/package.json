@@ -10,5 +10,6 @@
     "squoosh_oxipng.d.ts"
   ],
   "module": "squoosh_oxipng.js",
-  "types": "squoosh_oxipng.d.ts"
+  "types": "squoosh_oxipng.d.ts",
+  "type": "module"
 }

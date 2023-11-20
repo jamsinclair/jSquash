@@ -54,7 +54,7 @@ export async function init(
 
     // We only use multi-threading if the browser has threads and we're in a Worker context
     // This is a caveat of threading library we use (wasm-bindgen-rayon)
-    if (isWorker && hasHardwareConcurrency && (await threads())) {
+    if (isWorker && hasHardwareConcurrency && await threads()) {
       wasmReady = initMT(moduleOrPath);
     } else {
       wasmReady = initST(moduleOrPath);
