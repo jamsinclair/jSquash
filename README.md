@@ -2,18 +2,17 @@
 
 > Collection of WebAssembly image codecs that support the browser and are derived from the [Squoosh App](https://github.com/GoogleChromeLabs/squoosh)
 
-Squoosh already provides a [Node.js library](https://github.com/GoogleChromeLabs/squoosh/tree/dev/libsquoosh).
-
 The aim of this library is to provide an easy experience to encode, decode and modify images with the tools you know and love from Squoosh in the **Browser** and **Web Worker** environments.
 
 jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser support focus of these packages.
+
+⚠️ There is limited support for Node.js environments. The experimental Node.js support is provided for convenience and is not the primary focus of this project. For much better Node based alternatives please check out the [Squoosh Node.js library](https://github.com/GoogleChromeLabs/squoosh/tree/918c596cba36a46ff3d7aa8ffd69580bd22528e2/libsquoosh) and [Sharp](https://github.com/lovell/sharp).
 
 ## Differences with Squoosh
 
 - The codecs and tools are built for both Web and Web Worker environments
 - No dynamic code execution, the packages can be run in strict environments that do not allow code evaluation. Like Cloudflare Workers.
 - Does not rely on TextEncoder/TextDecoder API (could reduce performance) but allows it to be run in simpler V8 runtimes that only support UTF-8 (Cloudflare Workers, Vercel Edge Functions etc.)
-- No support for Node.js and Bun
 
 ## Packages
 
@@ -47,6 +46,13 @@ import { encode } from "https://unpkg.com/@jsquash/webp@1.2.0?module";
 ```
 
 Checkout the [with CDN](/examples/with-cdn) example for a working demo.
+
+## Usage in Node.js
+
+Using jSquash modules with Node.js requires some additional steps so that the WASM binaries can be included.
+The support is limited and the WASM modules are not optimized for speed with Node.js.
+
+Check out the [with Node.js](/examples/with-nodejs) example for a working demo.
 
 ## Usage in Cloudflare Workers
 
