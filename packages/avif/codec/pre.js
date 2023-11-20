@@ -1,5 +1,5 @@
 
-const isRunningInCloudflareWorker = caches.default !== undefined;
+const isRunningInCloudflareWorker = globalThis.caches && globalThis.caches.default !== undefined;
 
 if (isRunningInCloudflareWorker) {
   if (!globalThis.ImageData) {

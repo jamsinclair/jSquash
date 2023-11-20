@@ -25,13 +25,14 @@ import { initEmscriptenModule } from './utils.js';
 
 let emscriptenModule: Promise<JXLModule>;
 
-const isRunningInCloudflareWorker = () => (caches as any).default !== undefined;
+const isRunningInNode = () => typeof process !== 'undefined' && process.release && process.release.name === 'node';
+const isRunningInCloudflareWorker = () => (globalThis.caches as any)?.default !== undefined;
 
-async function init(
+export async function init(
   module?: WebAssembly.Module,
   moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
 ) {
-  if (!isRunningInCloudflareWorker() && (await threads())) {
+  if (!isRunningInNode() && !isRunningInCloudflareWorker() && (await threads())) {
     if (await simd()) {
       const jxlEncoder = await import('./codec/enc/jxl_enc_mt_simd.js');
       emscriptenModule = initEmscriptenModule(

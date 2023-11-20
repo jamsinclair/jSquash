@@ -5,6 +5,7 @@
 ### Adds
 
 - Adds Node.js ESM support
+- Correctly exports init method from encode module
 
 ### Misc.
 

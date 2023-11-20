@@ -29,6 +29,7 @@
     "wasm-feature-detect": "^1.5.1"
   },
   "devDependencies": {
+    "@types/node": "^20.9.2",
     "typescript": "^4.4.4"
   },
   "type": "module",

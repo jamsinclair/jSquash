@@ -25,10 +25,11 @@ import { threads } from 'wasm-feature-detect';
 
 let emscriptenModule: Promise<AVIFModule>;
 
-const isRunningInCloudflareWorker = () => (caches as any).default !== undefined;
+const isRunningInNode = () => typeof process !== 'undefined' && process.release && process.release.name === 'node';
+const isRunningInCloudflareWorker = () => (globalThis.caches as any)?.default !== undefined;
 
 export async function init(module?: WebAssembly.Module) {
-  if (!isRunningInCloudflareWorker() && (await threads())) {
+  if (!isRunningInNode() && !isRunningInCloudflareWorker() && await threads()) {
     const avifEncoder = await import('./codec/enc/avif_enc_mt.js');
     emscriptenModule = initEmscriptenModule(avifEncoder.default, module);
     return emscriptenModule;
