@@ -16,30 +16,54 @@
  * Updated to support a partial subset of JPEG XL encoding options to be provided.
  * The options are defaulted to defaults from the meta.ts file.
  */
-import type { EncodeOptions } from './meta';
-import type { JXLModule } from './codec/enc/jxl_enc';
+import type { EncodeOptions } from './meta.js';
+import type { JXLModule } from './codec/enc/jxl_enc.js';
 
-import { defaultOptions } from './meta';
+import { defaultOptions } from './meta.js';
 import { simd, threads } from 'wasm-feature-detect';
-import { initEmscriptenModule } from './utils';
+import { initEmscriptenModule } from './utils.js';
 
 let emscriptenModule: Promise<JXLModule>;
 
-const isRunningInCloudflareWorker = () => (caches as any).default !== undefined;
+const isRunningInNode = () =>
+  typeof process !== 'undefined' &&
+  process.release &&
+  process.release.name === 'node';
+const isRunningInCloudflareWorker = () =>
+  (globalThis.caches as any)?.default !== undefined;
 
-async function init(module?: WebAssembly.Module, moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>) {
-  if (!isRunningInCloudflareWorker() && await threads()) {
+export async function init(
+  module?: WebAssembly.Module,
+  moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
+) {
+  if (
+    !isRunningInNode() &&
+    !isRunningInCloudflareWorker() &&
+    (await threads())
+  ) {
     if (await simd()) {
-      const jxlEncoder = await import('./codec/enc/jxl_enc_mt_simd');
-      emscriptenModule = initEmscriptenModule(jxlEncoder.default, module, moduleOptionOverrides);
+      const jxlEncoder = await import('./codec/enc/jxl_enc_mt_simd.js');
+      emscriptenModule = initEmscriptenModule(
+        jxlEncoder.default,
+        module,
+        moduleOptionOverrides,
+      );
       return emscriptenModule;
     }
-    const jxlEncoder = await import('./codec/enc/jxl_enc_mt');
-    emscriptenModule = initEmscriptenModule(jxlEncoder.default, module, moduleOptionOverrides);
+    const jxlEncoder = await import('./codec/enc/jxl_enc_mt.js');
+    emscriptenModule = initEmscriptenModule(
+      jxlEncoder.default,
+      module,
+      moduleOptionOverrides,
+    );
     return emscriptenModule;
   }
-  const jxlEncoder = await import('./codec/enc/jxl_enc');
-  emscriptenModule = initEmscriptenModule(jxlEncoder.default, module, moduleOptionOverrides);
+  const jxlEncoder = await import('./codec/enc/jxl_enc.js');
+  emscriptenModule = initEmscriptenModule(
+    jxlEncoder.default,
+    module,
+    moduleOptionOverrides,
+  );
   return emscriptenModule;
 }
 
@@ -50,8 +74,13 @@ export default async function encode(
   if (!emscriptenModule) emscriptenModule = init();
 
   const module = await emscriptenModule;
-  const _options = { ...defaultOptions, ...options }
-  const resultView = module.encode(data.data, data.width, data.height, _options);
+  const _options = { ...defaultOptions, ...options };
+  const resultView = module.encode(
+    data.data,
+    data.width,
+    data.height,
+    _options,
+  );
   if (!resultView) {
     throw new Error('Encoding error.');
   }

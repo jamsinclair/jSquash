@@ -16,24 +16,33 @@
  * Updated to support a partial subset of Avif encoding options to be provided.
  * The avif options are defaulted to defaults from the meta.ts file.
  */
-import type { EncodeOptions } from './meta';
-import type { AVIFModule } from './codec/enc/avif_enc';
+import type { EncodeOptions } from './meta.js';
+import type { AVIFModule } from './codec/enc/avif_enc.js';
 
-import { defaultOptions } from './meta';
-import { initEmscriptenModule } from './utils';
+import { defaultOptions } from './meta.js';
+import { initEmscriptenModule } from './utils.js';
 import { threads } from 'wasm-feature-detect';
 
 let emscriptenModule: Promise<AVIFModule>;
 
-const isRunningInCloudflareWorker = () => (caches as any).default !== undefined;
+const isRunningInNode = () =>
+  typeof process !== 'undefined' &&
+  process.release &&
+  process.release.name === 'node';
+const isRunningInCloudflareWorker = () =>
+  (globalThis.caches as any)?.default !== undefined;
 
 export async function init(module?: WebAssembly.Module) {
-  if (!isRunningInCloudflareWorker() && await threads()) {
-    const avifEncoder = await import('./codec/enc/avif_enc_mt');
+  if (
+    !isRunningInNode() &&
+    !isRunningInCloudflareWorker() &&
+    (await threads())
+  ) {
+    const avifEncoder = await import('./codec/enc/avif_enc_mt.js');
     emscriptenModule = initEmscriptenModule(avifEncoder.default, module);
     return emscriptenModule;
   }
-  const avifEncoder = await import('./codec/enc/avif_enc');
+  const avifEncoder = await import('./codec/enc/avif_enc.js');
   emscriptenModule = initEmscriptenModule(avifEncoder.default, module);
   return emscriptenModule;
 }
@@ -45,7 +54,7 @@ export default async function encode(
   if (!emscriptenModule) emscriptenModule = init();
 
   const module = await emscriptenModule;
-  const _options = { ...defaultOptions, ...options }
+  const _options = { ...defaultOptions, ...options };
   const output = module.encode(data.data, data.width, data.height, _options);
 
   if (!output) {

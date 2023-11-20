@@ -173,8 +173,11 @@ async function init(input) {
 
 export default init;
 
-const isRunningInCloudFlareWorkers = globalThis.caches && globalThis.caches.default !== undefined;
-if (isRunningInCloudFlareWorkers) {
+const isServiceWorker = globalThis.ServiceWorkerGlobalScope !== undefined;
+const isRunningInCloudFlareWorkers = isServiceWorker && typeof self !== 'undefined' && globalThis.caches && globalThis.caches.default !== undefined;
+const isRunningInNode = typeof process === 'object' && process.release && process.release.name === 'node';
+
+if (isRunningInCloudFlareWorkers || isRunningInNode) {
   if (!globalThis.ImageData) {
     // Simple Polyfill for ImageData Object
     globalThis.ImageData = class ImageData {
@@ -184,5 +187,13 @@ if (isRunningInCloudFlareWorkers) {
         this.height = height;
       }
     };
+  }
+
+  if (import.meta.url === undefined) {
+    import.meta.url = 'https://localhost';
+  }
+
+  if (typeof self !== 'undefined' && self.location === undefined) {
+    self.location = { href: '' };
   }
 }

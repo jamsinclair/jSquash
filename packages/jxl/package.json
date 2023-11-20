@@ -1,6 +1,6 @@
 {
   "name": "@jsquash/jxl",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "main": "index.js",
   "description": "Wasm JPEG XL encoder and decoder supporting the browser. Repackaged from Squoosh App.",
   "repository": "jamsinclair/jSquash",
@@ -22,6 +22,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rm -rf dist",
+    "build:codec": "cd codec && npm run build",
     "build": "npm run clean && tsc && cp -r codec package.json README.md LICENSE *.d.ts .npmignore dist",
     "prepublishOnly": "[[ \"$PWD\" == *'/dist' ]] && exit 0 || (echo 'Please run npm publish from the dist directory' && exit 1)"
   },
@@ -29,6 +30,7 @@
     "wasm-feature-detect": "^1.5.1"
   },
   "devDependencies": {
+    "@types/node": "^20.9.2",
     "typescript": "^4.4.4"
   },
   "type": "module",

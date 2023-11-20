@@ -1,6 +1,13 @@
 # Changelog
 
-## @jsquash/png@next
+## @jsquash/png@2.2.0
+
+### Adds
+
+- Adds Node.js ESM support
+    - Updates relative imports to use file extensions
+    - Adds `module` field to relevant `package.json`
+    - Updates pre.js to polyfill ImageData for Node.js
 
 ### Misc.
 

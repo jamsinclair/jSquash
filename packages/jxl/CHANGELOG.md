@@ -1,6 +1,14 @@
 # Changelog
 
-## @jsquash/jxl@next
+## @jsquash/jxl@1.1.0
+
+### Adds
+
+- Adds Node.js ESM support
+    - Updates relative imports to use file extensions
+    - Adds `module` field to relevant `package.json`
+    - Updates pre.js to polyfill ImageData for Node.js
+- Correctly exports init method from encode module
 
 ### Misc.
 

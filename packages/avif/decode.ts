@@ -16,10 +16,10 @@
  * and modified it to decode JPEG images.
  */
 
-import type { AVIFModule } from './codec/dec/avif_dec';
-import { initEmscriptenModule } from './utils';
+import type { AVIFModule } from './codec/dec/avif_dec.js';
+import { initEmscriptenModule } from './utils.js';
 
-import avif_dec from './codec/dec/avif_dec';
+import avif_dec from './codec/dec/avif_dec.js';
 
 let emscriptenModule: Promise<AVIFModule>;
 

@@ -16,12 +16,12 @@
  * Updated to support a partial subset of Jpeg encoding options to be provided.
  * The jpeg options are defaulted to defaults from the meta.ts file.
  */
-import type { EncodeOptions } from './meta';
-import type { MozJPEGModule } from './codec/enc/mozjpeg_enc';
+import type { EncodeOptions } from './meta.js';
+import type { MozJPEGModule } from './codec/enc/mozjpeg_enc.js';
 
-import mozjpeg_enc from './codec/enc/mozjpeg_enc';
-import { defaultOptions } from './meta';
-import { initEmscriptenModule } from './utils';
+import mozjpeg_enc from './codec/enc/mozjpeg_enc.js';
+import { defaultOptions } from './meta.js';
+import { initEmscriptenModule } from './utils.js';
 
 let emscriptenModule: Promise<MozJPEGModule>;
 
@@ -36,8 +36,13 @@ export default async function encode(
   if (!emscriptenModule) init();
 
   const module = await emscriptenModule;
-  const _options = { ...defaultOptions, ...options }
-  const resultView = module.encode(data.data, data.width, data.height, _options);
+  const _options = { ...defaultOptions, ...options };
+  const resultView = module.encode(
+    data.data,
+    data.width,
+    data.height,
+    _options,
+  );
   // wasm can’t run on SharedArrayBuffers, so we hard-cast to ArrayBuffer.
   return resultView.buffer as ArrayBuffer;
 }

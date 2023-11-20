@@ -7,10 +7,18 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "lint": "prettier -l \"packages/**/*.{js,ts}\" test/**/*.js && eslint \"packages/**/*.{js,ts}\"",
+    "format": "prettier -lw \"packages/**/*.{js,ts}\" test/**/*.js"
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "turbo": "^1.10.2"
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
+    "eslint": "^8.54.0",
+    "eslint-plugin-import": "^2.29.0",
+    "prettier": "^3.1.0",
+    "turbo": "^1.10.2",
+    "typescript": "^5.2.2"
   }
 }

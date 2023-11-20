@@ -16,13 +16,20 @@
  * and modified it to decode JPEG XL images.
  */
 
-import jxlDecoder, { JXLModule } from './codec/dec/jxl_dec';
-import { initEmscriptenModule } from './utils';
+import jxlDecoder, { JXLModule } from './codec/dec/jxl_dec.js';
+import { initEmscriptenModule } from './utils.js';
 
 let emscriptenModule: Promise<JXLModule>;
 
-export async function init(module?: WebAssembly.Module, moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>): Promise<JXLModule> {
-  emscriptenModule = initEmscriptenModule(jxlDecoder, module, moduleOptionOverrides);
+export async function init(
+  module?: WebAssembly.Module,
+  moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
+): Promise<JXLModule> {
+  emscriptenModule = initEmscriptenModule(
+    jxlDecoder,
+    module,
+    moduleOptionOverrides,
+  );
   return emscriptenModule;
 }
 

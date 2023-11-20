@@ -11,5 +11,6 @@
   ],
   "module": "squooshhqx.js",
   "types": "squooshhqx.d.ts",
-  "sideEffects": false
+  "sideEffects": false,
+  "type": "module"
 }

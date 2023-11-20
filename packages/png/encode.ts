@@ -16,12 +16,15 @@
  * and modified it to encode PNG images and also optimise them.
  */
 
-import type { InitInput, InitOutput as PngModule } from './codec/squoosh_png';
-import initPngModule, { encode as pngEncode }  from './codec/squoosh_png';
+import type {
+  InitInput,
+  InitOutput as PngModule,
+} from './codec/squoosh_png.js';
+import initPngModule, { encode as pngEncode } from './codec/squoosh_png.js';
 
 let pngModule: Promise<PngModule>;
 
-export async function init (moduleOrPath?: InitInput): Promise<PngModule> {
+export async function init(moduleOrPath?: InitInput): Promise<PngModule> {
   if (!pngModule) {
     pngModule = initPngModule(moduleOrPath);
   }
