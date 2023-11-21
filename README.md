@@ -52,7 +52,7 @@ Checkout the [with CDN](/examples/with-cdn) example for a working demo.
 Using jSquash modules with Node.js requires some additional steps so that the WASM binaries can be included.
 The support is limited and the WASM modules are not optimized for speed with Node.js.
 
-Check out the [with Node.js](/examples/with-nodejs) example for a working demo.
+Check out the [with Node.js](/examples/with-node) example for a working demo.
 
 ## Usage in Cloudflare Workers
 
