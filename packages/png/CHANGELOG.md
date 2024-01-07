@@ -4,13 +4,11 @@
 
 ### Breaking Changes
 
-- `encode` method now returns an arraybuffer – which matches the return type of other jSquash `encode` methods
+- `encode` method now returns an `ArrayBuffer` which matches the return type of other jSquash `encode` methods
 - Ignores checksum errors. Allows images with invalid header chunks to be decoded (Fixes [#44](https://github.com/jamsinclair/jSquash/issues/44))
 - Upgrades codec to image-png 0.17.10 (increases wasm file size by 54KB)
-
-### Misc
-
 - Codec wasm and js files moved to /codec/pkg dir (due to addition of Rust source)
+    - If you are accessing the wasm file by path you'll need to update your paths to reference `node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm`. It's now nested in the `pkg` dir.
 
 ## @jsquash/png@2.2.0
 
