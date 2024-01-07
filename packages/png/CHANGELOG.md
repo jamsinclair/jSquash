@@ -2,8 +2,9 @@
 
 ## @jsquash/png@3.0.0
 
-### Breaking
+### Breaking Changes
 
+- `encode` method now returns an arraybuffer – which matches the return type of other jSquash `encode` methods
 - Ignores checksum errors. Allows images with invalid header chunks to be decoded (Fixes [#44](https://github.com/jamsinclair/jSquash/issues/44))
 - Upgrades codec to image-png 0.17.10 (increases wasm file size by 54KB)
 

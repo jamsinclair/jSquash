@@ -38,6 +38,5 @@ test('can successfully encode image', async (t) => {
     height: 50,
     width: 50,
   });
-  // @TODO Next breaking change, make PNG encode return an ArrayBuffer to match other packages
-  t.assert(!(data instanceof ArrayBuffer));
+  t.assert(data instanceof ArrayBuffer);
 });
