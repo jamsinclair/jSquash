@@ -16,6 +16,18 @@ test('can successfully decode image', async (t) => {
   t.is(data.data.length, 4 * 50 * 50);
 });
 
+test('can successfully decode png with invalid ICC profile checksum', async (t) => {
+  const [testImage, decodeWasmModule] = await Promise.all([
+    getFixturesImage('bad-icc-profile.png'),
+    importWasmModule('node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm'),
+  ]);
+  initDecode(decodeWasmModule);
+  const data = await decode(testImage);
+  t.is(data.width, 16);
+  t.is(data.height, 16);
+  t.is(data.data.length, 4 * 16 * 16);
+});
+
 test('can successfully encode image', async (t) => {
   const encodeWasmModule = await importWasmModule(
     'node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm',
