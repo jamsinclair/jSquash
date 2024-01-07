@@ -1,19 +1,7 @@
 {
   "name": "squoosh-png",
-  "collaborators": [
-    "Surma <surma@surma.dev>"
-  ],
-  "version": "0.1.0",
-  "files": [
-    "squoosh_png_bg.wasm",
-    "squoosh_png.js",
-    "squoosh_png.d.ts"
-  ],
   "scripts": {
-    "patch-pre-script": "cat pre.js >> squoosh_png.js"
-  },
-  "module": "squoosh_png.js",
-  "types": "squoosh_png.d.ts",
-  "sideEffects": false,
-  "type": "module"
+    "build": "../../../tools/build-rust.sh && npm run patch-pre-script",
+    "patch-pre-script": "cat pre.js >> pkg/squoosh_png.js"
+  }
 }

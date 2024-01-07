@@ -5,7 +5,7 @@ import encodeWebp, { init as initWebpWasm } from '@jsquash/webp/encode';
 // @Note, We need to manually import the WASM binaries below so that we can use them in the worker
 // CF Workers do not support dynamic imports
 import JPEG_DEC_WASM from "../node_modules/@jsquash/jpeg/codec/dec/mozjpeg_dec.wasm";
-import PNG_DEC_WASM from "../node_modules/@jsquash/png/codec/squoosh_png_bg.wasm";
+import PNG_DEC_WASM from "../node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm";
 import WEBP_ENC_WASM from "../node_modules/@jsquash/webp/codec/enc/webp_enc_simd.wasm";
 
 const MONTH_IN_SECONDS = 30 * 24 * 60 * 60;

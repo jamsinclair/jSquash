@@ -19,8 +19,8 @@
 import type {
   InitInput,
   InitOutput as PngModule,
-} from './codec/squoosh_png.js';
-import initPngModule, { decode as pngDecode } from './codec/squoosh_png.js';
+} from './codec/pkg/squoosh_png.js';
+import initPngModule, { decode as pngDecode } from './codec/pkg/squoosh_png.js';
 
 let pngModule: Promise<PngModule>;
 

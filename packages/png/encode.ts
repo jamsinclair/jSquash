@@ -19,8 +19,8 @@
 import type {
   InitInput,
   InitOutput as PngModule,
-} from './codec/squoosh_png.js';
-import initPngModule, { encode as pngEncode } from './codec/squoosh_png.js';
+} from './codec/pkg/squoosh_png.js';
+import initPngModule, { encode as pngEncode } from './codec/pkg/squoosh_png.js';
 
 let pngModule: Promise<PngModule>;
 
@@ -35,8 +35,8 @@ export async function init(moduleOrPath?: InitInput): Promise<PngModule> {
 export default async function encode(data: ImageData): Promise<ArrayBuffer> {
   await init();
   // @ts-ignore - pngEncode expects a Uint8Array, check if mistake or whether we need to convert from Uint8ClampedArray
-  const buffer = await pngEncode(data.data, data.width, data.height);
-  if (!buffer) throw new Error('Encoding error.');
+  const output = await pngEncode(data.data, data.width, data.height);
+  if (!output) throw new Error('Encoding error.');
 
-  return buffer;
+  return output.buffer;
 }
