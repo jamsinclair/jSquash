@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@jsquash/jpeg": "^1.3.0",
-    "@jsquash/png": "^2.2.0"
+    "@jsquash/png": "^3.0.0"
   },
   "keywords": [],
   "author": "",

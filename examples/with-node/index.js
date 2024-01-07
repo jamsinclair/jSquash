@@ -8,7 +8,7 @@ const jpegWasmModule = await WebAssembly.compile(jpegWasmBuffer);
 await initJpegDecode(jpegWasmModule);
 
 // Load the Png Encode WebAssembly Module and initialize the encoder
-const pngWasmBuffer = fs.readFileSync('node_modules/@jsquash/png/codec/squoosh_png_bg.wasm');
+const pngWasmBuffer = fs.readFileSync('node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm');
 const pngWasmModule = await WebAssembly.compile(pngWasmBuffer);
 await initPngEncode(pngWasmModule);
 
