@@ -1,4 +1,8 @@
 node_modules
-codecs/**/*package.json
+codec/**/*package.json
 *.d.ts.map
 tsconfig.tsbuildinfo
+target
+src
+Cargo.lock
+Cargo.toml

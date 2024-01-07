@@ -1,9 +1,12 @@
 {
   "name": "@jsquash/png",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "main": "index.js",
   "description": "Wasm png encoder and decoder supporting the browser. Repackaged from Squoosh App.",
-  "repository": "jamsinclair/jSquash",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamsinclair/jSquash.git"
+  },
   "author": {
     "name": "Jamie Sinclair",
     "email": "jamsinclairnz+npm@gmail.com"

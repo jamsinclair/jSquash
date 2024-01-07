@@ -1,5 +1,16 @@
 # Changelog
 
+## @jsquash/png@3.0.0
+
+### Breaking
+
+- Ignores checksum errors. Allows images with invalid header chunks to be decoded (Fixes [#44](https://github.com/jamsinclair/jSquash/issues/44))
+- Upgrades codec to image-png 0.17.10 (increases wasm file size by 50KB)
+
+### Misc
+
+- Codec wasm and js files moved to /codec/pkg dir (due to addition of Rust source)
+
 ## @jsquash/png@2.2.0
 
 ### Adds
