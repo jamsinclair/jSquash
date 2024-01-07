@@ -13,5 +13,6 @@
   "types": "squoosh_png.d.ts",
   "sideEffects": [
     "./snippets/*"
-  ]
+  ],
+  "type": "module"
 }

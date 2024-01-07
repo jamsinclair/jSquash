@@ -7,7 +7,7 @@ import encode, { init as initEncode } from '@jsquash/png/encode.js';
 test('can successfully decode image', async (t) => {
   const [testImage, decodeWasmModule] = await Promise.all([
     getFixturesImage('test.png'),
-    importWasmModule('node_modules/@jsquash/png/codec/squoosh_png_bg.wasm'),
+    importWasmModule('node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm'),
   ]);
   initDecode(decodeWasmModule);
   const data = await decode(testImage);
@@ -18,7 +18,7 @@ test('can successfully decode image', async (t) => {
 
 test('can successfully encode image', async (t) => {
   const encodeWasmModule = await importWasmModule(
-    'node_modules/@jsquash/png/codec/squoosh_png_bg.wasm',
+    'node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm',
   );
   await initEncode(encodeWasmModule);
   const data = await encode({
