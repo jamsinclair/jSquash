@@ -1,0 +1,23 @@
+[package]
+name = "squoosh-png"
+version = "0.1.0"
+authors = ["Surma <surma@surma.dev>"]
+edition = "2018"
+publish = false
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-O", "--no-validation"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+png = "0.17.10"
+wasm-bindgen = "0.2.89"
+"js-sys" = "0.3.66"
+web-sys = { version = "0.3.66", features = ["ImageData"] }
+rgb = "0.8.37"
+
+[profile.release]
+lto = true
+opt-level = "s"
