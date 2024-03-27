@@ -38,12 +38,17 @@ pub fn encode(data: &[u8], width: u32, height: u32) -> Vec<u8> {
 // Convert pixels in-place within buffer containing source data but preallocated
 // for entire [num_pixels * sizeof(RGBA)].
 // This works because all the color types are <= RGBA by size.
-fn expand_pixels<Src: Copy>(buf: &mut [u8], to_rgba: impl Fn(Src) -> RGBA8)
+fn expand_pixels<Src: Copy>(buf: &mut Vec<u8>, to_rgba: impl Fn(Src) -> RGBA8, pixel_size: usize)
 where
     [u8]: AsPixels<Src> + FromSlice<u8>,
 {
     assert!(std::mem::size_of::<Src>() <= std::mem::size_of::<RGBA8>());
-    let num_pixels = buf.len() / 4;
+    let num_pixels = buf.len() / pixel_size;
+
+    // Resize the buffer to fit the expanded pixels
+    buf.resize(num_pixels * std::mem::size_of::<RGBA8>(), 0);
+    
+    // Expand the pixels in reverse order to avoid overwriting data
     for i in (0..num_pixels).rev() {
         let src_pixel = buf.as_pixels()[i];
         buf.as_rgba_mut()[i] = to_rgba(src_pixel);
@@ -67,10 +72,10 @@ pub fn decode(mut data: &[u8]) -> ImageData {
     // the rest to RGBA.
     match info.color_type {
         png::ColorType::Rgba => {}
-        png::ColorType::Rgb => expand_pixels(&mut buf, RGB8::into),
-        png::ColorType::GrayscaleAlpha => expand_pixels(&mut buf, GRAYA8::into),
+        png::ColorType::Rgb => expand_pixels(&mut buf, RGB8::into, 3),
+        png::ColorType::GrayscaleAlpha => expand_pixels(&mut buf, GRAYA8::into, 2),
         png::ColorType::Grayscale => {
-            expand_pixels(&mut buf, |gray: GRAY8| GRAYA8::from(gray).into())
+            expand_pixels(&mut buf, |gray: GRAY8| GRAYA8::from(gray).into(), 1)
         }
         png::ColorType::Indexed => {
             unreachable!("Found indexed color type, but expected it to be already expanded")
