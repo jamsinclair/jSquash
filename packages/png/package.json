@@ -23,7 +23,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "npm run clean && tsc && cp -r codec package.json README.md CHANGELOG.md .npmignore ../../LICENSE dist",
+    "build": "npm run clean && tsc && cp -r codec package.json README.md CHANGELOG.md .npmignore ../../LICENSE dist && rm dist/codec/pkg/.gitignore",
     "prepublishOnly": "[[ \"$PWD\" == *'/dist' ]] && exit 0 || (echo 'Please run npm publish from the dist directory' && exit 1)"
   },
   "devDependencies": {
