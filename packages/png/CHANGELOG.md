@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/png@3.0.1
+
+### Fixes
+
+- Fixes the decoding of PNG images using non-rgba color types.
+
 ## @jsquash/png@3.0.0
 
 ### Breaking Changes
