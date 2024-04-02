@@ -1,11 +1,11 @@
 import type { WorkerResizeOptions } from './meta.js';
-import type { InitInput as InitResizeInput } from './lib/resize/squoosh_resize.js';
-import type { InitInput as InitHqxInput } from './lib/hqx/squooshhqx.js';
+import type { InitInput as InitResizeInput } from './lib/resize/pkg/squoosh_resize.js';
+import type { InitInput as InitHqxInput } from './lib/hqx/pkg/squooshhqx.js';
 import { getContainOffsets } from './util.js';
 import initResizeWasm, {
   resize as wasmResize,
-} from './lib/resize/squoosh_resize.js';
-import initHqxWasm, { resize as wasmHqx } from './lib/hqx/squooshhqx.js';
+} from './lib/resize/pkg/squoosh_resize.js';
+import initHqxWasm, { resize as wasmHqx } from './lib/hqx/pkg/squooshhqx.js';
 import { defaultOptions } from './meta.js';
 
 let resizeWasmReady: Promise<unknown>;

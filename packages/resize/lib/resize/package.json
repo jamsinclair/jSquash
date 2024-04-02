@@ -1,16 +1,7 @@
 {
   "name": "squoosh-resize",
-  "collaborators": [
-    "Surma <surma@surma.link>"
-  ],
-  "version": "0.1.0",
-  "files": [
-    "squoosh_resize_bg.wasm",
-    "squoosh_resize.js",
-    "squoosh_resize.d.ts"
-  ],
-  "module": "squoosh_resize.js",
-  "types": "squoosh_resize.d.ts",
-  "sideEffects": false,
-  "type": "module"
+  "scripts": {
+    "build": "../../../../tools/build-rust.sh && npm run patch-pre-script",
+    "patch-pre-script": "cat pre.js >> pkg/squoosh_resize.js"
+  }
 }
