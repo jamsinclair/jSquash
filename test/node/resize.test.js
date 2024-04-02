@@ -1,5 +1,5 @@
 import test from 'ava';
-import { importWasmModule, getFixturesImage } from './utils.js';
+import { importWasmModule } from './utils.js';
 
 import resize, { initHqx, initResize } from '@jsquash/resize';
 
@@ -10,7 +10,7 @@ test('can successfully downsize an image', async (t) => {
     height: 100,
   };
   const resizeWasmModule = await importWasmModule(
-    'node_modules/@jsquash/resize/lib/resize/squoosh_resize_bg.wasm',
+    'node_modules/@jsquash/resize/lib/resize/pkg/squoosh_resize_bg.wasm',
   );
   await initResize(resizeWasmModule);
   const resizedImage = await resize(testImage, {
@@ -31,9 +31,11 @@ test('can successfully upscale an image with hqx', async (t) => {
 
   // Setup WASM modules
   const [hqxWasmModule, resizeWasmModule] = await Promise.all([
-    importWasmModule('node_modules/@jsquash/resize/lib/hqx/squooshhqx_bg.wasm'),
     importWasmModule(
-      'node_modules/@jsquash/resize/lib/resize/squoosh_resize_bg.wasm',
+      'node_modules/@jsquash/resize/lib/hqx/pkg/squooshhqx_bg.wasm',
+    ),
+    importWasmModule(
+      'node_modules/@jsquash/resize/lib/resize/pkg/squoosh_resize_bg.wasm',
     ),
   ]);
   await Promise.all([initHqx(hqxWasmModule), initResize(resizeWasmModule)]);

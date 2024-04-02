@@ -1,3 +1,9 @@
 node_modules
 *.d.ts.map
 tsconfig.tsbuildinfo
+src
+target
+*.rs
+cargo.toml
+Cargo.lock
+pkg/package.json

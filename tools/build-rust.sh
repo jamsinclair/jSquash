@@ -1,4 +1,7 @@
+#!/bin/bash
 set -e
+
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ ! -z "$RUST_IMG" ]
 then
@@ -6,5 +9,5 @@ then
   IMG_SUFFIX=-${RUST_IMG#*:}
 fi
 IMG_NAME=squoosh-rust$IMG_SUFFIX
-docker build -t $IMG_NAME --build-arg RUST_IMG - < ../rust.Dockerfile
+docker build -t $IMG_NAME --build-arg RUST_IMG - < "$SCRIPTDIR/rust.Dockerfile"
 docker run -it --rm -v $PWD:/src $IMG_NAME "$@"
