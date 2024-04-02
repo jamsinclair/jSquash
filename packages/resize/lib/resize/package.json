@@ -3,5 +3,6 @@
   "scripts": {
     "build": "../../../../tools/build-rust.sh && npm run patch-pre-script",
     "patch-pre-script": "cat pre.js >> pkg/squoosh_resize.js"
-  }
+  },
+  "type": "module"
 }
