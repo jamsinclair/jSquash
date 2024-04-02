@@ -31,7 +31,9 @@ test('can successfully upscale an image with hqx', async (t) => {
 
   // Setup WASM modules
   const [hqxWasmModule, resizeWasmModule] = await Promise.all([
-    importWasmModule('node_modules/@jsquash/resize/lib/hqx/pkg/squooshhqx_bg.wasm'),
+    importWasmModule(
+      'node_modules/@jsquash/resize/lib/hqx/pkg/squooshhqx_bg.wasm',
+    ),
     importWasmModule(
       'node_modules/@jsquash/resize/lib/resize/pkg/squoosh_resize_bg.wasm',
     ),
