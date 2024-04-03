@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export function optimise(a: number, b: number, c: number, d: number, e: number, f: number): void;
+export function optimise_raw(a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number): void;
 export function __wbg_wbg_rayon_poolbuilder_free(a: number): void;
 export function wbg_rayon_poolbuilder_numThreads(a: number): number;
 export function wbg_rayon_poolbuilder_receiver(a: number): number;

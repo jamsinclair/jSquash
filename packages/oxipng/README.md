@@ -21,10 +21,10 @@ Note: You will need to either manually include the wasm files from the codec dir
 
 ### optimise(data: ArrayBuffer, options?: OptimiseOptions): Promise<ArrayBuffer>
 
-Optimises a PNG image buffer and resolves to the optimised buffer output
+Optimises a PNG image buffer or raw image data and resolves to the optimised PNG image buffer output
 
 #### data
-Type: `ArrayBuffer`
+Type: `ArrayBuffer | ImageData`
 
 #### options
 Type: `Partial<OptimiseOptions>`

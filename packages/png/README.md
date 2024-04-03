@@ -37,6 +37,8 @@ const imageData = await decode(await formData.get('image').arrayBuffer());
 
 ### encode(data: ImageData): Promise<ArrayBuffer>
 
+> ℹ️ You may want to use the [@jsquash/oxipng](/packages/oxipng) package instead. It can both optimise and encode to PNG directly from raw image data.
+
 Encodes raw RGB image data to PNG format and resolves to an ArrayBuffer of binary data.
 
 #### data

@@ -25,18 +25,21 @@ async function initMT(moduleOrPath?: InitInput) {
     default: init,
     initThreadPool,
     optimise,
+    optimise_raw,
   } = await import('./codec/pkg-parallel/squoosh_oxipng.js');
   await init(moduleOrPath);
   await initThreadPool(globalThis.navigator.hardwareConcurrency);
-  return optimise;
+  return { optimise, optimise_raw };
 }
 
 async function initST(moduleOrPath?: InitInput) {
-  const { default: init, optimise } = await import(
-    './codec/pkg/squoosh_oxipng.js'
-  );
+  const {
+    default: init,
+    optimise,
+    optimise_raw,
+  } = await import('./codec/pkg/squoosh_oxipng.js');
   await init(moduleOrPath);
-  return optimise;
+  return { optimise, optimise_raw };
 }
 
 let wasmReady: ReturnType<typeof initMT | typeof initST>;
@@ -65,11 +68,23 @@ export async function init(
 }
 
 export default async function optimise(
-  data: ArrayBuffer,
+  data: ArrayBuffer | ImageData,
   options: Partial<OptimiseOptions> = {},
 ): Promise<ArrayBuffer> {
   const _options = { ...defaultOptions, ...options };
-  const optimise = await init();
+  const { optimise, optimise_raw } = await init();
+
+  if (data instanceof ImageData) {
+    return optimise_raw(
+      data.data,
+      data.width,
+      data.height,
+      _options.level,
+      _options.interlace,
+      _options.optimiseAlpha,
+    ).buffer;
+  }
+
   return optimise(
     new Uint8Array(data),
     _options.level,
