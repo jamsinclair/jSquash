@@ -1,7 +1,8 @@
 {
   "name": "oxipng",
   "scripts": {
-    "build": "./build.sh"
+    "build": "./build.sh && npm run patch-pre-script",
+    "patch-pre-script": "cat pre.js >> pkg/squoosh_oxipng.js && cat pre.js >> pkg-parallel/squoosh_oxipng.js"
   },
   "type": "module"
 }
