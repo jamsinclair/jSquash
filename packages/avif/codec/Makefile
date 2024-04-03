@@ -11,6 +11,8 @@ export BUILD_DIR = node_modules/build
 export LIBAOM_DIR = node_modules/libaom
 
 override CFLAGS += "-Wno-unused-macros"
+override CXXFLAGS += "-g"
+override LDFLAGS += "-g"
 
 # We must build libsharpyuv from a specific libwebp commit
 # See libavif/ext/libsharpyuv.cmd for more detail

@@ -17,6 +17,10 @@ using namespace emscripten;
 using AvifImagePtr = std::unique_ptr<avifImage, decltype(&avifImageDestroy)>;
 using AvifEncoderPtr = std::unique_ptr<avifEncoder, decltype(&avifEncoderDestroy)>;
 
+void logMessage(const std::string& message) {
+    emscripten::val::global("console").call<void>("log", message);
+}
+
 struct AvifOptions {
   // [0 - 100]
   // 0 = worst quality
@@ -144,6 +148,7 @@ val encode(std::string buffer, int width, int height, AvifOptions options) {
   avifResult encodeResult = avifEncoderWrite(encoder.get(), image.get(), &output);
   auto js_result = val::null();
   if (encodeResult == AVIF_RESULT_OK) {
+    logMessage("AVIF result is ok");
     js_result = Uint8Array.new_(typed_memory_view(output.size, output.data));
   }
 
