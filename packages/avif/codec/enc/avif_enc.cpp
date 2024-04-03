@@ -1,3 +1,4 @@
+#include <emscripten.h>
 #include <emscripten/bind.h>
 #include <emscripten/threading.h>
 #include <emscripten/val.h>
@@ -17,8 +18,10 @@ using namespace emscripten;
 using AvifImagePtr = std::unique_ptr<avifImage, decltype(&avifImageDestroy)>;
 using AvifEncoderPtr = std::unique_ptr<avifEncoder, decltype(&avifEncoderDestroy)>;
 
-void logMessage(const std::string& message) {
-    emscripten::val::global("console").call<void>("log", message);
+void logMessage(const char* message) {
+    EM_ASM_({
+        console.log(UTF8ToString($0));
+    }, message);
 }
 
 struct AvifOptions {
@@ -59,7 +62,7 @@ thread_local const val Uint8Array = val::global("Uint8Array");
 
 val encode(std::string buffer, int width, int height, AvifOptions options) {
   avifResult status;  // To check the return status for avif API's
-
+  logMessage("Starting Encoding");
   int depth = 8;
   avifPixelFormat format;
   switch (options.subsample) {

@@ -5,9 +5,9 @@ export const enum AVIFTune {
 }
 
 export interface EncodeOptions {
-  cqLevel: number;
+  quality: number;
   denoiseLevel: number;
-  cqAlphaLevel: number;
+  qualityAlpha: number;
   tileRowsLog2: number;
   tileColsLog2: number;
   speed: number;
@@ -15,6 +15,7 @@ export interface EncodeOptions {
   chromaDeltaQ: boolean;
   sharpness: number;
   tune: AVIFTune;
+  enableSharpYUV: boolean;
 }
 
 export interface AVIFModule extends EmscriptenWasm.Module {

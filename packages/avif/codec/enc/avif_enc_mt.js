@@ -735,7 +735,71 @@ function logExceptionOnExit(e) {
  err("exiting due to exception: " + toLog);
 }
 
-if (ENVIRONMENT_IS_SHELL) {
+var nodeFS;
+
+var nodePath;
+
+if (ENVIRONMENT_IS_NODE) {
+ if (!(typeof process === "object" && typeof require === "function")) throw new Error("not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)");
+ if (ENVIRONMENT_IS_WORKER) {
+  scriptDirectory = require("path").dirname(scriptDirectory) + "/";
+ } else {
+  scriptDirectory = __dirname + "/";
+ }
+ read_ = function shell_read(filename, binary) {
+  if (!nodeFS) nodeFS = require("fs");
+  if (!nodePath) nodePath = require("path");
+  filename = nodePath["normalize"](filename);
+  return nodeFS["readFileSync"](filename, binary ? null : "utf8");
+ };
+ readBinary = function readBinary(filename) {
+  var ret = read_(filename, true);
+  if (!ret.buffer) {
+   ret = new Uint8Array(ret);
+  }
+  assert(ret.buffer);
+  return ret;
+ };
+ readAsync = function readAsync(filename, onload, onerror) {
+  if (!nodeFS) nodeFS = require("fs");
+  if (!nodePath) nodePath = require("path");
+  filename = nodePath["normalize"](filename);
+  nodeFS["readFile"](filename, function(err, data) {
+   if (err) onerror(err); else onload(data.buffer);
+  });
+ };
+ if (process["argv"].length > 1) {
+  thisProgram = process["argv"][1].replace(/\\/g, "/");
+ }
+ arguments_ = process["argv"].slice(2);
+ process["on"]("uncaughtException", function(ex) {
+  if (!(ex instanceof ExitStatus)) {
+   throw ex;
+  }
+ });
+ process["on"]("unhandledRejection", function(reason) {
+  throw reason;
+ });
+ quit_ = function(status, toThrow) {
+  if (keepRuntimeAlive()) {
+   process["exitCode"] = status;
+   throw toThrow;
+  }
+  logExceptionOnExit(toThrow);
+  process["exit"](status);
+ };
+ Module["inspect"] = function() {
+  return "[Emscripten Module object]";
+ };
+ var nodeWorkerThreads;
+ try {
+  nodeWorkerThreads = require("worker_threads");
+ } catch (e) {
+  console.error('The "worker_threads" module is not supported in this node.js build - perhaps a newer version is needed?');
+  throw e;
+ }
+ global.Worker = nodeWorkerThreads.Worker;
+} else if (ENVIRONMENT_IS_SHELL) {
  if (typeof process === "object" && typeof require === "function" || typeof window === "object" || typeof importScripts === "function") throw new Error("not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)");
  if (typeof read != "undefined") {
   read_ = function shell_read(f) {
@@ -787,7 +851,30 @@ if (ENVIRONMENT_IS_SHELL) {
   scriptDirectory = "";
  }
  if (!(typeof window === "object" || typeof importScripts === "function")) throw new Error("not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)");
- {
+ if (ENVIRONMENT_IS_NODE) {
+  read_ = function shell_read(filename, binary) {
+   if (!nodeFS) nodeFS = require("fs");
+   if (!nodePath) nodePath = require("path");
+   filename = nodePath["normalize"](filename);
+   return nodeFS["readFileSync"](filename, binary ? null : "utf8");
+  };
+  readBinary = function readBinary(filename) {
+   var ret = read_(filename, true);
+   if (!ret.buffer) {
+    ret = new Uint8Array(ret);
+   }
+   assert(ret.buffer);
+   return ret;
+  };
+  readAsync = function readAsync(filename, onload, onerror) {
+   if (!nodeFS) nodeFS = require("fs");
+   if (!nodePath) nodePath = require("path");
+   filename = nodePath["normalize"](filename);
+   nodeFS["readFile"](filename, function(err, data) {
+    if (err) onerror(err); else onload(data.buffer);
+   });
+  };
+ } else {
   read_ = function(url) {
    var xhr = new XMLHttpRequest();
    xhr.open("GET", url, false);
@@ -825,9 +912,29 @@ if (ENVIRONMENT_IS_SHELL) {
  throw new Error("environment detection error");
 }
 
-var out = Module["print"] || console.log.bind(console);
+if (ENVIRONMENT_IS_NODE) {
+ if (typeof performance === "undefined") {
+  global.performance = require("perf_hooks").performance;
+ }
+}
 
-var err = Module["printErr"] || console.warn.bind(console);
+var defaultPrint = console.log.bind(console);
+
+var defaultPrintErr = console.warn.bind(console);
+
+if (ENVIRONMENT_IS_NODE) {
+ var fs = require("fs");
+ defaultPrint = function(str) {
+  fs.writeSync(1, str + "\n");
+ };
+ defaultPrintErr = function(str) {
+  fs.writeSync(2, str + "\n");
+ };
+}
+
+var out = Module["print"] || defaultPrint;
+
+var err = Module["printErr"] || defaultPrintErr;
 
 for (key in moduleOverrides) {
  if (moduleOverrides.hasOwnProperty(key)) {
@@ -937,8 +1044,6 @@ function alignMemory() {
 }
 
 assert(ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER || ENVIRONMENT_IS_NODE, "Pthreads do not work in this environment yet (need Web Workers, or an alternative to them)");
-
-assert(!ENVIRONMENT_IS_NODE, "node environment detected but not enabled at build time.  Add 'node' to `-s ENVIRONMENT` to enable.");
 
 assert(!ENVIRONMENT_IS_SHELL, "shell environment detected but not enabled at build time.  Add 'shell' to `-s ENVIRONMENT` to enable.");
 
@@ -1996,7 +2101,11 @@ var tempDouble;
 
 var tempI64;
 
-var ASM_CONSTS = {};
+var ASM_CONSTS = {
+ 629580: function($0) {
+  console.log(UTF8ToString($0));
+ }
+};
 
 function callRuntimeCallbacks(callbacks) {
  while (callbacks.length > 0) {
@@ -2256,6 +2365,17 @@ var PThread = {
    err("pthread sent an error! " + e.filename + ":" + e.lineno + ": " + e.message);
    throw e;
   };
+  if (ENVIRONMENT_IS_NODE) {
+   worker.on("message", function(data) {
+    worker.onmessage({
+     data: data
+    });
+   });
+   worker.on("error", function(e) {
+    worker.onerror(e);
+   });
+   worker.on("detachedExit", function() {});
+  }
   assert(wasmMemory instanceof WebAssembly.Memory, "WebAssembly memory should have been loaded by now!");
   assert(wasmModule instanceof WebAssembly.Module, "WebAssembly Module should have been loaded by now!");
   worker.postMessage({
@@ -2355,7 +2475,12 @@ function ___assert_fail(condition, filename, line, func) {
 
 var _emscripten_get_now;
 
-if (ENVIRONMENT_IS_PTHREAD) {
+if (ENVIRONMENT_IS_NODE) {
+ _emscripten_get_now = function() {
+  var t = process["hrtime"]();
+  return t[0] * 1e3 + t[1] / 1e6;
+ };
+} else if (ENVIRONMENT_IS_PTHREAD) {
  _emscripten_get_now = function() {
   return performance.now() - Module["__performance_now_clock_drift"];
  };
@@ -2545,6 +2670,7 @@ function _emscripten_futex_wait(addr, val, timeout) {
 }
 
 function _emscripten_check_blocking_allowed() {
+ if (ENVIRONMENT_IS_NODE) return;
  if (ENVIRONMENT_IS_WORKER) return;
  warnOnce("Blocking on the main thread is very dangerous, see https://emscripten.org/docs/porting/pthreads.html#blocking-on-the-main-browser-thread");
 }
@@ -3585,12 +3711,6 @@ function __emscripten_throw_longjmp() {
  throw "longjmp";
 }
 
-function __emval_allocateDestructors(destructorsRef) {
- var destructors = [];
- GROWABLE_HEAP_I32()[destructorsRef >> 2] = Emval.toHandle(destructors);
- return destructors;
-}
-
 var emval_symbols = {};
 
 function getStringOrSymbol(address) {
@@ -3600,15 +3720,6 @@ function getStringOrSymbol(address) {
  } else {
   return symbol;
  }
-}
-
-var emval_methodCallers = [];
-
-function __emval_call_void_method(caller, handle, methodName, args) {
- caller = emval_methodCallers[caller];
- handle = Emval.toValue(handle);
- methodName = getStringOrSymbol(methodName);
- caller(handle, methodName, null, args);
 }
 
 function emval_get_global() {
@@ -3646,10 +3757,10 @@ function __emval_get_global(name) {
  }
 }
 
-function __emval_addMethodCaller(caller) {
- var id = emval_methodCallers.length;
- emval_methodCallers.push(caller);
- return id;
+function __emval_incref(handle) {
+ if (handle > 4) {
+  emval_handle_array[handle].refcount += 1;
+ }
 }
 
 function requireRegisteredType(rawType, humanName) {
@@ -3658,43 +3769,6 @@ function requireRegisteredType(rawType, humanName) {
   throwBindingError(humanName + " has unknown type " + getTypeName(rawType));
  }
  return impl;
-}
-
-function __emval_lookupTypes(argCount, argTypes) {
- var a = new Array(argCount);
- for (var i = 0; i < argCount; ++i) {
-  a[i] = requireRegisteredType(GROWABLE_HEAP_I32()[(argTypes >> 2) + i], "parameter " + i);
- }
- return a;
-}
-
-function __emval_get_method_caller(argCount, argTypes) {
- var types = __emval_lookupTypes(argCount, argTypes);
- var retType = types[0];
- var argN = new Array(argCount - 1);
- var invokerFunction = function(handle, name, destructors, args) {
-  var offset = 0;
-  for (var i = 0; i < argCount - 1; ++i) {
-   argN[i] = types[i + 1].readValueFromPointer(args + offset);
-   offset += types[i + 1].argPackAdvance;
-  }
-  var rv = handle[name].apply(handle, argN);
-  for (var i = 0; i < argCount - 1; ++i) {
-   if (types[i + 1].deleteObject) {
-    types[i + 1].deleteObject(argN[i]);
-   }
-  }
-  if (!retType.isVoid) {
-   return retType.toWireType(destructors, rv);
-  }
- };
- return __emval_addMethodCaller(invokerFunction);
-}
-
-function __emval_incref(handle) {
- if (handle > 4) {
-  emval_handle_array[handle].refcount += 1;
- }
 }
 
 function craftEmvalAllocator(argCount) {
@@ -3727,6 +3801,30 @@ function _abort() {
  abort("native code called abort()");
 }
 
+var readAsmConstArgsArray = [];
+
+function readAsmConstArgs(sigPtr, buf) {
+ assert(Array.isArray(readAsmConstArgsArray));
+ assert(buf % 16 == 0);
+ readAsmConstArgsArray.length = 0;
+ var ch;
+ buf >>= 2;
+ while (ch = GROWABLE_HEAP_U8()[sigPtr++]) {
+  assert(ch === 100 || ch === 102 || ch === 105);
+  var readAsmConstArgsDouble = ch < 105;
+  if (readAsmConstArgsDouble && buf & 1) buf++;
+  readAsmConstArgsArray.push(readAsmConstArgsDouble ? GROWABLE_HEAP_F64()[buf++ >> 1] : GROWABLE_HEAP_I32()[buf]);
+  ++buf;
+ }
+ return readAsmConstArgsArray;
+}
+
+function _emscripten_asm_const_int(code, sigPtr, argbuf) {
+ var args = readAsmConstArgs(sigPtr, argbuf);
+ if (!ASM_CONSTS.hasOwnProperty(code)) abort("No EM_ASM constant found at address " + code);
+ return ASM_CONSTS[code].apply(null, args);
+}
+
 function _emscripten_conditional_set_current_thread_status_js(expectedStatus, newStatus) {}
 
 function _emscripten_conditional_set_current_thread_status(expectedStatus, newStatus) {}
@@ -3736,6 +3834,7 @@ function _emscripten_memcpy_big(dest, src, num) {
 }
 
 function _emscripten_num_logical_cores() {
+ if (ENVIRONMENT_IS_NODE) return require("os").cpus().length;
  return navigator["hardwareConcurrency"];
 }
 
@@ -4384,13 +4483,12 @@ var asmLibraryArg = {
  "_embind_register_void": __embind_register_void,
  "_emscripten_notify_thread_queue": __emscripten_notify_thread_queue,
  "_emscripten_throw_longjmp": __emscripten_throw_longjmp,
- "_emval_call_void_method": __emval_call_void_method,
  "_emval_decref": __emval_decref,
  "_emval_get_global": __emval_get_global,
- "_emval_get_method_caller": __emval_get_method_caller,
  "_emval_incref": __emval_incref,
  "_emval_new": __emval_new,
  "abort": _abort,
+ "emscripten_asm_const_int": _emscripten_asm_const_int,
  "emscripten_check_blocking_allowed": _emscripten_check_blocking_allowed,
  "emscripten_conditional_set_current_thread_status": _emscripten_conditional_set_current_thread_status,
  "emscripten_futex_wait": _emscripten_futex_wait,
@@ -4529,7 +4627,7 @@ var dynCall_iiijii = Module["dynCall_iiijii"] = createExportWrapper("dynCall_iii
 
 var __emscripten_allow_main_runtime_queued_calls = Module["__emscripten_allow_main_runtime_queued_calls"] = 629268;
 
-var __emscripten_main_thread_futex = Module["__emscripten_main_thread_futex"] = 932068;
+var __emscripten_main_thread_futex = Module["__emscripten_main_thread_futex"] = 932100;
 
 function invoke_vii(index, a1, a2) {
  var sp = stackSave();

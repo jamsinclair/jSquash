@@ -12,6 +12,42 @@
 
 var Module = {};
 
+// Node.js support
+if (typeof process === 'object' && typeof process.versions === 'object' && typeof process.versions.node === 'string') {
+  // Create as web-worker-like an environment as we can.
+
+  var nodeWorkerThreads = require('worker_threads');
+
+  var parentPort = nodeWorkerThreads.parentPort;
+
+  parentPort.on('message', function(data) {
+    onmessage({ data: data });
+  });
+
+  var nodeFS = require('fs');
+
+  Object.assign(global, {
+    self: global,
+    require: require,
+    Module: Module,
+    location: {
+      href: __filename
+    },
+    Worker: nodeWorkerThreads.Worker,
+    importScripts: function(f) {
+      (0, eval)(nodeFS.readFileSync(f, 'utf8'));
+    },
+    postMessage: function(msg) {
+      parentPort.postMessage(msg);
+    },
+    performance: global.performance || {
+      now: function() {
+        return Date.now();
+      }
+    },
+  });
+}
+
 // Thread-local:
 var initializedJS = false; // Guard variable for one-time init of the JS state (currently only embind types registration)
 

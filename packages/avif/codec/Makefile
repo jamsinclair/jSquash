@@ -26,7 +26,7 @@ OUT_DEC_JS = dec/avif_dec.js
 
 OUT_ENC_CPP = enc/avif_enc.cpp
 OUT_DEC_CPP = dec/avif_dec.cpp
-ENVIRONMENT = web,worker
+ENVIRONMENT = web,worker,node
 
 HELPER_MAKEFLAGS := -f helper.Makefile
 
