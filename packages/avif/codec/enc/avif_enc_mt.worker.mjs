@@ -12,44 +12,6 @@
 
 var Module = {};
 
-// Node.js support
-var ENVIRONMENT_IS_NODE = typeof process == 'object' && typeof process.versions == 'object' && typeof process.versions.node == 'string';
-if (ENVIRONMENT_IS_NODE) {
-  // Create as web-worker-like an environment as we can.
-
-  // See the parallel code in shell.js, but here we don't need the condition on
-  // multi-environment builds, as we do not have the need to interact with the
-  // modularization logic as shell.js must (see link.py:node_es6_imports and
-  // how that is used in link.py).
-  const { createRequire } = await import('module');
-  /** @suppress{duplicate} */
-  var require = createRequire(import.meta.url);
-
-  var nodeWorkerThreads = require('worker_threads');
-
-  var parentPort = nodeWorkerThreads.parentPort;
-
-  parentPort.on('message', (data) => onmessage({ data: data }));
-
-  var fs = require('fs');
-  var vm = require('vm');
-
-  Object.assign(global, {
-    self: global,
-    require,
-    Module,
-    location: {
-      // __filename is undefined in ES6 modules, and import.meta.url only in ES6
-      // modules.
-      href: typeof __filename !== 'undefined' ? __filename : import.meta.url
-    },
-    Worker: nodeWorkerThreads.Worker,
-    importScripts: (f) => vm.runInThisContext(fs.readFileSync(f, 'utf8'), {filename: f}),
-    postMessage: (msg) => parentPort.postMessage(msg),
-    performance: global.performance || { now: Date.now },
-  });
-}
-
 // Thread-local guard variable for one-time init of the JS state
 var initializedJS = false;
 
@@ -59,11 +21,6 @@ function assert(condition, text) {
 
 function threadPrintErr(...args) {
   var text = args.join(' ');
-  // See https://github.com/emscripten-core/emscripten/issues/14804
-  if (ENVIRONMENT_IS_NODE) {
-    fs.writeSync(2, text + '\n');
-    return;
-  }
   console.error(text);
 }
 function threadAlert(...args) {

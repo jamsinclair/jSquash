@@ -3,7 +3,7 @@ var Module = (() => {
   var _scriptDir = import.meta.url;
   
   return (
-async function(moduleArg = {}) {
+function(moduleArg = {}) {
 
 // Support for growable heap + pthreads, where the buffer may change, so JS views
 // must be updated.
@@ -109,52 +109,7 @@ function locateFile(path) {
 
 var read_, readAsync, readBinary;
 
-if (ENVIRONMENT_IS_NODE) {
- if (typeof process == "undefined" || !process.release || process.release.name !== "node") throw new Error("not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)");
- var nodeVersion = process.versions.node;
- var numericVersion = nodeVersion.split(".").slice(0, 3);
- numericVersion = (numericVersion[0] * 1e4) + (numericVersion[1] * 100) + (numericVersion[2].split("-")[0] * 1);
- var minVersion = 16e4;
- if (numericVersion < 16e4) {
-  throw new Error("This emscripten-generated code requires node v16.0.0 (detected v" + nodeVersion + ")");
- }
- const {createRequire: createRequire} = await import("module");
- /** @suppress{duplicate} */ var require = createRequire(import.meta.url);
- var fs = require("fs");
- var nodePath = require("path");
- if (ENVIRONMENT_IS_WORKER) {
-  scriptDirectory = nodePath.dirname(scriptDirectory) + "/";
- } else {
-  scriptDirectory = require("url").fileURLToPath(new URL("./", import.meta.url));
- }
- read_ = (filename, binary) => {
-  filename = isFileURI(filename) ? new URL(filename) : nodePath.normalize(filename);
-  return fs.readFileSync(filename, binary ? undefined : "utf8");
- };
- readBinary = filename => {
-  var ret = read_(filename, true);
-  if (!ret.buffer) {
-   ret = new Uint8Array(ret);
-  }
-  assert(ret.buffer);
-  return ret;
- };
- readAsync = (filename, onload, onerror, binary = true) => {
-  filename = isFileURI(filename) ? new URL(filename) : nodePath.normalize(filename);
-  fs.readFile(filename, binary ? undefined : "utf8", (err, data) => {
-   if (err) onerror(err); else onload(binary ? data.buffer : data);
-  });
- };
- if (!Module["thisProgram"] && process.argv.length > 1) {
-  thisProgram = process.argv[1].replace(/\\/g, "/");
- }
- arguments_ = process.argv.slice(2);
- quit_ = (status, toThrow) => {
-  process.exitCode = status;
-  throw toThrow;
- };
- global.Worker = require("worker_threads").Worker;
-} else if (ENVIRONMENT_IS_SHELL) {
+if (ENVIRONMENT_IS_SHELL) {
  if ((typeof process == "object" && typeof require === "function") || typeof window == "object" || typeof importScripts == "function") throw new Error("not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)");
  if (typeof read != "undefined") {
   read_ = read;
@@ -216,7 +171,7 @@ if (ENVIRONMENT_IS_NODE) {
   scriptDirectory = scriptDirectory.substr(0, scriptDirectory.replace(/[?#].*/, "").lastIndexOf("/") + 1);
  }
  if (!(typeof window == "object" || typeof importScripts == "function")) throw new Error("not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)");
- if (!ENVIRONMENT_IS_NODE) {
+ {
   read_ = url => {
    var xhr = new XMLHttpRequest;
    xhr.open("GET", url, false);
@@ -251,24 +206,9 @@ if (ENVIRONMENT_IS_NODE) {
  throw new Error("environment detection error");
 }
 
-if (ENVIRONMENT_IS_NODE) {
- if (typeof performance == "undefined") {
-  global.performance = require("perf_hooks").performance;
- }
-}
+var out = Module["print"] || console.log.bind(console);
 
-var defaultPrint = console.log.bind(console);
-
-var defaultPrintErr = console.error.bind(console);
-
-if (ENVIRONMENT_IS_NODE) {
- defaultPrint = (...args) => fs.writeSync(1, args.join(" ") + "\n");
- defaultPrintErr = (...args) => fs.writeSync(2, args.join(" ") + "\n");
-}
-
-var out = Module["print"] || defaultPrint;
-
-var err = Module["printErr"] || defaultPrintErr;
+var err = Module["printErr"] || console.error.bind(console);
 
 Object.assign(Module, moduleOverrides);
 
@@ -334,6 +274,8 @@ var NODEFS = "NODEFS is no longer included by default; build with -lnodefs.js";
 
 assert(ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER || ENVIRONMENT_IS_NODE, "Pthreads do not work in this environment yet (need Web Workers, or an alternative to them)");
 
+assert(!ENVIRONMENT_IS_NODE, "node environment detected but not enabled at build time.  Add `node` to `-sENVIRONMENT` to enable.");
+
 assert(!ENVIRONMENT_IS_SHELL, "shell environment detected but not enabled at build time.  Add `shell` to `-sENVIRONMENT` to enable.");
 
 var wasmBinary;
@@ -382,7 +324,7 @@ var INITIAL_MEMORY = Module["INITIAL_MEMORY"] || 16777216;
 
 legacyModuleProp("INITIAL_MEMORY", "INITIAL_MEMORY");
 
-assert(INITIAL_MEMORY >= 65536, "INITIAL_MEMORY should be larger than STACK_SIZE, was " + INITIAL_MEMORY + "! (STACK_SIZE=" + 65536 + ")");
+assert(INITIAL_MEMORY >= 5242880, "INITIAL_MEMORY should be larger than STACK_SIZE, was " + INITIAL_MEMORY + "! (STACK_SIZE=" + 5242880 + ")");
 
 if (ENVIRONMENT_IS_PTHREAD) {
  wasmMemory = Module["wasmMemory"];
@@ -698,7 +640,7 @@ function instantiateArrayBuffer(binaryFile, imports, receiver) {
 }
 
 function instantiateAsync(binary, binaryFile, imports, callback) {
- if (!binary && typeof WebAssembly.instantiateStreaming == "function" && !isDataURI(binaryFile) &&  !ENVIRONMENT_IS_NODE && typeof fetch == "function") {
+ if (!binary && typeof WebAssembly.instantiateStreaming == "function" && !isDataURI(binaryFile) && typeof fetch == "function") {
   return fetch(binaryFile, {
    credentials: "same-origin"
   }).then(response => {
@@ -865,9 +807,7 @@ var checkInt53 = value => checkInt(value, 53, MIN_INT53, MAX_UINT53);
 var checkInt64 = value => checkInt(value, 64, MIN_INT64, MAX_UINT64);
 
 function dbg(...args) {
- if (ENVIRONMENT_IS_NODE) {
-  fs.writeSync(2, args.join(" ") + "\n");
- } else  console.warn(...args);
+ console.warn(...args);
 }
 
 var ASM_CONSTS = {
@@ -940,9 +880,6 @@ var spawnThread = threadParams => {
   "arg": threadParams.arg,
   "pthread_ptr": threadParams.pthread_ptr
  };
- if (ENVIRONMENT_IS_NODE) {
-  worker.unref();
- }
  worker.postMessage(msg, threadParams.transferList);
  return 0;
 };
@@ -1017,7 +954,7 @@ var handleException = e => {
  checkStackCookie();
  if (e instanceof WebAssembly.RuntimeError) {
   if (_emscripten_stack_get_current() <= 0) {
-   err("Stack overflow detected.  You can try increasing -sSTACK_SIZE (currently set to 65536)");
+   err("Stack overflow detected.  You can try increasing -sSTACK_SIZE (currently set to 5242880)");
   }
  }
  quit_(1, e);
@@ -1115,9 +1052,6 @@ var PThread = {
     cancelThread(d["thread"]);
    } else if (cmd === "loaded") {
     worker.loaded = true;
-    if (ENVIRONMENT_IS_NODE && !worker.pthread_ptr) {
-     worker.unref();
-    }
     onFinishedLoading(worker);
    } else if (cmd === "alert") {
     alert(`Thread ${d["threadId"]}: ${d["text"]}`);
@@ -1137,12 +1071,6 @@ var PThread = {
    err(`${message} ${e.filename}:${e.lineno}: ${e.message}`);
    throw e;
   };
-  if (ENVIRONMENT_IS_NODE) {
-   worker.on("message", data => worker.onmessage({
-    data: data
-   }));
-   worker.on("error", e => worker.onerror(e));
-  }
   assert(wasmMemory instanceof WebAssembly.Memory, "WebAssembly memory should have been loaded by now!");
   assert(wasmModule instanceof WebAssembly.Module, "WebAssembly Module should have been loaded by now!");
   var handlers = [];
@@ -1185,9 +1113,7 @@ var PThread = {
  },
  getNewWorker() {
   if (PThread.unusedWorkers.length == 0) {
-   if (!ENVIRONMENT_IS_NODE) {
-    err("Tried to spawn a new thread, but the thread pool is exhausted.\n" + "This might result in a deadlock unless some threads eventually exit or the code explicitly breaks out to the event loop.\n" + "If you want to increase the pool size, use setting `-sPTHREAD_POOL_SIZE=...`." + "\nIf you want to throw an explicit error instead of the risk of deadlocking in those cases, use setting `-sPTHREAD_POOL_SIZE_STRICT=2`.");
-   }
+   err("Tried to spawn a new thread, but the thread pool is exhausted.\n" + "This might result in a deadlock unless some threads eventually exit or the code explicitly breaks out to the event loop.\n" + "If you want to increase the pool size, use setting `-sPTHREAD_POOL_SIZE=...`." + "\nIf you want to throw an explicit error instead of the risk of deadlocking in those cases, use setting `-sPTHREAD_POOL_SIZE_STRICT=2`.");
    PThread.allocateUnusedWorker();
    PThread.loadWasmModuleToWorker(PThread.unusedWorkers[0]);
   }
@@ -1505,7 +1431,6 @@ var warnOnce = text => {
  warnOnce.shown ||= {};
  if (!warnOnce.shown[text]) {
   warnOnce.shown[text] = 1;
-  if (ENVIRONMENT_IS_NODE) text = "warning: " + text;
   err(text);
  }
 };
@@ -1582,7 +1507,7 @@ var ___cxa_throw = (ptr, type, destructor) => {
 };
 
 var ___emscripten_init_main_thread_js = tb => {
- __emscripten_thread_init(tb, /*is_main=*/ !ENVIRONMENT_IS_WORKER, /*is_runtime=*/ 1, /*can_block=*/ !ENVIRONMENT_IS_WEB, /*default_stacksize=*/ 65536, /*start_profiling=*/ false);
+ __emscripten_thread_init(tb, /*is_main=*/ !ENVIRONMENT_IS_WORKER, /*is_runtime=*/ 1, /*can_block=*/ !ENVIRONMENT_IS_WEB, /*default_stacksize=*/ 5242880, /*start_profiling=*/ false);
  PThread.threadInitTLS();
 };
 
@@ -2628,11 +2553,7 @@ var __emscripten_receive_on_main_thread_js = (funcIndex, emAsmAddr, callingThrea
  return rtn;
 };
 
-var __emscripten_thread_set_strongref = thread => {
- if (ENVIRONMENT_IS_NODE) {
-  PThread.pthreads[thread].ref();
- }
-};
+var __emscripten_thread_set_strongref = thread => {};
 
 var __emscripten_throw_longjmp = () => {
  throw Infinity;
@@ -2781,7 +2702,6 @@ var runEmAsmFunction = (code, sigPtr, argbuf) => {
 var _emscripten_asm_const_int = (code, sigPtr, argbuf) => runEmAsmFunction(code, sigPtr, argbuf);
 
 var _emscripten_check_blocking_allowed = () => {
- if (ENVIRONMENT_IS_NODE) return;
  if (ENVIRONMENT_IS_WORKER) return;
  warnOnce("Blocking on the main thread is very dangerous, see https://emscripten.org/docs/porting/pthreads.html#blocking-on-the-main-browser-thread");
 };
@@ -2801,7 +2721,7 @@ var _emscripten_get_now;
 
 _emscripten_get_now = () => performance.timeOrigin + performance.now();
 
-var _emscripten_num_logical_cores = () => ENVIRONMENT_IS_NODE ? require("os").cpus().length : navigator["hardwareConcurrency"];
+var _emscripten_num_logical_cores = () => navigator["hardwareConcurrency"];
 
 var getHeapMax = () =>  2147483648;
 

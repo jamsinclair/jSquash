@@ -49,6 +49,7 @@ $(OUT_JS): $(OUT_CPP) $(LIBAOM_OUT) $(CODEC_OUT)
 		-s EXPORT_ES6=1 \
 		-s DYNAMIC_EXECUTION=0 \
 		-s MODULARIZE=1 \
+		-s STACK_SIZE="5mb" \
 		-o $@ \
 		$+
 
