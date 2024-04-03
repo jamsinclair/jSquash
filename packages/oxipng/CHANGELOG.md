@@ -1,5 +1,12 @@
 # Changelog
 
+## @jsquash/oxipng@2.2.0
+
+### Adds
+
+- Updates oxipng to v9.0
+- Adds support to optimise raw image data directly and output as an optimised PNG. This is useful for when you have raw image data and want to optimise it without having to encode to a PNG first.
+
 ## @jsquash/oxipng@2.1.0
 
 ### Adds
