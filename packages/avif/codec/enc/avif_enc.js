@@ -1771,7 +1771,7 @@ var tempI64;
 // === Body ===
 
 var ASM_CONSTS = {
-  628292: function($0) {console.log(UTF8ToString($0));}
+  628036: function($0) {console.log(UTF8ToString($0));}
 };
 
 
