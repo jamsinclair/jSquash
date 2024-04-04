@@ -149,6 +149,14 @@ val encode(std::string buffer, int width, int height, AvifOptions options) {
 
   avifRWData output = AVIF_DATA_EMPTY;
   avifResult encodeResult = avifEncoderWrite(encoder.get(), image.get(), &output);
+
+  logMessage("encoder result");
+  int eresult = static_cast<int>(encodeResult);
+  std::string eresultStr = std::to_string(eresult);
+  logMessage(eresultStr.c_str());
+  logMessage("encoder diag error");
+  logMessage(encoder->diag.error);
+
   auto js_result = val::null();
   if (encodeResult == AVIF_RESULT_OK) {
     logMessage("AVIF result is ok");

@@ -934,7 +934,7 @@ function dbg(...args) {
 // === Body ===
 
 var ASM_CONSTS = {
-  636984: ($0) => { console.log(UTF8ToString($0)); }
+  637240: ($0) => { console.log(UTF8ToString($0)); }
 };
 
 // end include: preamble.js
