@@ -1,5 +1,12 @@
 # Changelog
 
+
+## @jsquash/avif@next
+
+### Breaking Changes
+
+- Upgrades libavif to v1.0.1
+
 ## @jsquash/avif@1.3.0
 
 ### Adds
