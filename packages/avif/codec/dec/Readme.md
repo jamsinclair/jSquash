@@ -1,7 +1,7 @@
 # AVIF decoder
 
 - Source: <https://github.com/AOMediaCodec/libavif>
-- Version: v0.5.4
+- Version: v1.0.1
 
 ## Example
 
