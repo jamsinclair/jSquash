@@ -62,4 +62,5 @@ addEventListener('message', async function (event) {
 
     // Send the converted image back to the main thread
     postMessage(result);
+    isConverting = false;
 });
