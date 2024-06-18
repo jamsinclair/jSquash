@@ -56,7 +56,7 @@ export function optimise(data, level, interlace, optimize_alpha) {
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         var v2 = getArrayU8FromWasm0(r0, r1).slice();
-        wasm.__wbindgen_free(r0, r1 * 1);
+        wasm.__wbindgen_free(r0, r1 * 1, 1);
         return v2;
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
@@ -81,7 +81,7 @@ export function optimise_raw(data, width, height, level, interlace, optimize_alp
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         var v2 = getArrayU8FromWasm0(r0, r1).slice();
-        wasm.__wbindgen_free(r0, r1 * 1);
+        wasm.__wbindgen_free(r0, r1 * 1, 1);
         return v2;
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
