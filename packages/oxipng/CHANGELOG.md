@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/oxipng@2.3.0
+
+### Adds
+
+- Better compilation with Vite Bundler. Solves issues with circular dependencies for Vite v5.1.6+.
+
 ## @jsquash/oxipng@2.2.0
 
 ### Adds
