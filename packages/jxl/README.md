@@ -4,7 +4,7 @@
 
 An easy experience for encoding and decoding JPEG XL images in the browser. Powered by WebAssembly ⚡️.
 
-⚠️ No stable browser release supports displaying JPEG XL yet. This package is intended for experimentation and testing.
+⚠️ Only one stable browser supports displaying JPEG XL [so far](https://caniuse.com/jpegxl). This package is intended for experimentation and testing.
 
 Uses the [libjxl](https://github.com/libjxl/libjxl) library.
 
