@@ -1,0 +1,36 @@
+{
+  "name": "@jsquash/avif-decode",
+  "version": "1.3.0",
+  "main": "index.js",
+  "description": "Wasm AVIF encoder and decoder supporting the browser. Repackaged from Squoosh App.",
+  "repository": "jamsinclair/jSquash",
+  "author": {
+    "name": "Jamie Sinclair",
+    "email": "jamsinclairnz+npm@gmail.com"
+  },
+  "keywords": [
+    "image",
+    "optimisation",
+    "optimization",
+    "squoosh",
+    "wasm",
+    "webassembly",
+    "avif"
+  ],
+  "license": "Apache-2.0",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build:codec": "cd codec && npm run build",
+    "build": "npm run clean && tsc && cp -r codec package.json README.md *.d.ts .npmignore ../../LICENSE dist && cd dist/codec",
+    "prepublishOnly": "[[ \"$PWD\" == *'/dist' ]] && exit 0 || (echo 'Please run npm publish from the dist directory' && exit 1)"
+  },
+  "devDependencies": {
+    "@types/node": "^20.9.2",
+    "typescript": "^4.4.4"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "dependencies": {
+    "wasm-feature-detect": "^1.2.11"
+  }
+}

@@ -1,5 +1,5 @@
 FROM emscripten/emsdk:2.0.34
-RUN apt-get update && apt-get install -qqy autoconf libtool pkg-config
+RUN apt-get update && apt-get install -qqy autoconf libtool pkg-config meson ninja-build nasm
 ENV CFLAGS "-O3 -flto"
 ENV CXXFLAGS "${CFLAGS} -std=c++17"
 ENV LDFLAGS "${CFLAGS} \
@@ -15,4 +15,4 @@ RUN emcc ${CXXFLAGS} ${LDFLAGS} --bind -xc++ /dev/null -o /dev/null
 RUN emcc ${CXXFLAGS} ${LDFLAGS} --bind -pthread -xc++ /dev/null -o /dev/null
 
 WORKDIR /src
-CMD ["sh", "-c", "emmake make -j`nproc`"]
+CMD ["sh", "-c", "emmake make -j`nproc`"]tools/cpp.dockerfile

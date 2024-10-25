@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "build": "bash ../../../tools/build-cpp.sh && npm run patch-pre-script",
+    "patch-pre-script": "echo hi"
+  },
+  "type": "module"
+}
