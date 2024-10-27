@@ -1,5 +1,5 @@
 FROM emscripten/emsdk:2.0.34
-RUN apt-get update && apt-get install -qqy autoconf libtool pkg-config meson ninja-build nasm
+RUN apt-get update && apt-get install -qqy autoconf libtool ninja-build nasm
 ENV CFLAGS "-O3 -flto"
 ENV CXXFLAGS "${CFLAGS} -std=c++17"
 ENV LDFLAGS "${CFLAGS} \
@@ -13,6 +13,9 @@ ENV LDFLAGS "${CFLAGS} \
 RUN emcc ${CXXFLAGS} ${LDFLAGS} --bind -xc++ /dev/null -o /dev/null
 # And another set for the pthread variant.
 RUN emcc ${CXXFLAGS} ${LDFLAGS} --bind -pthread -xc++ /dev/null -o /dev/null
+
+# Install Meson globally so meson based projects like dav1d can be built
+RUN pip3 install meson
 
 WORKDIR /src
 CMD ["sh", "-c", "emmake make -j`nproc`"]tools/cpp.dockerfile

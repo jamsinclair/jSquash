@@ -1,6 +1,8 @@
 CODEC_URL=https://code.videolan.org/videolan/dav1d/-/archive/1.5.0/dav1d-1.5.0.tar.gz
 CODEC_DIR = node_modules/dav1d
 CODEC_OUT := $(CODEC_DIR)/build
+CODEC_STATIC_BUILD = $(CODEC_OUT)/src/libdav1d.a
+
 ENVIRONMENT = web,worker
 
 PRE_JS = pre.js
@@ -15,12 +17,11 @@ all: $(OUT_JS)
 $(filter dec/%,$(OUT_JS)): dec/avif_dec.o
 dec/webp_dec.js: $(CODEC_OUT)/src/dav1d.a
 
-$(OUT_JS):
+$(OUT_JS): $(CODEC_STATIC_BUILD)
 	emcc \
 		$(LDFLAGS) \
 		-L$(CODEC_OUT)/src \
 		-ldav1d \
-		--pre-js $(PRE_JS) \
 		--bind \
 		-s ENVIRONMENT=$(ENVIRONMENT) \
 		-s EXPORT_ES6=1 \
@@ -36,12 +37,11 @@ $(OUT_JS):
 		-o $@ \
 		$<
 
-%/dav1d.a: $(CODEC_OUT)/build.ninja
+$(CODEC_STATIC_BUILD): $(CODEC_OUT)/build.ninja
 	cd $(CODEC_DIR) && ninja -C build
 
 $(CODEC_OUT)/build.ninja: $(CODEC_DIR)/meson.build
-	. /emsdk/emsdk_env.sh && \
-	cd $(CODEC_DIR) && meson setup build --buildtype release \
+	cd /src/$(CODEC_DIR) && meson setup build --buildtype release \
 		--werror \
 		--default-library static \
 		--cross-file package/crossfiles/wasm32.meson
@@ -51,5 +51,5 @@ $(CODEC_DIR)/meson.build:
 	curl -sL $(CODEC_URL) | tar xz --strip 1 -C $(CODEC_DIR)
 
 clean:
-	$(RM) $(OUT_JS) $(OUT_WASM)
-	$(MAKE) -C $(CODEC_OUT) clean
+	$(RM) -rf $(CODEC_OUT)
+	$(RM) $(OUT_JS) $(OUT_WASM) **/*.o
