@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/bin/bash
+set -e
 
 if [ -z "$EMSDK_VERSION" ]; then
   EMSDK_VERSION=2.0.34
