@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 BUILD_DIR=$(pwd)
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo "BUILD_DIR: $BUILD_DIR"
