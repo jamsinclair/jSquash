@@ -16,7 +16,10 @@ all: $(OUT_JS)
 $(filter enc/%,$(OUT_JS)): enc/mozjpeg_enc.cpp
 $(filter dec/%,$(OUT_JS)): dec/mozjpeg_dec.cpp
 
-%.js: $(CODEC_OUT)
+$(PRE_JS):
+	touch $@
+
+%.js: $(CODEC_OUT) $(PRE_JS)
 	$(CXX) \
 		-I $(CODEC_DIR) \
 		${CXXFLAGS} \
@@ -28,7 +31,7 @@ $(filter dec/%,$(OUT_JS)): dec/mozjpeg_dec.cpp
 		-s DYNAMIC_EXECUTION=0 \
 		-s MODULARIZE=1 \
 		-o $@ \
-		$+
+		$(CODEC_OUT)
 
 # This one is a bit special: there is no rule for .libs/libjpeg.a
 #  so we use libjpeg.la which implicitly builds that one instead.
