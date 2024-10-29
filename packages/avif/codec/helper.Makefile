@@ -3,6 +3,7 @@
 # Params that must be supplied by the caller:
 #   $(CODEC_DIR)
 #   $(LIBAOM_DIR)
+#   $(LIBDAV1D_DIR)
 #   $(BUILD_DIR)
 #   $(OUT_JS)
 #   $(OUT_CPP)
@@ -21,6 +22,9 @@ CODEC_OUT := $(CODEC_BUILD_DIR)/libavif.a
 LIBAOM_BUILD_DIR := $(OUT_BUILD_DIR)/libaom
 LIBAOM_OUT := $(LIBAOM_BUILD_DIR)/libaom.a
 
+LIBDAV1D_BUILD_DIR := $(LIBDAV1D_DIR)/build
+LIBDAV1D_OUT := $(LIBDAV1D_BUILD_DIR)/src/libdav1d.a
+
 OUT_WASM = $(OUT_JS:.js=.wasm)
 OUT_WORKER=$(OUT_JS:.js=.worker.js)
 
@@ -28,14 +32,19 @@ OUT_WORKER=$(OUT_JS:.js=.worker.js)
 
 all: $(OUT_JS)
 
-# Only add libsharpyuv as a dependency for encoders.
+# Only add libsharpyuv and libaom as a dependencies for encoders.
 # Yes, that if statement is true for encoders.
 ifneq (,$(findstring enc/, $(OUT_JS)))
-$(OUT_JS): $(LIBSHARPYUV)
-$(CODEC_OUT): $(LIBSHARPYUV)
+$(OUT_JS): $(LIBSHARPYUV) $(LIBAOM_OUT)
+$(CODEC_OUT): $(LIBSHARPYUV) $(LIBAOM_OUT)
 endif
 
-$(OUT_JS): $(OUT_CPP) $(LIBAOM_OUT) $(CODEC_OUT)
+# Only add libdav1d as a dependency for decoder
+ifneq (,$(findstring dec/, $(OUT_JS)))
+$(OUT_JS): $(LIBDAV1D_OUT)
+endif
+
+$(OUT_JS): $(OUT_CPP) $(CODEC_OUT)
 	$(CXX) \
 		-I $(CODEC_DIR)/include \
 		$(CXXFLAGS) \
@@ -50,7 +59,7 @@ $(OUT_JS): $(OUT_CPP) $(LIBAOM_OUT) $(CODEC_OUT)
 		-o $@ \
 		$+
 
-$(CODEC_OUT): $(CODEC_DIR)/CMakeLists.txt $(LIBAOM_OUT)
+$(CODEC_OUT): $(CODEC_DIR)/CMakeLists.txt
 	emcmake cmake \
 		-DCMAKE_LIBRARY_PATH=$(LIBSHARPYUV_BUILD_DIR) \
 		-DCMAKE_BUILD_TYPE=Release \
