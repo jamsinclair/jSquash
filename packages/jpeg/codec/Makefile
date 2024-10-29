@@ -40,6 +40,7 @@ $(CODEC_DIR)/rdswitch.o: $(CODEC_DIR)/Makefile
 
 $(CODEC_DIR)/Makefile: $(CODEC_DIR)/configure
 	cd $(CODEC_DIR) && ./configure \
+		--host=wasm32 \
 		--disable-shared \
 		--without-turbojpeg \
 		--without-simd \
