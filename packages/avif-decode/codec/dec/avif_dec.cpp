@@ -40,8 +40,12 @@ void yuv_to_rgb(uint8_t* rgb, const uint8_t* y_plane, const uint8_t* u_plane, co
     }
 }
 
+void free_callback(const uint8_t *buf, void *cookie) {
+    // no-op
+}
+
 // Decode function that accepts AVIF image data and returns JavaScript ImageData
-val decode_avif_to_image_data(const std::string& avifimage) {
+val decode_avif_to_image_data(std::string avifimage) {
     Dav1dContext* ctx;
     Dav1dSettings settings;
     dav1d_default_settings(&settings);
@@ -52,7 +56,7 @@ val decode_avif_to_image_data(const std::string& avifimage) {
 
     // Prepare dav1d data input
     Dav1dData data;
-    dav1d_data_wrap(&data, reinterpret_cast<const uint8_t*>(avifimage.data()), avifimage.size(), nullptr, nullptr);
+    dav1d_data_wrap(&data, (const uint8_t*)avifimage.c_str(), avifimage.size(), free_callback, nullptr);
 
     // Decode to picture
     Dav1dPicture picture;
@@ -88,5 +92,5 @@ val decode_avif_to_image_data(const std::string& avifimage) {
 
 // Bind the decode function to be called from JavaScript
 EMSCRIPTEN_BINDINGS(decode_module) {
-    function("decode_avif_to_image_data", &decode_avif_to_image_data);
+    function("decode", &decode_avif_to_image_data);
 }

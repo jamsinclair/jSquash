@@ -20,6 +20,7 @@ dec/webp_dec.js: $(CODEC_OUT)/src/dav1d.a
 $(OUT_JS): $(CODEC_STATIC_BUILD)
 	emcc \
 		$(LDFLAGS) \
+		-O0 -g --source-map \
 		-L$(CODEC_OUT)/src \
 		-ldav1d \
 		--bind \
@@ -27,6 +28,8 @@ $(OUT_JS): $(CODEC_STATIC_BUILD)
 		-s EXPORT_ES6=1 \
 		-s DYNAMIC_EXECUTION=0 \
 		-s MODULARIZE=1 \
+		-s DEMANGLE_SUPPORT=1 -s ASSERTIONS=1 \
+		-s DISABLE_EXCEPTION_CATCHING=0 \
 		-o $@ \
 		$+
 
@@ -41,7 +44,7 @@ $(CODEC_STATIC_BUILD): $(CODEC_OUT)/build.ninja
 	cd $(CODEC_DIR) && ninja -C build
 
 $(CODEC_OUT)/build.ninja: $(CODEC_DIR)/meson.build
-	cd /src/$(CODEC_DIR) && meson setup build --buildtype release \
+	cd /src/$(CODEC_DIR) && meson setup build --buildtype debug \
 		--werror \
 		--default-library static \
 		--cross-file package/crossfiles/wasm32.meson
