@@ -32,7 +32,7 @@ OUT_WORKER=$(OUT_JS:.js=.worker.js)
 
 all: $(OUT_JS)
 
-# Only add libsharpyuv and libaom as a dependencies for encoders.
+# Only add libsharpyuv and libaom as dependencies for encoders.
 # Yes, that if statement is true for encoders.
 ifneq (,$(findstring enc/, $(OUT_JS)))
 $(OUT_JS): $(LIBSHARPYUV) $(LIBAOM_OUT)
