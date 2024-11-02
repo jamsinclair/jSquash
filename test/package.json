@@ -10,6 +10,7 @@
     "@jsquash/jxl": "file:../packages/jxl/dist",
     "@jsquash/oxipng": "file:../packages/oxipng/dist",
     "@jsquash/png": "file:../packages/png/dist",
+    "@jsquash/qoi": "file:../packages/qoi/dist",
     "@jsquash/resize": "file:../packages/resize/dist",
     "@jsquash/webp": "file:../packages/webp/dist"
   },
