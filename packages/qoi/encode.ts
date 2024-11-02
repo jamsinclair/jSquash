@@ -12,9 +12,8 @@
  */
 
 /**
- * Notice: I (Jamie Sinclair) have modified this file.
- * Updated to support a partial subset of Jpeg encoding options to be provided.
- * The jpeg options are defaulted to defaults from the meta.ts file.
+ * Notice: I (Jamie Sinclair) have copied this code from the original and modified
+ * to align with the jSquash project structure.
  */
 import type { QOIModule } from './codec/enc/qoi_enc.js';
 

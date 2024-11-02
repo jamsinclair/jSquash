@@ -12,8 +12,8 @@
  */
 
 /**
- * Notice: I (Jamie Sinclair) have copied this code from the JPEG encode module
- * and modified it to decode JPEG images.
+ * Notice: I (Jamie Sinclair) have copied this code from the original and modified
+ * to align with the jSquash project structure.
  */
 
 import type { QOIModule } from './codec/dec/qoi_dec.js';
