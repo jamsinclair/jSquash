@@ -1,0 +1,8 @@
+{
+  "name": "jsquash-magic-kernel",
+  "scripts": {
+    "build": "../../../tools/build-rust.sh && npm run patch-pre-script",
+    "patch-pre-script": "cat pre.js >> pkg/jsquash_magic_kernel.js.js"
+  },
+  "type": "module"
+}

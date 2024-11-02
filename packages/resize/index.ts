@@ -1,15 +1,26 @@
 import type { WorkerResizeOptions } from './meta.js';
 import type { InitInput as InitResizeInput } from './lib/resize/pkg/squoosh_resize.js';
 import type { InitInput as InitHqxInput } from './lib/hqx/pkg/squooshhqx.js';
+import type { InitInput as InitMagicKernelInput } from './lib/magic-kernel/pkg/jsquash_magic_kernel.js';
 import { getContainOffsets } from './util.js';
 import initResizeWasm, {
   resize as wasmResize,
 } from './lib/resize/pkg/squoosh_resize.js';
 import initHqxWasm, { resize as wasmHqx } from './lib/hqx/pkg/squooshhqx.js';
+import initMagicKernelWasm, {
+  resize as wasmMagicKernel,
+} from './lib/magic-kernel/pkg/jsquash_magic_kernel.js';
 import { defaultOptions } from './meta.js';
+
+const MAGIC_KERNEL_METHODS = [
+  'magicKernel',
+  'magicKernelSharp2013',
+  'magicKernelSharp2021',
+];
 
 let resizeWasmReady: Promise<unknown>;
 let hqxWasmReady: Promise<unknown>;
+let magicKernelWasmReady: Promise<unknown>;
 
 export function initResize(moduleOrPath?: InitResizeInput) {
   if (!resizeWasmReady) {
@@ -25,12 +36,29 @@ export function initHqx(moduleOrPath?: InitHqxInput) {
   return hqxWasmReady;
 }
 
+export function initMagicKernel(moduleOrPath?: InitMagicKernelInput) {
+  if (!magicKernelWasmReady) {
+    magicKernelWasmReady = initMagicKernelWasm(moduleOrPath);
+  }
+  return magicKernelWasmReady;
+}
+
 interface HqxResizeOptions extends WorkerResizeOptions {
   method: 'hqx';
 }
 
+interface MagicKernelResizeOptions extends WorkerResizeOptions {
+  method: 'magicKernel' | 'magicKernelSharp2013' | 'magicKernelSharp2021';
+}
+
 function optsIsHqxOpts(opts: WorkerResizeOptions): opts is HqxResizeOptions {
   return opts.method === 'hqx';
+}
+
+function optsIsMagicKernelOpts(
+  opts: WorkerResizeOptions,
+): opts is MagicKernelResizeOptions {
+  return MAGIC_KERNEL_METHODS.includes(opts.method);
 }
 
 function crop(
@@ -102,6 +130,24 @@ async function hqx(
   );
 }
 
+async function magicKernel(
+  input: ImageData,
+  opts: MagicKernelResizeOptions,
+): Promise<ImageData> {
+  await initMagicKernel();
+
+  const result = wasmMagicKernel(
+    new Uint8Array(input.data.buffer),
+    input.width,
+    input.height,
+    opts.width,
+    opts.height,
+    opts.method,
+  );
+
+  return result;
+}
+
 export default async function resize(
   data: ImageData,
   overrideOptions: Partial<WorkerResizeOptions> & {
@@ -139,6 +185,10 @@ export default async function resize(
       Math.round(sw),
       Math.round(sh),
     );
+  }
+
+  if (optsIsMagicKernelOpts(options)) {
+    return magicKernel(input, options);
   }
 
   const result = wasmResize(

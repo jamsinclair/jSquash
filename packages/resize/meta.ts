@@ -16,7 +16,10 @@ type WorkerResizeMethods =
   | 'catrom'
   | 'mitchell'
   | 'lanczos3'
-  | 'hqx';
+  | 'hqx'
+  | 'magicKernel'
+  | 'magicKernelSharp2013'
+  | 'magicKernelSharp2021';
 
 export const workerResizeMethods: WorkerResizeMethods[] = [
   'triangle',
@@ -24,6 +27,9 @@ export const workerResizeMethods: WorkerResizeMethods[] = [
   'mitchell',
   'lanczos3',
   'hqx',
+  'magicKernel',
+  'magicKernelSharp2013',
+  'magicKernelSharp2021',
 ];
 
 export type Options = WorkerResizeOptions | VectorResizeOptions;
