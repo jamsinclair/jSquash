@@ -1,5 +1,14 @@
 # Changelog
 
+## @jsquash/resize@2.1.0
+
+### Adds
+
+- Adds initial Magic Kernel resizing method support ([Using the Rust library](https://github.com/SevInf/magic-kernel-rust))
+    - `magicKernel` - The original Magic Kernel algorithm
+    - `magicKernelSharp2013` - A sharpened version of the Magic Kernel algorithm
+    - `magicKernelSharp2021` - A further sharpened version of the Magic Kernel algorithm
+
 ## @jsquash/resize@2.0.0
 
 ### Breaking Changes
