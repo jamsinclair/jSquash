@@ -19,7 +19,7 @@ type WorkerResizeMethods =
   | 'hqx'
   | 'magicKernel'
   | 'magicKernelSharp2013'
-  | 'magicKernelSharp2021'
+  | 'magicKernelSharp2021';
 
 export const workerResizeMethods: WorkerResizeMethods[] = [
   'triangle',
@@ -29,7 +29,7 @@ export const workerResizeMethods: WorkerResizeMethods[] = [
   'hqx',
   'magicKernel',
   'magicKernelSharp2013',
-  'magicKernelSharp2021'
+  'magicKernelSharp2021',
 ];
 
 export type Options = WorkerResizeOptions | VectorResizeOptions;

@@ -7,10 +7,16 @@ import initResizeWasm, {
   resize as wasmResize,
 } from './lib/resize/pkg/squoosh_resize.js';
 import initHqxWasm, { resize as wasmHqx } from './lib/hqx/pkg/squooshhqx.js';
-import initMagicKernelWasm, { resize as wasmMagicKernel } from './lib/magic-kernel/pkg/jsquash_magic_kernel.js';
+import initMagicKernelWasm, {
+  resize as wasmMagicKernel,
+} from './lib/magic-kernel/pkg/jsquash_magic_kernel.js';
 import { defaultOptions } from './meta.js';
 
-const MAGIC_KERNEL_METHODS = ['magicKernel', 'magicKernelSharp2013', 'magicKernelSharp2021'];
+const MAGIC_KERNEL_METHODS = [
+  'magicKernel',
+  'magicKernelSharp2013',
+  'magicKernelSharp2021',
+];
 
 let resizeWasmReady: Promise<unknown>;
 let hqxWasmReady: Promise<unknown>;
@@ -49,7 +55,9 @@ function optsIsHqxOpts(opts: WorkerResizeOptions): opts is HqxResizeOptions {
   return opts.method === 'hqx';
 }
 
-function optsIsMagicKernelOpts(opts: WorkerResizeOptions): opts is MagicKernelResizeOptions {
+function optsIsMagicKernelOpts(
+  opts: WorkerResizeOptions,
+): opts is MagicKernelResizeOptions {
   return MAGIC_KERNEL_METHODS.includes(opts.method);
 }
 
@@ -134,7 +142,7 @@ async function magicKernel(
     input.height,
     opts.width,
     opts.height,
-    opts.method
+    opts.method,
   );
 
   return result;
