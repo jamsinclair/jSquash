@@ -10,8 +10,8 @@
   },
   "keywords": [
     "image",
-    "optimisation",
-    "optimization",
+    "encoder",
+    "decoder",
     "squoosh",
     "wasm",
     "webassembly",
