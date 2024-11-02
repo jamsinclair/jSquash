@@ -26,7 +26,7 @@ Note: You will need to either manually include the wasm files from the codec dir
 
 ### resize(data: ImageData, options: ResizeOptions): Promise<ImageData>
 
-Resizes an ImageData object to the 
+Resizes an ImageData object to the specified dimensions.
 
 #### data
 Type: `ImageData`
@@ -37,7 +37,7 @@ Type: `Partial<ResizeOptions> & { width: number, height: number }`
 The resize options for the output image. [See default values](./meta.ts).
 - `width` (number) the width to resize the image to 
 - `height` (number) the height to resize the image to
-- `method?` (`'triangle'` | `'catrom'` | `'mitchell'` | `'lanczos3'` | `'hqx'`) the algorithm used to resize the image. Defaults to `lanczos3`.
+- `method?` (`'triangle'` | `'catrom'` | `'mitchell'` | `'lanczos3'` | `'hqx'` | `'magicKernel'` | `'magicKernelSharp2013'` | `'magicKernelSharp2021'`) the algorithm used to resize the image. Defaults to `lanczos3`.
 - `fitMethod?` (`'stretch'` | `'contain'`) whether the image is stretched to fit the dimensions or cropped. Defaults to `stretch`.
 - `premultiply?` (boolean) Defaults to `true`
 - `linearRGB?` (boolean) Defaults to `true`
@@ -68,4 +68,10 @@ import resize, { initResize } from '@jsquash/resize';
 initResize(WASM_MODULE); // The `WASM_MODULE` variable will need to be sourced by yourself and passed as an ArrayBuffer.
 
 resize(image, options);
+
+// Optionally if you know you are using the hqx method or magicKernel method you can also initialise those modules
+import { initHqx, initMagicKernel } from '@jsquash/resize';
+
+initHqx(HQX_WASM_MODULE);
+initMagicKernel(MAGIC_KERNEL_WASM_MODULE);
 ```

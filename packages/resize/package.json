@@ -1,33 +1,34 @@
 {
-    "name": "@jsquash/resize",
-    "version": "2.0.0",
-    "main": "index.js",
-    "description": "Wasm image resize methods supporting the browser and V8 environments. Repackaged from Squoosh App.",
-    "repository": "jamsinclair/jSquash/packages/resize",
-    "author": {
-      "name": "Jamie Sinclair",
-      "email": "jamsinclairnz+npm@gmail.com"
-    },
-    "keywords": [
-      "image",
-      "resize",
-      "hqx",
-      "squoosh",
-      "wasm",
-      "webassembly",
-      "lanczos3",
-      "crop"
-    ],
-    "license": "Apache-2.0",
-    "scripts": {
-      "clean": "rm -rf dist",
-      "build": "npm run clean && tsc && cp -r lib package.json README.md .npmignore ../../LICENSE dist && (rm dist/lib/*/pkg/package.json dist/lib/*/pkg/.gitignore || true)",
-      "prepublishOnly": "[[ \"$PWD\" == *'/dist' ]] && exit 0 || (echo 'Please run npm publish from the dist directory' && exit 1)"
-    },
-    "devDependencies": {
-      "typescript": "^4.4.4"
-    },
-    "type": "module",
-    "sideEffects": false
-  }
-  
+  "name": "@jsquash/resize",
+  "version": "2.1.0",
+  "main": "index.js",
+  "description": "Wasm image resize methods supporting the browser and V8 environments. Repackaged from Squoosh App.",
+  "repository": "jamsinclair/jSquash/packages/resize",
+  "author": {
+    "name": "Jamie Sinclair",
+    "email": "jamsinclairnz+npm@gmail.com"
+  },
+  "keywords": [
+    "image",
+    "resize",
+    "hqx",
+    "squoosh",
+    "wasm",
+    "webassembly",
+    "lanczos3",
+    "crop",
+    "magic-kernel",
+    "magic kernel"
+  ],
+  "license": "Apache-2.0",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc && cp -r lib package.json README.md .npmignore ../../LICENSE dist && (rm dist/lib/*/pkg/package.json dist/lib/*/pkg/.gitignore || true)",
+    "prepublishOnly": "[[ \"$PWD\" == *'/dist' ]] && exit 0 || (echo 'Please run npm publish from the dist directory' && exit 1)"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.4"
+  },
+  "type": "module",
+  "sideEffects": false
+}

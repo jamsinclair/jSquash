@@ -1,0 +1,22 @@
+[package]
+name = "jsquash-magic-kernel"
+version = "0.1.0"
+authors = ["Jamie <jamsinclairnz@gmail.com>"]
+edition = "2021"
+publish = false
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-O", "--no-validation"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+magic-kernel = "0.1.0"
+wasm-bindgen = "0.2.95"
+js-sys = "0.3.72"
+web-sys = { version = "0.3.72", features = ["ImageData"] }
+
+[profile.release]
+lto = true
+opt-level = "s"
