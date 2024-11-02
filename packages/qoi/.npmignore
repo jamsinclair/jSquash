@@ -3,5 +3,6 @@
 Makefile
 node_modules
 codec/*package.json
+codec/*package-lock.json
 *.d.ts.map
 tsconfig.tsbuildinfo
