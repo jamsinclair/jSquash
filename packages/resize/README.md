@@ -11,6 +11,9 @@ Composed of:
 - https://github.com/PistonDevelopers/resize
 - https://github.com/CryZe/wasmboy-rs/tree/master/hqx
 
+Addtionally we have added support for the Magic Kernel algorithm for resizing images. This is a Rust implementation of the algorithm.
+- https://github.com/SevInf/magic-kernel-rust
+
 A [jSquash](https://github.com/jamsinclair/jSquash) package. Codecs and supporting code derived from the [Squoosh](https://github.com/GoogleChromeLabs/squoosh) app.
 
 ## Installation
