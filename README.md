@@ -21,6 +21,7 @@ jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser suppor
 - [@jSquash/jxl](/packages/jxl) - An encoder and decoder for JPEG XL images using the [libjxl](https://github.com/libjxl/libjxl) library
 - [@jSquash/oxipng](/packages/oxipng) - A PNG image optimiser using [Oxipng](https://github.com/shssoichiro/oxipng)
 - [@jSquash/png](/packages/png) - An encoder and decoder for PNG images using the [rust PNG crate](https://docs.rs/png/0.11.0/png/)
+- [@jSquash/qoi](/packages/qoi) - An encoder and decoder for the "Quite Ok Image Format" using the [official library](https://github.com/phoboslab/qoi)
 - [@jSquash/resize](/packages/resize) - An image resizer tool using rust [resize](https://github.com/PistonDevelopers/resize), [hqx](https://github.com/CryZe/wasmboy-rs/tree/master/hqx) and [magic-kernel](https://github.com/SevInf/magic-kernel-rust) libraries. Supports both downscaling and upscaling.
 - [@jSquash/webp](/packages/webp) - An encoder and decoder for WebP images using [libwebp](https://github.com/webmproject/libwebp)
 - ...more to come
