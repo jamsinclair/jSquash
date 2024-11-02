@@ -7,3 +7,5 @@ target
 cargo.toml
 Cargo.lock
 pkg/package.json
+lib/*/package.json
+lib/*/pre.js
