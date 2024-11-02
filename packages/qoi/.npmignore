@@ -1,4 +1,5 @@
 *.cpp
+*.o
 Makefile
 node_modules
 codec/*package.json
