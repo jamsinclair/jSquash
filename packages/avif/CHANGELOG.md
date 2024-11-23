@@ -1,7 +1,7 @@
 # Changelog
 
 
-## @jsquash/avif@next
+## @jsquash/avif@2.0.0
 
 ### Breaking Changes
 
