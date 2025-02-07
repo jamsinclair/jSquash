@@ -25,12 +25,13 @@ let emscriptenModule: Promise<WebPModule>;
 export async function init(
   module?: WebAssembly.Module,
   moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
-): Promise<void> {
+): Promise<WebPModule> {
   emscriptenModule = initEmscriptenModule(
     webp_dec,
     module,
     moduleOptionOverrides,
   );
+  return emscriptenModule;
 }
 
 export default async function decode(buffer: ArrayBuffer): Promise<ImageData> {
