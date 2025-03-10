@@ -20,6 +20,7 @@ import type { MozJPEGModule } from './codec/dec/mozjpeg_dec.js';
 import { initEmscriptenModule } from './utils.js';
 
 import mozjpeg_dec from './codec/dec/mozjpeg_dec.js';
+import { DecodeOptions, defaultDecodeOptions } from 'meta.js';
 
 let emscriptenModule: Promise<MozJPEGModule>;
 
@@ -34,11 +35,12 @@ export async function init(
   );
 }
 
-export default async function decode(buffer: ArrayBuffer): Promise<ImageData> {
+export default async function decode(buffer: ArrayBuffer, options: Partial<DecodeOptions> = {} ): Promise<ImageData> {
   if (!emscriptenModule) init();
 
+  const _options = { ...defaultDecodeOptions, ...options };
   const module = await emscriptenModule;
-  const result = module.decode(buffer);
+  const result = module.decode(buffer, _options.preserveOrientation);
   if (!result) throw new Error('Decoding error');
   return result;
 }
