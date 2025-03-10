@@ -35,7 +35,10 @@ export async function init(
   );
 }
 
-export default async function decode(buffer: ArrayBuffer, options: Partial<DecodeOptions> = {} ): Promise<ImageData> {
+export default async function decode(
+  buffer: ArrayBuffer,
+  options: Partial<DecodeOptions> = {},
+): Promise<ImageData> {
   if (!emscriptenModule) init();
 
   const _options = { ...defaultDecodeOptions, ...options };
