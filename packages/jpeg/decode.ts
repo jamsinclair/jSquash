@@ -20,7 +20,7 @@ import type { MozJPEGModule } from './codec/dec/mozjpeg_dec.js';
 import { initEmscriptenModule } from './utils.js';
 
 import mozjpeg_dec from './codec/dec/mozjpeg_dec.js';
-import { DecodeOptions, defaultDecodeOptions } from 'meta.js';
+import { DecodeOptions, defaultDecodeOptions } from './meta.js';
 
 let emscriptenModule: Promise<MozJPEGModule>;
 
