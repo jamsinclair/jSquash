@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/jpeg@next
+
+### Adds
+
+- Adds ability to preserve the orientation of the image when decoding. When set to `true`, the image will be rotated to the correct orientation. This is useful when the image has an orientation metadata tag that needs to be respected. By default, this is set to `false`. Note: if you are constrained on memory usage, you may want to consider rotating the image yourself either before or after decoding.
+
 ## @jsquash/jpeg@1.4.0
 
 ### Adds

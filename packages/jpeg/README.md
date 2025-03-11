@@ -19,12 +19,17 @@ npm install --save @jsquash/jpeg
 
 Note: You will need to either manually include the wasm files from the codec directory or use a bundler like WebPack or Rollup to include them in your app/server.
 
-### decode(data: ArrayBuffer): Promise<ImageData>
+### decode(data: ArrayBuffer, options?: DecodeOptions): Promise<ImageData>
 
 Decodes JPEG binary ArrayBuffer to raw RGB image data.
 
 #### data
 Type: `ArrayBuffer`
+
+#### options
+Type: `Partial<DecodeOptions>`
+
+The custom options for the decoder. Setting `preserveOrientation` to `true` will rotate the image to the correct orientation based on the metadata tag. By default, this is set to `false`.
 
 #### Example
 ```js

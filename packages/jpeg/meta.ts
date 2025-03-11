@@ -13,6 +13,10 @@
 import { EncodeOptions, MozJpegColorSpace } from './codec/enc/mozjpeg_enc.js';
 export { EncodeOptions, MozJpegColorSpace };
 
+export type DecodeOptions = {
+  preserveOrientation: boolean;
+};
+
 export const label = 'MozJPEG';
 export const mimeType = 'image/jpeg';
 export const extension = 'jpg';
@@ -33,4 +37,10 @@ export const defaultOptions: EncodeOptions = {
   chroma_subsample: 2,
   separate_chroma_quality: false,
   chroma_quality: 75,
+};
+
+export const defaultEncodeOptions = defaultOptions;
+
+export const defaultDecodeOptions: DecodeOptions = {
+  preserveOrientation: false,
 };
