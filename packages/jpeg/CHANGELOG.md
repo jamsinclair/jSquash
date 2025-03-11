@@ -1,6 +1,6 @@
 # Changelog
 
-## @jsquash/jpeg@next
+## @jsquash/jpeg@1.5.0
 
 ### Adds
 
