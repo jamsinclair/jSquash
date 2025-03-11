@@ -48,6 +48,22 @@ test('should decode pixel data in respect to orientation when preserveOrientatio
   t.is(data.data[2], 1);
 });
 
+test('[regression] should correctly decode pixel data for jpeg with orientation 6 (90° CW)', async (t) => {
+  const [testImage, decodeWasmModule] = await Promise.all([
+    getFixturesImage('exif-rotated-90.jpeg'),
+    importWasmModule('node_modules/@jsquash/jpeg/codec/dec/mozjpeg_dec.wasm'),
+  ]);
+  initDecode(decodeWasmModule);
+  const data = await decode(testImage, { preserveOrientation: true });
+  t.is(data.width, 30);
+  t.is(data.height, 100);
+  t.is(data.data.length, 4 * 30 * 100);
+  // First pixel should be red
+  t.is(data.data[0], 254);
+  t.is(data.data[1], 0);
+  t.is(data.data[2], 0);
+});
+
 test('can successfully encode image', async (t) => {
   const encodeWasmModule = await importWasmModule(
     'node_modules/@jsquash/jpeg/codec/enc/mozjpeg_enc.wasm',
