@@ -135,7 +135,7 @@ void apply_orientation(uint8_t *buffer, int width, int height, int orientation)
         break;
       case 6: // Rotate 90° clockwise
         src_x = dst_y;
-        src_y = width - 1 - dst_x;
+        src_y = height - 1 - dst_x;
         break;
       case 7: // Transverse
         src_x = width - 1 - dst_y;
