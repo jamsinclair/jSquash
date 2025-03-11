@@ -6,9 +6,16 @@ LIBAVIF_PACKAGE = node_modules/libavif.tar.gz
 LIBAOM_URL = https://aomedia.googlesource.com/aom/+archive/v3.7.0.tar.gz
 LIBAOM_PACKAGE = node_modules/libaom.tar.gz
 
+# using libdav1d from https://code.videolan.org/videolan/dav1d
+LIBDAV1D_URL = https://code.videolan.org/videolan/dav1d/-/archive/1.5.0/dav1d-1.5.0.tar.gz
+LIBDAV1D_PACKAGE = node_modules/dav1d.tar.gz
+LIBDAV1D_BUILD = node_modules/libavif/ext/dav1d/build
+LIBDAV1D_OUT = $(LIBDAV1D_BUILD)/src/libdav1d.a
+
 export CODEC_DIR = node_modules/libavif
 export BUILD_DIR = node_modules/build
 export LIBAOM_DIR = node_modules/libaom
+export LIBDAV1D_DIR = node_modules/libavif/ext/dav1d
 
 override CFLAGS += "-Wno-unused-macros"
 
@@ -66,17 +73,17 @@ $(OUT_ENC_MT_JS): $(OUT_ENC_CPP) $(CODEC_DIR)/CMakeLists.txt $(LIBAOM_DIR)/CMake
 		OUT_FLAGS="-pthread"
 
 # Decoding
-$(OUT_DEC_JS): $(OUT_DEC_CPP) $(CODEC_DIR)/CMakeLists.txt $(LIBAOM_DIR)/CMakeLists.txt
+$(OUT_DEC_JS): $(OUT_DEC_CPP) $(CODEC_DIR)/CMakeLists.txt $(LIBDAV1D_OUT)
 	$(MAKE) \
 		$(HELPER_MAKEFLAGS) \
 		OUT_JS=$@ \
 		OUT_CPP=$< \
-		LIBAOM_FLAGS="\
-			-DCONFIG_AV1_ENCODER=0 \
-			-DCONFIG_MULTITHREAD=0 \
-		" \
 		ENVIRONMENT=$(ENVIRONMENT) \
-		LIBAVIF_FLAGS="-DAVIF_CODEC_AOM_ENCODE=0"
+		LIBAVIF_FLAGS="\
+			-DAVIF_CODEC_AOM=OFF \
+			-DAVIF_CODEC_DAV1D=LOCAL \
+			-DDAV1D_LIBRARY=$(LIBDAV1D_OUT) \
+			-DDAV1D_INCLUDE_DIR=$(LIBDAV1D_DIR)/include"
 
 # LIBAOM EXTRACTION SECTION
 
@@ -89,6 +96,25 @@ $(LIBAOM_PACKAGE):
 $(LIBAOM_DIR)/CMakeLists.txt: $(LIBAOM_PACKAGE)
 	mkdir -p $(@D)
 	tar xzm -C $(@D) -f $(LIBAOM_PACKAGE)
+
+# Download the libdav1d tarball
+$(LIBDAV1D_PACKAGE):
+	mkdir -p $(@D)
+	curl -sL $(LIBDAV1D_URL) -o $@
+
+# Extract libdav1d from the tarball
+$(LIBDAV1D_DIR)/meson.build: $(LIBDAV1D_PACKAGE)
+	mkdir -p $(@D)
+	tar xz --strip 1 -C $(@D) -f $(LIBDAV1D_PACKAGE)
+
+$(LIBDAV1D_BUILD)/build.ninja: $(LIBDAV1D_DIR)/meson.build
+	cd $(LIBDAV1D_DIR) && meson setup build --buildtype release \
+		--werror \
+		--default-library static \
+		--cross-file package/crossfiles/wasm32.meson
+
+$(LIBDAV1D_OUT): $(LIBDAV1D_BUILD)/build.ninja
+	cd $(LIBDAV1D_DIR) && ninja -C build
 
 # LIBAVIF EXTRACTION SECTION
 
@@ -153,3 +179,4 @@ clean:
 	$(MAKE) $(HELPER_MAKEFLAGS) OUT_JS=$(OUT_ENC_JS) clean
 	$(MAKE) $(HELPER_MAKEFLAGS) OUT_JS=$(OUT_ENC_MT_JS) clean
 	$(MAKE) $(HELPER_MAKEFLAGS) OUT_JS=$(OUT_DEC_JS) clean
+	$(RM) -rf $(LIBDAV1D_OUT)
