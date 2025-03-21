@@ -30,6 +30,9 @@ jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser suppor
 
 ## Usage in the Browser
 
+> [!WARNING]  
+> As of 2025-03-21 there seems to be an issue with the Unpkg CDN and ESM module imports. See issue [#81](https://github.com/jamsinclair/jSquash/issues/81) for updates
+
 You can use the packages directly from the Unpkg CDN and can be the easiest way to get started.
 
 ```js
