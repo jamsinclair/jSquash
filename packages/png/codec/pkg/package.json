@@ -1,5 +1,6 @@
 {
   "name": "squoosh-png",
+  "type": "module",
   "collaborators": [
     "Surma <surma@surma.dev>"
   ],
@@ -9,10 +10,9 @@
     "squoosh_png.js",
     "squoosh_png.d.ts"
   ],
-  "module": "squoosh_png.js",
+  "main": "squoosh_png.js",
   "types": "squoosh_png.d.ts",
   "sideEffects": [
     "./snippets/*"
-  ],
-  "type": "module"
+  ]
 }

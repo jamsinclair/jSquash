@@ -1,5 +1,34 @@
 let wasm;
 
+const heap = new Array(128).fill(undefined);
+
+heap.push(undefined, null, true, false);
+
+let heap_next = heap.length;
+
+function addHeapObject(obj) {
+    if (heap_next === heap.length) heap.push(heap.length + 1);
+    const idx = heap_next;
+    heap_next = heap[idx];
+
+    heap[idx] = obj;
+    return idx;
+}
+
+function getObject(idx) { return heap[idx]; }
+
+function dropObject(idx) {
+    if (idx < 132) return;
+    heap[idx] = heap_next;
+    heap_next = idx;
+}
+
+function takeObject(idx) {
+    const ret = getObject(idx);
+    dropObject(idx);
+    return ret;
+}
+
 const cachedTextDecoder = (typeof TextDecoder !== 'undefined' ? new TextDecoder('utf-8', { ignoreBOM: true, fatal: true }) : { decode: () => { throw Error('TextDecoder not available') } } );
 
 if (typeof TextDecoder !== 'undefined') { cachedTextDecoder.decode(); };
@@ -32,21 +61,6 @@ function getClampedArrayU8FromWasm0(ptr, len) {
     return getUint8ClampedMemory0().subarray(ptr / 1, ptr / 1 + len);
 }
 
-const heap = new Array(128).fill(undefined);
-
-heap.push(undefined, null, true, false);
-
-let heap_next = heap.length;
-
-function addHeapObject(obj) {
-    if (heap_next === heap.length) heap.push(heap.length + 1);
-    const idx = heap_next;
-    heap_next = heap[idx];
-
-    heap[idx] = obj;
-    return idx;
-}
-
 let WASM_VECTOR_LEN = 0;
 
 function passArray8ToWasm0(arg, malloc) {
@@ -73,14 +87,15 @@ function getArrayU8FromWasm0(ptr, len) {
 * @param {Uint8Array} data
 * @param {number} width
 * @param {number} height
+* @param {number} bit_depth
 * @returns {Uint8Array}
 */
-export function encode(data, width, height) {
+export function encode(data, width, height, bit_depth) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passArray8ToWasm0(data, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
-        wasm.encode(retptr, ptr0, len0, width, height);
+        wasm.encode(retptr, ptr0, len0, width, height, bit_depth);
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         var v2 = getArrayU8FromWasm0(r0, r1).slice();
@@ -91,19 +106,6 @@ export function encode(data, width, height) {
     }
 }
 
-function getObject(idx) { return heap[idx]; }
-
-function dropObject(idx) {
-    if (idx < 132) return;
-    heap[idx] = heap_next;
-    heap_next = idx;
-}
-
-function takeObject(idx) {
-    const ret = getObject(idx);
-    dropObject(idx);
-    return ret;
-}
 /**
 * @param {Uint8Array} data
 * @returns {ImageData}
@@ -113,6 +115,63 @@ export function decode(data) {
     const len0 = WASM_VECTOR_LEN;
     const ret = wasm.decode(ptr0, len0);
     return takeObject(ret);
+}
+
+/**
+* @param {Uint8Array} data
+* @returns {ImageDataRGBA16}
+*/
+export function decode_rgba16(data) {
+    const ptr0 = passArray8ToWasm0(data, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.decode_rgba16(ptr0, len0);
+    return ImageDataRGBA16.__wrap(ret);
+}
+
+/**
+*/
+export class ImageDataRGBA16 {
+
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(ImageDataRGBA16.prototype);
+        obj.__wbg_ptr = ptr;
+
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_imagedatargba16_free(ptr);
+    }
+    /**
+    * @returns {number}
+    */
+    get width() {
+        const ret = wasm.imagedatargba16_width(this.__wbg_ptr);
+        return ret >>> 0;
+    }
+    /**
+    * @returns {number}
+    */
+    get height() {
+        const ret = wasm.imagedatargba16_height(this.__wbg_ptr);
+        return ret >>> 0;
+    }
+    /**
+    * @returns {Uint16Array}
+    */
+    get data() {
+        const ret = wasm.imagedatargba16_data(this.__wbg_ptr);
+        return takeObject(ret);
+    }
 }
 
 async function __wbg_load(module, imports) {
@@ -149,6 +208,21 @@ async function __wbg_load(module, imports) {
 function __wbg_get_imports() {
     const imports = {};
     imports.wbg = {};
+    imports.wbg.__wbindgen_memory = function() {
+        const ret = wasm.memory;
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_buffer_a448f833075b71ba = function(arg0) {
+        const ret = getObject(arg0).buffer;
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_newwithbyteoffsetandlength_099217381c451830 = function(arg0, arg1, arg2) {
+        const ret = new Uint16Array(getObject(arg0), arg1 >>> 0, arg2 >>> 0);
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbindgen_object_drop_ref = function(arg0) {
+        takeObject(arg0);
+    };
     imports.wbg.__wbg_newwithownedu8clampedarrayandsh_91db5987993a08fb = function(arg0, arg1, arg2, arg3) {
         var v0 = getClampedArrayU8FromWasm0(arg0, arg1).slice();
         wasm.__wbindgen_free(arg0, arg1 * 1, 1);

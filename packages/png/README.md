@@ -21,7 +21,7 @@ Note: You will need to either manually include the wasm files from the codec dir
 
 ### decode(data: ArrayBuffer): Promise<ImageData>
 
-Decodes PNG binary ArrayBuffer to raw RGB image data.
+Decodes PNG binary ArrayBuffer to raw RGBA image data.
 
 #### data
 Type: `ArrayBuffer`
@@ -35,14 +35,40 @@ const formData = new FormData(formEl);
 const imageData = await decode(await formData.get('image').arrayBuffer());
 ```
 
-### encode(data: ImageData): Promise<ArrayBuffer>
+### decodeRgba16(data: ArrayBuffer): Promise<{ data: Uint16Array; width: number; height: number; }>
+
+Decodes PNG binary ArrayBuffer to raw 16-bit RGBA image data. Both 8-bit and 16-bit PNGs are supported.
+
+#### data
+Type: `ArrayBuffer`
+
+#### Example
+```js
+import { decodeRgba16 } from '@jsquash/png';
+
+const formEl = document.querySelector('form');
+const formData = new FormData(formEl);
+const imageData = await decodeRgba16(await formData.get('image').arrayBuffer());
+```
+
+### encode(data: ImageData | ImageDataRGBA16, options?: { bitDepth?: 8 | 16 }): Promise<ArrayBuffer>
 
 > ℹ️ You may want to use the [@jsquash/oxipng](/packages/oxipng) package instead. It can both optimise and encode to PNG directly from raw image data.
 
 Encodes raw RGB image data to PNG format and resolves to an ArrayBuffer of binary data.
 
+Can optionally specify the bit depth of the output PNG. The default is 8-bit. When set to 16-bit, the input data be of the following format:
+
+```ts
+{
+  data: Uint16Array;
+  width: number;
+  height: number;
+}
+```
+
 #### data
-Type: `ImageData`
+Type: `ImageData` or for 16-bit images `{ data: Uint16Array; width: number; height: number; }`
 
 #### Example
 ```js
@@ -61,6 +87,29 @@ async function loadImage(src) {
 
 const rawImageData = await loadImage('/example.jpg');
 const pngBuffer = await encode(rawImageData);
+```
+
+#### Example with 16-bit image data
+```js
+import { encode } from '@jsquash/png';
+
+async function create16bitImage(src) {
+  const pixels = new Uint16Array(4 * 256 * 256);
+  for (let i = 0; i < pixels.length; i += 4) {
+    pixels[i] = Math.floor(Math.random() * 65535); // R
+    pixels[i + 1] = Math.floor(Math.random() * 65535); // G
+    pixels[i + 2] = Math.floor(Math.random() * 65535); // B
+    pixels[i + 3] = 65535; // A
+  }
+  return {
+    data: pixels,
+    width: 256,
+    height: 256,
+  };
+}
+
+const rawImageData = await create16bitImage();
+const png16bitBuffer = await encode(rawImageData, { bitDepth: 16 });
 ```
 
 ## Manual WASM initialisation (not recommended)
