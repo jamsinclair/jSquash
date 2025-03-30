@@ -21,7 +21,10 @@ import type {
   InitInput,
   InitOutput as PngModule,
 } from './codec/pkg/squoosh_png.js';
-import initPngModule, { decode as pngDecode, decode_rgba16 } from './codec/pkg/squoosh_png.js';
+import initPngModule, {
+  decode as pngDecode,
+  decode_rgba16,
+} from './codec/pkg/squoosh_png.js';
 
 let pngModule: Promise<PngModule>;
 
@@ -43,7 +46,9 @@ export async function decode(data: ArrayBuffer): Promise<ImageData> {
   return imageData;
 }
 
-export async function decodeRgba16(data: ArrayBuffer): Promise<ImageDataRGBA16> {
+export async function decodeRgba16(
+  data: ArrayBuffer,
+): Promise<ImageDataRGBA16> {
   await init();
 
   const imageData = await decode_rgba16(new Uint8Array(data));

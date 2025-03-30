@@ -26,7 +26,7 @@ type ImageDataRGBA16 = {
   data: Uint16Array;
   width: number;
   height: number;
-}
+};
 
 let pngModule: Promise<PngModule>;
 
@@ -38,8 +38,14 @@ export async function init(moduleOrPath?: InitInput): Promise<PngModule> {
   return pngModule;
 }
 
-export default async function encode(data: ImageDataRGBA16, options: { bitDepth: 16 }): Promise<ArrayBuffer>;
-export default async function encode(data: ImageData | ImageDataRGBA16, options?: { bitDepth?: 8 | 16 }): Promise<ArrayBuffer> {
+export default async function encode(
+  data: ImageDataRGBA16,
+  options: { bitDepth: 16 },
+): Promise<ArrayBuffer>;
+export default async function encode(
+  data: ImageData | ImageDataRGBA16,
+  options?: { bitDepth?: 8 | 16 },
+): Promise<ArrayBuffer> {
   await init();
 
   const bitDepth = options?.bitDepth ?? 8;
@@ -50,10 +56,14 @@ export default async function encode(data: ImageData | ImageDataRGBA16, options?
 
   const isUint16Array = data.data instanceof Uint16Array;
   if (isUint16Array && bitDepth !== 16) {
-      throw new Error('Invalid bit depth, must be 16 for Uint16Array or manually convert to RGB8 values with Uint8Array.');
+    throw new Error(
+      'Invalid bit depth, must be 16 for Uint16Array or manually convert to RGB8 values with Uint8Array.',
+    );
   }
   if (!isUint16Array && bitDepth === 16) {
-      throw new Error('Invalid bit depth, must be 8 for Uint8Array or manually convert to RGB16 values with Uint16Array.');
+    throw new Error(
+      'Invalid bit depth, must be 8 for Uint8Array or manually convert to RGB16 values with Uint16Array.',
+    );
   }
 
   const encodeData = new Uint8Array(data.data.buffer);
