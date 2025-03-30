@@ -22,6 +22,12 @@ import type {
 } from './codec/pkg/squoosh_png.js';
 import initPngModule, { encode as pngEncode } from './codec/pkg/squoosh_png.js';
 
+type ImageDataRGBA16 = {
+  data: Uint16Array;
+  width: number;
+  height: number;
+}
+
 let pngModule: Promise<PngModule>;
 
 export async function init(moduleOrPath?: InitInput): Promise<PngModule> {
@@ -32,10 +38,26 @@ export async function init(moduleOrPath?: InitInput): Promise<PngModule> {
   return pngModule;
 }
 
-export default async function encode(data: ImageData): Promise<ArrayBuffer> {
+export default async function encode(data: ImageDataRGBA16, options: { bitDepth: 16 }): Promise<ArrayBuffer>;
+export default async function encode(data: ImageData | ImageDataRGBA16, options?: { bitDepth?: 8 | 16 }): Promise<ArrayBuffer> {
   await init();
-  // @ts-ignore - pngEncode expects a Uint8Array, check if mistake or whether we need to convert from Uint8ClampedArray
-  const output = await pngEncode(data.data, data.width, data.height);
+
+  const bitDepth = options?.bitDepth ?? 8;
+
+  if (bitDepth !== 8 && bitDepth !== 16) {
+    throw new Error('Invalid bit depth. Must be either 8 or 16.');
+  }
+
+  const isUint16Array = data.data instanceof Uint16Array;
+  if (isUint16Array && bitDepth !== 16) {
+      throw new Error('Invalid bit depth, must be 16 for Uint16Array or manually convert to RGB8 values with Uint8Array.');
+  }
+  if (!isUint16Array && bitDepth === 16) {
+      throw new Error('Invalid bit depth, must be 8 for Uint8Array or manually convert to RGB16 values with Uint16Array.');
+  }
+
+  const encodeData = new Uint8Array(data.data.buffer);
+  const output = await pngEncode(encodeData, data.width, data.height, bitDepth);
   if (!output) throw new Error('Encoding error.');
 
   return output.buffer;
