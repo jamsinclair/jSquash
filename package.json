@@ -20,5 +20,6 @@
     "prettier": "^3.1.0",
     "turbo": "^1.10.2",
     "typescript": "^5.2.2"
-  }
+  },
+  "type": "module"
 }
