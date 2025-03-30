@@ -43,7 +43,9 @@ export default async function decode(buffer: ArrayBuffer): Promise<ImageData> {
   return result;
 }
 
-export async function decodeAnimated(buffer: ArrayBuffer): Promise<WebPFrame[]> {
+export async function decodeAnimated(
+  buffer: ArrayBuffer,
+): Promise<WebPFrame[]> {
   if (!emscriptenModule) init();
 
   const module = await emscriptenModule;
