@@ -49,6 +49,8 @@ struct AvifOptions {
   int denoiseLevel;
   // toggles AVIF_CHROMA_DOWNSAMPLING_SHARP_YUV
   bool enableSharpYUV;
+  // 8, 10, or 12 bit depth
+  int bitDepth;
 };
 
 thread_local const val Uint8Array = val::global("Uint8Array");
@@ -56,7 +58,14 @@ thread_local const val Uint8Array = val::global("Uint8Array");
 val encode(std::string buffer, int width, int height, AvifOptions options) {
   avifResult status;  // To check the return status for avif API's
 
-  int depth = 8;
+  int depth = options.bitDepth;
+  if (depth != 8 && depth != 10 && depth != 12) {
+    EM_ASM({
+      throw new Error("Invalid bit depth. Supported values are 8, 10, or 12.");
+    });
+    return val::null();
+  }
+
   avifPixelFormat format;
   switch (options.subsample) {
     case 0:
@@ -87,12 +96,20 @@ val encode(std::string buffer, int width, int height, AvifOptions options) {
     image->matrixCoefficients = AVIF_MATRIX_COEFFICIENTS_BT601;
   }
 
-  uint8_t* rgba = reinterpret_cast<uint8_t*>(const_cast<char*>(buffer.data()));
-
   avifRGBImage srcRGB;
   avifRGBImageSetDefaults(&srcRGB, image.get());
+
+  uint8_t* rgba = reinterpret_cast<uint8_t*>(const_cast<char*>(buffer.data()));
   srcRGB.pixels = rgba;
-  srcRGB.rowBytes = width * 4;
+
+  if (depth > 8) {
+    srcRGB.depth = depth;
+    srcRGB.rowBytes = width * 8;
+  } else {
+    srcRGB.depth = 8;
+    srcRGB.rowBytes = width * 4;
+  }
+
   if (options.enableSharpYUV) {
     srcRGB.chromaDownsampling = AVIF_CHROMA_DOWNSAMPLING_SHARP_YUV;
   }
@@ -163,7 +180,8 @@ EMSCRIPTEN_BINDINGS(my_module) {
       .field("tune", &AvifOptions::tune)
       .field("denoiseLevel", &AvifOptions::denoiseLevel)
       .field("subsample", &AvifOptions::subsample)
-      .field("enableSharpYUV", &AvifOptions::enableSharpYUV);
+      .field("enableSharpYUV", &AvifOptions::enableSharpYUV)
+      .field("bitDepth", &AvifOptions::bitDepth);
 
   function("encode", &encode);
 }
