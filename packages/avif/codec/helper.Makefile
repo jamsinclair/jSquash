@@ -24,6 +24,8 @@ LIBAOM_OUT := $(LIBAOM_BUILD_DIR)/libaom.a
 OUT_WASM = $(OUT_JS:.js=.wasm)
 OUT_WORKER=$(OUT_JS:.js=.worker.js)
 
+PRE_JS = pre.js
+
 .PHONY: all clean
 
 all: $(OUT_JS)
@@ -41,6 +43,7 @@ $(OUT_JS): $(OUT_CPP) $(LIBAOM_OUT) $(CODEC_OUT)
 		$(CXXFLAGS) \
 		$(LDFLAGS) \
 		$(OUT_FLAGS) \
+		--pre-js $(PRE_JS) \
 		--bind \
 		-s ERROR_ON_UNDEFINED_SYMBOLS=0 \
 		-s ENVIRONMENT=$(ENVIRONMENT) \
