@@ -164,7 +164,7 @@ test('throws error when encoding 10-bit image with Uint8Array-like data', async 
     width: 50,
   }, { bitDepth: 10 }));
 
-  t.is(error.message, 'Invalid bit depth. Must use Uint16Array for bit depths greater than 8.');
+  t.is(error.message, 'Invalid image data for bit depth. Must use Uint16Array for bit depths greater than 8.');
 });
 
 test('throws error when encoding 12-bit image with Uint8Array-like data', async (t) => {
@@ -178,5 +178,5 @@ test('throws error when encoding 12-bit image with Uint8Array-like data', async 
     width: 50,
   }, { bitDepth: 12 }));
 
-  t.is(error.message, 'Invalid bit depth. Must use Uint16Array for bit depths greater than 8.');
+  t.is(error.message, 'Invalid image data for bit depth. Must use Uint16Array for bit depths greater than 8.');
 });

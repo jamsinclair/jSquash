@@ -67,7 +67,7 @@ export default async function encode(
 
   if (!(data.data instanceof Uint16Array) && _options.bitDepth !== 8) {
     throw new Error(
-      'Invalid bit depth. Must use Uint16Array for bit depths greater than 8.',
+      'Invalid image data for bit depth. Must use Uint16Array for bit depths greater than 8.',
     );
   }
 
