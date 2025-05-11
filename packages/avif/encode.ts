@@ -72,7 +72,12 @@ export default async function encode(
   }
 
   const module = await emscriptenModule;
-  const output = module.encode(new Uint8Array(data.data.buffer), data.width, data.height, _options);
+  const output = module.encode(
+    new Uint8Array(data.data.buffer),
+    data.width,
+    data.height,
+    _options,
+  );
 
   if (!output) {
     throw new Error('Encoding error.');

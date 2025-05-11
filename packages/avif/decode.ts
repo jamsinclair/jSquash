@@ -37,14 +37,22 @@ export async function init(
 
 type DecodeOptions = {
   bitDepth?: 8 | 10 | 12 | 16;
-}
+};
 
-export default async function decode(buffer: ArrayBuffer): Promise<ImageData | null>;
-export default async function decode(buffer: ArrayBuffer, options: { bitDepth?: 8 }): Promise<ImageData | null>;
-export default async function decode(buffer: ArrayBuffer, options: { bitDepth: 10 | 12 | 16 }): Promise<ImageData16bit | null>;
 export default async function decode(
   buffer: ArrayBuffer,
-  options?: DecodeOptions
+): Promise<ImageData | null>;
+export default async function decode(
+  buffer: ArrayBuffer,
+  options: { bitDepth?: 8 },
+): Promise<ImageData | null>;
+export default async function decode(
+  buffer: ArrayBuffer,
+  options: { bitDepth: 10 | 12 | 16 },
+): Promise<ImageData16bit | null>;
+export default async function decode(
+  buffer: ArrayBuffer,
+  options?: DecodeOptions,
 ): Promise<ImageData | ImageData16bit | null> {
   if (!emscriptenModule) {
     init();
