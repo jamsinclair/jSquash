@@ -20,6 +20,7 @@ import type { AVIFModule } from './codec/dec/avif_dec.js';
 import { initEmscriptenModule } from './utils.js';
 
 import avif_dec from './codec/dec/avif_dec.js';
+import { ImageData16bit } from 'meta.js';
 
 let emscriptenModule: Promise<AVIFModule>;
 
@@ -34,13 +35,24 @@ export async function init(
   );
 }
 
-export default async function decode(buffer: ArrayBuffer): Promise<ImageData> {
+type DecodeOptions = {
+  bitDepth?: 8 | 10 | 12 | 16;
+}
+
+export default async function decode(buffer: ArrayBuffer): Promise<ImageData | null>;
+export default async function decode(buffer: ArrayBuffer, options: { bitDepth?: 8 }): Promise<ImageData | null>;
+export default async function decode(buffer: ArrayBuffer, options: { bitDepth: 10 | 12 | 16 }): Promise<ImageData16bit | null>;
+export default async function decode(
+  buffer: ArrayBuffer,
+  options?: DecodeOptions
+): Promise<ImageData | ImageData16bit | null> {
   if (!emscriptenModule) {
     init();
   }
 
   const module = await emscriptenModule;
-  const result = module.decode(buffer);
+  const bitDepth = options?.bitDepth ?? 8;
+  const result = module.decode(buffer, bitDepth);
   if (!result) throw new Error('Decoding error');
   return result;
 }
