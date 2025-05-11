@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "../../../tools/build-cpp.sh"
+    "build": "EMSDK_VERSION=3.1.57 ../../../tools/build-cpp.sh"
   },
   "type": "module"
 }
