@@ -1,7 +1,7 @@
 import test from 'ava';
 import { importWasmModule, getFixturesImage } from './utils.js';
 
-import decode, { init as initDecode } from '@jsquash/webp/decode.js';
+import decode, { decodeAnimated, init as initDecode } from '@jsquash/webp/decode.js';
 import encode, { init as initEncode } from '@jsquash/webp/encode.js';
 
 test('can successfully decode image', async (t) => {
@@ -14,6 +14,22 @@ test('can successfully decode image', async (t) => {
   t.is(data.width, 50);
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
+});
+
+test('can successfully decode animated webp image', async (t) => {
+  const [testImage, decodeWasmModule] = await Promise.all([
+    getFixturesImage('test-animated.webp'),
+    importWasmModule('node_modules/@jsquash/webp/codec/dec/webp_dec.wasm'),
+  ]);
+  initDecode(decodeWasmModule);
+  const frames = await decodeAnimated(testImage);
+  t.is(frames.length, 3);
+  for (const frame of frames) {
+    t.is(frame.imageData.width, 100);
+    t.is(frame.imageData.height, 100);
+    t.is(frame.imageData.data.length, 4 * 100 * 100);
+    t.is(frame.duration, 500);
+  }
 });
 
 test('can successfully encode image', async (t) => {

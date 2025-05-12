@@ -36,6 +36,24 @@ const formData = new FormData(formEl);
 const imageData = await decode(await formData.get('image').arrayBuffer());
 ```
 
+### decodeAnimated(data: ArrayBuffer): Promise<Array<{ imageData: ImageData, duration: number }>>
+
+Decodes WebP binary ArrayBuffer to raw RGB image data.
+
+#### data
+Type: `ArrayBuffer`
+
+#### Example
+```js
+import { decodeAnimated } from '@jsquash/webp';
+
+const formEl = document.querySelector('form');
+const formData = new FormData(formEl);
+// Assuming user selected an animated input WebP file
+const frames = await decodeAnimated(await formData.get('image').arrayBuffer());
+```
+
+
 ### encode(data: ImageData, options?: EncodeOptions): Promise<ArrayBuffer>
 
 Encodes raw RGB image data to WebP format and resolves to an ArrayBuffer of binary data.
