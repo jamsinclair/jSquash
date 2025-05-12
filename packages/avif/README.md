@@ -76,6 +76,15 @@ const rawImageData = await loadImage('/example.png');
 const avifBuffer = await encode(rawImageData);
 ```
 
+#### Lossless Example
+```js
+import { encode } from '@jsquash/avif';
+
+const rawImageData = await loadImage('/example.png');
+// Lossless encoding can be achieved by setting the `lossless` option to `true`
+const avifBuffer = await encode(rawImageData, { lossless: true });
+```
+
 ## Manual WASM initialisation (not recommended)
 
 In most situations there is no need to manually initialise the provided WebAssembly modules.

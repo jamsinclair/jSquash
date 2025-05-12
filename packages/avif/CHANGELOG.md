@@ -9,6 +9,10 @@
     - 10-bit, 12-bit and 16-bit images are supported for decoding
     - See [README](./README.md) for bit depth configuration options
 
+- Adds easy support for lossless encoding with the `lossless` option
+    - When `lossless` is set to `true`, the `quality` and `qualityAlpha` options are ignored
+    - The `subsample` option is ignored when `lossless` is set to `true`
+
 ## @jsquash/avif@2.0.0
 
 ### Breaking Changes

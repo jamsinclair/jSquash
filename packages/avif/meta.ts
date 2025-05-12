@@ -10,9 +10,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { EncodeOptions, AVIFTune } from './codec/enc/avif_enc.js';
+import {
+  EncodeOptions as RawEncodeOptions,
+  AVIFTune,
+} from './codec/enc/avif_enc.js';
 
-export { EncodeOptions, AVIFTune };
+export { AVIFTune };
+
+export type EncodeOptions = RawEncodeOptions & {
+  lossless: boolean;
+};
 
 export type ImageData16bit = {
   data: Uint16Array;
@@ -36,4 +43,5 @@ export const defaultOptions: EncodeOptions = {
   tune: AVIFTune.auto,
   enableSharpYUV: false,
   bitDepth: 8,
+  lossless: false,
 };
