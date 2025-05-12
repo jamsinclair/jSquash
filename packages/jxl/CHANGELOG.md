@@ -1,5 +1,26 @@
 # Changelog
 
+## @jsquash/jxl@1.2.0
+
+### Adds
+- Adds support for only providing a module option override to the `init` function directly
+
+  **Example:**
+  ```ts
+  import encode, { init } from '@jsquash/jxl/encode';
+  await init({
+    locateFile: (path) => {
+        const remoteLocation = 'https://cdn.mydomain.com/wasm';
+        return remoteLocation + path;
+    }
+  });
+  const buffer = await encode(/* image data */);
+  ```
+
+### Fixes
+
+- Updates `locateFile` emscripten module option type to support prefix parameter.
+
 ## @jsquash/jxl@1.1.0
 
 ### Adds

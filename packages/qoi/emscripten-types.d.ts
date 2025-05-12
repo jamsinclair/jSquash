@@ -12,7 +12,9 @@ declare namespace EmscriptenWasm {
   interface ModuleOpts {
     mainScriptUrlOrBlob?: string;
     noInitialRun?: boolean;
-    locateFile?: (url: string) => string;
+    locateFile?:
+      | ((path: string) => string)
+      | ((path: string, prefix: string) => string);
     onRuntimeInitialized?: () => void;
     instantiateWasm?: (
       imports: WebAssembly.Imports,

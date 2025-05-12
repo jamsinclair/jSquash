@@ -27,23 +27,36 @@ import { simd } from 'wasm-feature-detect';
 let emscriptenModule: Promise<WebPModule>;
 
 export async function init(
+  moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
+): Promise<WebPModule>;
+export async function init(
   module?: WebAssembly.Module,
   moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
 ): Promise<WebPModule> {
+  let actualModule: WebAssembly.Module | undefined = module;
+  let actualOptions: Partial<EmscriptenWasm.ModuleOpts> | undefined =
+    moduleOptionOverrides;
+
+  // If only one argument is provided and it's not a WebAssembly.Module
+  if (arguments.length === 1 && !(module instanceof WebAssembly.Module)) {
+    actualModule = undefined;
+    actualOptions = module as unknown as Partial<EmscriptenWasm.ModuleOpts>;
+  }
+
   if (await simd()) {
     const webpEncoder = await import('./codec/enc/webp_enc_simd.js');
     emscriptenModule = initEmscriptenModule(
       webpEncoder.default,
-      module,
-      moduleOptionOverrides,
+      actualModule,
+      actualOptions,
     );
     return emscriptenModule;
   }
   const webpEncoder = await import('./codec/enc/webp_enc.js');
   emscriptenModule = initEmscriptenModule(
     webpEncoder.default,
-    module,
-    moduleOptionOverrides,
+    actualModule,
+    actualOptions,
   );
   return emscriptenModule;
 }

@@ -23,14 +23,23 @@ import { initEmscriptenModule } from './utils.js';
 let emscriptenModule: Promise<QOIModule>;
 
 export async function init(
+  moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
+): Promise<void>;
+export async function init(
   module?: WebAssembly.Module,
   moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
 ): Promise<void> {
-  emscriptenModule = initEmscriptenModule(
-    qoi_enc,
-    module,
-    moduleOptionOverrides,
-  );
+  let actualModule: WebAssembly.Module | undefined = module;
+  let actualOptions: Partial<EmscriptenWasm.ModuleOpts> | undefined =
+    moduleOptionOverrides;
+
+  // If only one argument is provided and it's not a WebAssembly.Module
+  if (arguments.length === 1 && !(module instanceof WebAssembly.Module)) {
+    actualModule = undefined;
+    actualOptions = module as unknown as Partial<EmscriptenWasm.ModuleOpts>;
+  }
+
+  emscriptenModule = initEmscriptenModule(qoi_enc, actualModule, actualOptions);
 }
 
 export default async function encode(data: ImageData): Promise<ArrayBuffer> {
@@ -38,6 +47,6 @@ export default async function encode(data: ImageData): Promise<ArrayBuffer> {
 
   const module = await emscriptenModule;
   const resultView = module.encode(data.data, data.width, data.height);
-  // wasm can’t run on SharedArrayBuffers, so we hard-cast to ArrayBuffer.
+  // wasm can't run on SharedArrayBuffers, so we hard-cast to ArrayBuffer.
   return resultView.buffer as ArrayBuffer;
 }
