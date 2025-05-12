@@ -16,7 +16,7 @@
  * Updated to support a partial subset of Avif encoding options to be provided.
  * The avif options are defaulted to defaults from the meta.ts file.
  */
-import type { EncodeOptions } from './meta.js';
+import type { EncodeOptions, ImageData16bit } from './meta.js';
 import type { AVIFModule } from './codec/enc/avif_enc.js';
 
 import { defaultOptions } from './meta.js';
@@ -59,14 +59,25 @@ export async function init(
 }
 
 export default async function encode(
-  data: ImageData,
+  data: ImageData | ImageData16bit,
   options: Partial<EncodeOptions> = {},
 ): Promise<ArrayBuffer> {
   if (!emscriptenModule) emscriptenModule = init();
+  const _options = { ...defaultOptions, ...options };
+
+  if (!(data.data instanceof Uint16Array) && _options.bitDepth !== 8) {
+    throw new Error(
+      'Invalid image data for bit depth. Must use Uint16Array for bit depths greater than 8.',
+    );
+  }
 
   const module = await emscriptenModule;
-  const _options = { ...defaultOptions, ...options };
-  const output = module.encode(data.data, data.width, data.height, _options);
+  const output = module.encode(
+    new Uint8Array(data.data.buffer),
+    data.width,
+    data.height,
+    _options,
+  );
 
   if (!output) {
     throw new Error('Encoding error.');

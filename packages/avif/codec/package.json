@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "build": "../../../tools/build-cpp.sh && npm run patch-pre-script",
-    "patch-pre-script": "cat pre.js >> enc/avif_enc.js && cat pre.js >> dec/avif_dec.js"
+    "build": "EMSDK_VERSION=3.1.57 DEFAULT_CFLAGS='-Oz -flto' ../../../tools/build-cpp.sh"
   },
   "type": "module"
 }

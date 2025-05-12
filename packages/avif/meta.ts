@@ -14,6 +14,12 @@ import { EncodeOptions, AVIFTune } from './codec/enc/avif_enc.js';
 
 export { EncodeOptions, AVIFTune };
 
+export type ImageData16bit = {
+  data: Uint16Array;
+  width: number;
+  height: number;
+};
+
 export const label = 'AVIF';
 export const mimeType = 'image/avif';
 export const extension = 'avif';
@@ -29,4 +35,5 @@ export const defaultOptions: EncodeOptions = {
   sharpness: 0,
   tune: AVIFTune.auto,
   enableSharpYUV: false,
+  bitDepth: 8,
 };

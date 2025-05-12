@@ -16,6 +16,7 @@ export interface EncodeOptions {
   sharpness: number;
   enableSharpYUV: boolean;
   tune: AVIFTune;
+  bitDepth: number;
 }
 
 export interface AVIFModule extends EmscriptenWasm.Module {
