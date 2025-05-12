@@ -23,7 +23,7 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build:codec": "cd codec && npm run build",
-    "build": "npm run clean && tsc && cp -r codec package.json README.md *.d.ts .npmignore ../../LICENSE dist",
+    "build": "npm run clean && tsc && cp -r codec package.json README.md CHANGELOG.md *.d.ts .npmignore ../../LICENSE dist",
     "prepublishOnly": "[[ \"$PWD\" == *'/dist' ]] && exit 0 || (echo 'Please run npm publish from the dist directory' && exit 1)"
   },
   "dependencies": {
