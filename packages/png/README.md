@@ -46,19 +46,11 @@ const imageData16bit = await decode(await formData.get('image').arrayBuffer(), {
 
 ### encode(data: ImageData | ImageDataRGBA16, options?: { bitDepth?: 8 | 16 }): Promise<ArrayBuffer>
 
-> ℹ️ You may want to use the [@jsquash/oxipng](/packages/oxipng) package instead. It can both optimise and encode to PNG directly from raw image data.
+> ℹ️ You may want to use the [@jsquash/oxipng](/packages/oxipng) package instead. It can both optimise and encode to PNG directly from raw image data (8-bit images only).
 
 Encodes raw RGB image data to PNG format and resolves to an ArrayBuffer of binary data.
 
-Can optionally specify the bit depth of the output PNG. The default is 8-bit. When set to 16-bit, the input data be of the following format:
-
-```ts
-{
-  data: Uint16Array;
-  width: number;
-  height: number;
-}
-```
+Can optionally specify the bit depth of the output PNG. The default is 8-bit.
 
 #### data
 Type: `ImageData` or for 16-bit images `{ data: Uint16Array; width: number; height: number; }`
