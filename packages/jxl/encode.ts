@@ -33,9 +33,22 @@ const isRunningInCloudflareWorker = () =>
   (globalThis.caches as any)?.default !== undefined;
 
 export async function init(
+  moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
+): Promise<JXLModule>;
+export async function init(
   module?: WebAssembly.Module,
   moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
 ) {
+  let actualModule: WebAssembly.Module | undefined = module;
+  let actualOptions: Partial<EmscriptenWasm.ModuleOpts> | undefined =
+    moduleOptionOverrides;
+
+  // If only one argument is provided and it's not a WebAssembly.Module
+  if (arguments.length === 1 && !(module instanceof WebAssembly.Module)) {
+    actualModule = undefined;
+    actualOptions = module as unknown as Partial<EmscriptenWasm.ModuleOpts>;
+  }
+
   if (
     !isRunningInNode() &&
     !isRunningInCloudflareWorker() &&
@@ -45,24 +58,24 @@ export async function init(
       const jxlEncoder = await import('./codec/enc/jxl_enc_mt_simd.js');
       emscriptenModule = initEmscriptenModule(
         jxlEncoder.default,
-        module,
-        moduleOptionOverrides,
+        actualModule,
+        actualOptions,
       );
       return emscriptenModule;
     }
     const jxlEncoder = await import('./codec/enc/jxl_enc_mt.js');
     emscriptenModule = initEmscriptenModule(
       jxlEncoder.default,
-      module,
-      moduleOptionOverrides,
+      actualModule,
+      actualOptions,
     );
     return emscriptenModule;
   }
   const jxlEncoder = await import('./codec/enc/jxl_enc.js');
   emscriptenModule = initEmscriptenModule(
     jxlEncoder.default,
-    module,
-    moduleOptionOverrides,
+    actualModule,
+    actualOptions,
   );
   return emscriptenModule;
 }

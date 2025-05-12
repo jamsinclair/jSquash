@@ -33,9 +33,22 @@ const isRunningInCloudflareWorker = () =>
   (globalThis.caches as any)?.default !== undefined;
 
 export async function init(
+  moduleOptionOverride?: Partial<EmscriptenWasm.ModuleOpts>,
+): Promise<any>;
+export async function init(
   module?: WebAssembly.Module,
   moduleOptionOverrides?: Partial<EmscriptenWasm.ModuleOpts>,
 ) {
+  let actualModule: WebAssembly.Module | undefined = module;
+  let actualOptions: Partial<EmscriptenWasm.ModuleOpts> | undefined =
+    moduleOptionOverrides;
+
+  // If only one argument is provided and it's not a WebAssembly.Module
+  if (arguments.length === 1 && !(module instanceof WebAssembly.Module)) {
+    actualModule = undefined;
+    actualOptions = module as unknown as Partial<EmscriptenWasm.ModuleOpts>;
+  }
+
   if (
     !isRunningInNode() &&
     !isRunningInCloudflareWorker() &&
@@ -44,16 +57,16 @@ export async function init(
     const avifEncoder = await import('./codec/enc/avif_enc_mt.js');
     emscriptenModule = initEmscriptenModule(
       avifEncoder.default,
-      module,
-      moduleOptionOverrides,
+      actualModule,
+      actualOptions,
     );
     return emscriptenModule;
   }
   const avifEncoder = await import('./codec/enc/avif_enc.js');
   emscriptenModule = initEmscriptenModule(
     avifEncoder.default,
-    module,
-    moduleOptionOverrides,
+    actualModule,
+    actualOptions,
   );
   return emscriptenModule;
 }

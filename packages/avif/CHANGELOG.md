@@ -13,6 +13,24 @@
     - When `lossless` is set to `true`, the `quality` and `qualityAlpha` options are ignored
     - The `subsample` option is ignored when `lossless` is set to `true`
 
+- Adds support for only providing a module option override to the `init` function directly
+
+  **Example:**
+  ```ts
+  import encode, { init } from '@jsquash/avif/encode';
+  await init({
+    locateFile: (path) => {
+        const remoteLocation = 'https://cdn.mydomain.com/wasm';
+        return remoteLocation + path;
+    }
+  });
+  const buffer = await encode(/* image data */);
+  ```
+
+### Fixes
+
+- Updates `locateFile` emscripten module option type to support prefix parameter.
+
 ## @jsquash/avif@2.0.0
 
 ### Breaking Changes
