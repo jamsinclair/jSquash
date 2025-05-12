@@ -26,6 +26,12 @@ Decodes AVIF binary ArrayBuffer to raw RGB image data.
 #### data
 Type: `ArrayBuffer`
 
+#### options (optional)
+Type: `object`
+  - `bitDepth`: `8 | 10 | 12 | 16` (default: `8`). Specifies the desired bit depth of the decoded image data.
+    - If `bitDepth` is `8` (or not provided), the function returns a standard `ImageData` object.
+    - If `bitDepth` is `10`, `12`, or `16`, the function returns an `ImageData`-like object. The `data` property will be a `Uint16Array`.
+
 #### Example
 ```js
 import { decode } from '@jsquash/avif';
@@ -47,6 +53,9 @@ Type: `ImageData`
 Type: `Partial<EncodeOptions>`
 
 The AVIF encoder options for the output image. [See default values](./meta.ts).
+
+> [!NOTE]
+>  To encode images with a bit depth greater than 8, the `data` property of the image object must be a `Uint16Array`. The pixel values will need to be in the appropriate range for the bit depth.
 
 #### Example
 ```js
