@@ -55,7 +55,7 @@ Type: `Partial<EncodeOptions>`
 The AVIF encoder options for the output image. [See default values](./meta.ts).
 
 > [!NOTE]
->  To encode images with a bit depth greater than 8, the `data` property of the image object must be a `Uint16Array`. The pixel values will need to be in the appropriate range for the bit depth.
+> To encode images with a bit depth greater than 8, the `data` property of the image object must be a `Uint16Array`. The pixel values will need to be in the appropriate range for the bit depth.
 
 #### Example
 ```js
