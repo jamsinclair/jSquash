@@ -19,12 +19,18 @@ npm install --save @jsquash/png
 
 Note: You will need to either manually include the wasm files from the codec directory or use a bundler like WebPack or Rollup to include them in your app/server.
 
-### decode(data: ArrayBuffer): Promise<ImageData>
+### decode(data: ArrayBuffer, options?: { bitDepth?: 8 | 16 }): Promise<ImageData | ImageDataRGBA16>
 
-Decodes PNG binary ArrayBuffer to raw RGBA image data.
+Decodes PNG binary ArrayBuffer to raw image data. 
+By default, it decodes to 8-bit RGBA image data. 
+If `options.bitDepth` is set to 16, it decodes to 16-bit RGBA image data.
 
 #### data
 Type: `ArrayBuffer`
+
+#### options (optional)
+Type: `object`
+- `bitDepth` (optional): `8 | 16` - The desired bit depth of the output. Defaults to `8`.
 
 #### Example
 ```js
@@ -32,23 +38,10 @@ import { decode } from '@jsquash/png';
 
 const formEl = document.querySelector('form');
 const formData = new FormData(formEl);
-const imageData = await decode(await formData.get('image').arrayBuffer());
-```
-
-### decodeRgba16(data: ArrayBuffer): Promise<{ data: Uint16Array; width: number; height: number; }>
-
-Decodes PNG binary ArrayBuffer to raw 16-bit RGBA image data. Both 8-bit and 16-bit PNGs are supported.
-
-#### data
-Type: `ArrayBuffer`
-
-#### Example
-```js
-import { decodeRgba16 } from '@jsquash/png';
-
-const formEl = document.querySelector('form');
-const formData = new FormData(formEl);
-const imageData = await decodeRgba16(await formData.get('image').arrayBuffer());
+// Decode to 8-bit RGBA
+const imageData8bit = await decode(await formData.get('image').arrayBuffer());
+// Decode to 16-bit RGBA
+const imageData16bit = await decode(await formData.get('image').arrayBuffer(), { bitDepth: 16 });
 ```
 
 ### encode(data: ImageData | ImageDataRGBA16, options?: { bitDepth?: 8 | 16 }): Promise<ArrayBuffer>

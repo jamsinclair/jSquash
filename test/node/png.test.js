@@ -1,11 +1,7 @@
 import test from 'ava';
 import { importWasmModule, getFixturesImage } from './utils.js';
 
-import {
-  init as initDecode,
-  decode,
-  decodeRgba16,
-} from '@jsquash/png/decode.js';
+import { init as initDecode, decode } from '@jsquash/png/decode.js';
 import encode, { init as initEncode } from '@jsquash/png/encode.js';
 
 test('can successfully decode image', async (t) => {
@@ -100,7 +96,7 @@ test('can successfully decode 8bit image to RGB16', async (t) => {
     importWasmModule('node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm'),
   ]);
   initDecode(decodeWasmModule);
-  const data = await decodeRgba16(testImage);
+  const data = await decode(testImage, { bitDepth: 16 });
   t.is(data.width, 50);
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
@@ -113,7 +109,7 @@ test('can successfully decode 16bit image to RGB16', async (t) => {
     importWasmModule('node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm'),
   ]);
   initDecode(decodeWasmModule);
-  const data = await decodeRgba16(testImage);
+  const data = await decode(testImage, { bitDepth: 16 });
   t.is(data.width, 50);
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
@@ -126,7 +122,7 @@ test('can successfully decode 16bit rgb image to RGB16', async (t) => {
     importWasmModule('node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm'),
   ]);
   initDecode(decodeWasmModule);
-  const data = await decodeRgba16(testImage);
+  const data = await decode(testImage, { bitDepth: 16 });
   t.is(data.width, 50);
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
@@ -139,7 +135,7 @@ test('can successfully decode 16bit grayscale image to RGB16', async (t) => {
     importWasmModule('node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm'),
   ]);
   initDecode(decodeWasmModule);
-  const data = await decodeRgba16(testImage);
+  const data = await decode(testImage, { bitDepth: 16 });
   t.is(data.width, 50);
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
@@ -152,7 +148,7 @@ test('can successfully decode 16bit grayscale alpha image to RGB16', async (t) =
     importWasmModule('node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm'),
   ]);
   initDecode(decodeWasmModule);
-  const data = await decodeRgba16(testImage);
+  const data = await decode(testImage, { bitDepth: 16 });
   t.is(data.width, 50);
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
