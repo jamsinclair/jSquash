@@ -1,5 +1,13 @@
 # Changelog
 
+## @jsquash/png@3.1.0
+
+### Added
+
+- Added `bitDepth` option to `decode` method to allow decoding of 16-bit PNGs to their 16-bit RGBA values
+- Added `encode` method to allow encoding of 16-bit RGBA image data
+    - A Uint16Array is required for the pixel data when `bitDepth` is set to 16
+
 ## @jsquash/png@3.0.1
 
 ### Fixes

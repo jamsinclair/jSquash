@@ -17,12 +17,20 @@
  */
 
 import type {
+  ImageDataRGBA16,
   InitInput,
   InitOutput as PngModule,
 } from './codec/pkg/squoosh_png.js';
-import initPngModule, { decode as pngDecode } from './codec/pkg/squoosh_png.js';
+import initPngModule, {
+  decode as pngDecodeWasm,
+  decode_rgba16 as pngDecodeRgba16Wasm,
+} from './codec/pkg/squoosh_png.js';
 
 let pngModule: Promise<PngModule>;
+
+export interface DecodeOptions {
+  bitDepth?: 8 | 16;
+}
 
 export async function init(moduleOrPath?: InitInput): Promise<PngModule> {
   if (!pngModule) {
@@ -32,12 +40,33 @@ export async function init(moduleOrPath?: InitInput): Promise<PngModule> {
   return pngModule;
 }
 
-export default async function decode(data: ArrayBuffer): Promise<ImageData> {
+export async function decode(
+  data: ArrayBuffer,
+  options?: { bitDepth: 16 },
+): Promise<ImageDataRGBA16>;
+export async function decode(
+  data: ArrayBuffer,
+  options?: { bitDepth?: 8 },
+): Promise<ImageData>;
+export async function decode(
+  data: ArrayBuffer,
+  options: DecodeOptions = {},
+): Promise<ImageData | ImageDataRGBA16> {
   await init();
 
-  const imageData = await pngDecode(new Uint8Array(data));
+  const { bitDepth = 8 } = options;
+
+  if (bitDepth === 16) {
+    const imageData = await pngDecodeRgba16Wasm(new Uint8Array(data));
+    if (!imageData) throw new Error('Encoding error.');
+    return imageData;
+  }
+
+  const imageData = await pngDecodeWasm(new Uint8Array(data));
 
   if (!imageData) throw new Error('Encoding error.');
 
   return imageData;
 }
+
+export default decode;
