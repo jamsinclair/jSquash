@@ -174,7 +174,7 @@ test('can successfully encode 12-bit image', async (t) => {
   t.assert(data instanceof ArrayBuffer);
 });
 
-test('throws error when encoding 10-bit image with Uint8Array-like data', async (t) => {
+test('throws error when encoding 10-bit image with non-Uint16Array data', async (t) => {
   const encodeWasmModule = await importWasmModule(
     'node_modules/@jsquash/avif/codec/enc/avif_enc.wasm',
   );
@@ -196,7 +196,7 @@ test('throws error when encoding 10-bit image with Uint8Array-like data', async 
   );
 });
 
-test('throws error when encoding 12-bit image with Uint8Array-like data', async (t) => {
+test('throws error when encoding 12-bit image with non-Uint16Array data', async (t) => {
   const encodeWasmModule = await importWasmModule(
     'node_modules/@jsquash/avif/codec/enc/avif_enc.wasm',
   );
