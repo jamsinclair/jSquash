@@ -1,5 +1,13 @@
 # Changelog
 
+## @jsquash/avif@2.1.0
+
+### Adds
+
+- Adds support for encoding and decoding AVIF images with higher bit depths
+    - 10-bit and 12-bit images are supported for encoding. Pixel data must be provided as 16-bit integers.
+    - 10-bit, 12-bit and 16-bit images are supported for decoding
+    - See [README](./README.md) for bit depth configuration options
 
 ## @jsquash/avif@2.0.0
 

@@ -1,6 +1,6 @@
 {
   "name": "@jsquash/avif",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "main": "index.js",
   "description": "Wasm AVIF encoder and decoder supporting the browser. Repackaged from Squoosh App.",
   "repository": "jamsinclair/jSquash",
