@@ -40,7 +40,7 @@ export async function init(moduleOrPath?: InitInput): Promise<PngModule> {
 
 export default async function encode(
   data: ImageDataRGBA16,
-  options?: { bitDepth: 16 },
+  options: { bitDepth: 16 },
 ): Promise<ArrayBuffer>;
 export default async function encode(
   data: ImageData,
