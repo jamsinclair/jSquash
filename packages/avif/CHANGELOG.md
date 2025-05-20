@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/avif@2.1.1
+
+### Fixes
+
+- Fixes the type definitions for the `encode` method to work correctly with the intended bitDepths.
+
 ## @jsquash/avif@2.1.0
 
 ### Adds
