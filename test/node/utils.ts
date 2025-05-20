@@ -6,7 +6,7 @@ export async function importWasmModule(path) {
   return WebAssembly.compile(fileBuffer);
 }
 
-export function getFixturesImage(imagePath) {
+export function getFixturesImage(imagePath: string) {
   const filePath = path.resolve(`fixtures/${imagePath}`);
-  return fs.readFile(filePath);
+  return fs.readFile(filePath).then(buffer => buffer.buffer as ArrayBuffer);
 }

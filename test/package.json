@@ -1,10 +1,9 @@
 {
   "name": "integration-tests",
   "scripts": {
-    "test": "ava node/*.test.js"
+    "test": "npx tsc && ava node/*.test.ts"
   },
   "devDependencies": {
-    "ava": "^5.3.1",
     "@jsquash/avif": "file:../packages/avif/dist",
     "@jsquash/jpeg": "file:../packages/jpeg/dist",
     "@jsquash/jxl": "file:../packages/jxl/dist",
@@ -12,7 +11,18 @@
     "@jsquash/png": "file:../packages/png/dist",
     "@jsquash/qoi": "file:../packages/qoi/dist",
     "@jsquash/resize": "file:../packages/resize/dist",
-    "@jsquash/webp": "file:../packages/webp/dist"
+    "@jsquash/webp": "file:../packages/webp/dist",
+    "ava": "^6.3.0",
+    "tsimp": "^2.0.12",
+    "typescript": "^5.8.3"
+  },
+  "ava": {
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--import=tsimp"
+    ]
   },
   "private": true,
   "type": "module"
