@@ -8,6 +8,7 @@ test('can successfully downsize an image', async (t) => {
     data: new Uint8ClampedArray(4 * 100 * 100),
     width: 100,
     height: 100,
+    colorSpace: 'srgb' as const,
   };
   const resizeWasmModule = await importWasmModule(
     'node_modules/@jsquash/resize/lib/resize/pkg/squoosh_resize_bg.wasm',
@@ -27,6 +28,7 @@ test('can successfully upscale an image with hqx', async (t) => {
     data: new Uint8ClampedArray(4 * 100 * 100),
     width: 100,
     height: 100,
+    colorSpace: 'srgb' as const,
   };
 
   // Setup WASM modules
@@ -56,6 +58,7 @@ test('can successfully resize using magic kernel method', async (t) => {
     data: new Uint8ClampedArray(4 * 100 * 100),
     width: 100,
     height: 100,
+    colorSpace: 'srgb' as const,
   };
 
   // Setup WASM modules

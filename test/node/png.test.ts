@@ -10,10 +10,11 @@ test('can successfully decode image', async (t) => {
     importWasmModule('node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm'),
   ]);
   initDecode(decodeWasmModule);
-  const data = await decode(testImage);
+  const data = await decode(testImage, { bitDepth: 8 });
   t.is(data.width, 50);
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
+  t.assert(data.data instanceof Uint8ClampedArray);
 });
 
 test('can successfully decode png with invalid ICC profile checksum', async (t) => {
@@ -26,6 +27,7 @@ test('can successfully decode png with invalid ICC profile checksum', async (t) 
   t.is(data.width, 16);
   t.is(data.height, 16);
   t.is(data.data.length, 4 * 16 * 16);
+  t.assert(data.data instanceof Uint8ClampedArray);
 });
 
 test('can successfully decode png with no alpha', async (t) => {
@@ -38,6 +40,7 @@ test('can successfully decode png with no alpha', async (t) => {
   t.is(data.width, 50);
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
+  t.assert(data.data instanceof Uint8ClampedArray);
 });
 
 test('can successfully decode grayscale png with no alpha', async (t) => {
@@ -50,6 +53,7 @@ test('can successfully decode grayscale png with no alpha', async (t) => {
   t.is(data.width, 50);
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
+  t.assert(data.data instanceof Uint8ClampedArray);
 });
 
 test('can successfully decode grayscale png with alpha', async (t) => {
@@ -62,6 +66,7 @@ test('can successfully decode grayscale png with alpha', async (t) => {
   t.is(data.width, 50);
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
+  t.assert(data.data instanceof Uint8ClampedArray);
 });
 
 test('can successfully encode image', async (t) => {
@@ -73,6 +78,7 @@ test('can successfully encode image', async (t) => {
     data: new Uint8ClampedArray(4 * 50 * 50),
     height: 50,
     width: 50,
+    colorSpace: 'srgb',
   });
   t.assert(data instanceof ArrayBuffer);
 });
@@ -88,6 +94,7 @@ test('can successfully decode 16bit image to RGB8', async (t) => {
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
   t.is(data.data.byteLength, 4 * 50 * 50);
+  t.assert(data.data instanceof Uint8ClampedArray);
 });
 
 test('can successfully decode 8bit image to RGB16', async (t) => {
@@ -101,6 +108,7 @@ test('can successfully decode 8bit image to RGB16', async (t) => {
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
   t.is(data.data.byteLength, 8 * 50 * 50);
+  t.assert(data.data instanceof Uint16Array);
 });
 
 test('can successfully decode 16bit image to RGB16', async (t) => {
@@ -114,6 +122,7 @@ test('can successfully decode 16bit image to RGB16', async (t) => {
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
   t.is(data.data.byteLength, 8 * 50 * 50);
+  t.assert(data.data instanceof Uint16Array);
 });
 
 test('can successfully decode 16bit rgb image to RGB16', async (t) => {
@@ -127,6 +136,7 @@ test('can successfully decode 16bit rgb image to RGB16', async (t) => {
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
   t.is(data.data.byteLength, 8 * 50 * 50);
+  t.assert(data.data instanceof Uint16Array);
 });
 
 test('can successfully decode 16bit grayscale image to RGB16', async (t) => {
@@ -140,6 +150,7 @@ test('can successfully decode 16bit grayscale image to RGB16', async (t) => {
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
   t.is(data.data.byteLength, 8 * 50 * 50);
+  t.assert(data.data instanceof Uint16Array);
 });
 
 test('can successfully decode 16bit grayscale alpha image to RGB16', async (t) => {
@@ -153,6 +164,7 @@ test('can successfully decode 16bit grayscale alpha image to RGB16', async (t) =
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
   t.is(data.data.byteLength, 8 * 50 * 50);
+  t.assert(data.data instanceof Uint16Array);
 });
 
 test('can successfully encode 16bit image', async (t) => {
@@ -177,15 +189,21 @@ test('throws error if bitDepth is not 8 or 16', async (t) => {
   );
   await initEncode(encodeWasmModule);
   const error = await t.throwsAsync(() =>
+    // @ts-expect-error - we're testing invalid bit depths
     encode(
       {
-        data: new Uint8Array(4 * 50 * 50),
+        data: new Uint8ClampedArray(4 * 50 * 50),
         height: 50,
         width: 50,
+        colorSpace: 'srgb',
       },
       { bitDepth: 32 },
     ),
   );
+  if (!error) {
+    t.fail('Expected error to be thrown');
+    return;
+  }
   t.is(error.message, 'Invalid bit depth. Must be either 8 or 16.');
 });
 
@@ -195,6 +213,7 @@ test('throws error if array is Uint16Array and bitDepth is 8', async (t) => {
   );
   await initEncode(encodeWasmModule);
   const error = await t.throwsAsync(() =>
+    // @ts-expect-error - we're testing incorrect data type
     encode(
       {
         data: new Uint16Array(4 * 50 * 50),
@@ -204,6 +223,10 @@ test('throws error if array is Uint16Array and bitDepth is 8', async (t) => {
       { bitDepth: 8 },
     ),
   );
+  if (!error) {
+    t.fail('Expected error to be thrown');
+    return;
+  }
   t.is(
     error.message,
     'Invalid bit depth, must be 16 for Uint16Array or manually convert to RGB8 values with Uint8Array.',
@@ -216,15 +239,20 @@ test('throws error if array is Uint8Array and bitDepth is 16', async (t) => {
   );
   await initEncode(encodeWasmModule);
   const error = await t.throwsAsync(() =>
+    // @ts-expect-error - we're testing incorrect data type
     encode(
       {
-        data: new Uint8Array(4 * 50 * 50),
+        data: new Uint8ClampedArray(4 * 50 * 50),
         height: 50,
         width: 50,
       },
       { bitDepth: 16 },
     ),
   );
+  if (!error) {
+    t.fail('Expected error to be thrown');
+    return;
+  }
   t.is(
     error.message,
     'Invalid bit depth, must be 8 for Uint8Array or manually convert to RGB16 values with Uint16Array.',

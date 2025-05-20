@@ -73,6 +73,7 @@ test('can successfully encode image', async (t) => {
     data: new Uint8ClampedArray(4 * 50 * 50),
     height: 50,
     width: 50,
+    colorSpace: 'srgb' as const,
   });
   t.assert(data instanceof ArrayBuffer);
 });

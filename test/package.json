@@ -1,10 +1,9 @@
 {
   "name": "integration-tests",
   "scripts": {
-    "test": "ava node/*.test.js"
+    "test": "rm -rf dist && tsc && ava dist/node/*.test.js"
   },
   "devDependencies": {
-    "ava": "^5.3.1",
     "@jsquash/avif": "file:../packages/avif/dist",
     "@jsquash/jpeg": "file:../packages/jpeg/dist",
     "@jsquash/jxl": "file:../packages/jxl/dist",
@@ -12,7 +11,10 @@
     "@jsquash/png": "file:../packages/png/dist",
     "@jsquash/qoi": "file:../packages/qoi/dist",
     "@jsquash/resize": "file:../packages/resize/dist",
-    "@jsquash/webp": "file:../packages/webp/dist"
+    "@jsquash/webp": "file:../packages/webp/dist",
+    "@types/node": "^22.15.19",
+    "ava": "^6.3.0",
+    "typescript": "^5.8.3"
   },
   "private": true,
   "type": "module"

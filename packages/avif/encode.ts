@@ -71,6 +71,15 @@ export async function init(
   return emscriptenModule;
 }
 
+export default async function encode(data: ImageData): Promise<ArrayBuffer>;
+export default async function encode(
+  data: ImageData,
+  options: Partial<EncodeOptions> & { bitDepth?: 8 },
+): Promise<ArrayBuffer>;
+export default async function encode(
+  data: ImageData16bit,
+  options: Partial<EncodeOptions> & { bitDepth: 10 | 12 },
+): Promise<ArrayBuffer>;
 export default async function encode(
   data: ImageData | ImageData16bit,
   options: Partial<EncodeOptions> = {},

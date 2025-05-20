@@ -11,6 +11,10 @@ test('can successfully decode image', async (t) => {
   ]);
   initDecode(decodeWasmModule);
   const data = await decode(testImage);
+  if (!data) {
+    t.fail('Failed to decode image');
+    return;
+  }
   t.is(data.width, 50);
   t.is(data.height, 50);
   t.is(data.data.length, 4 * 50 * 50);
@@ -92,6 +96,10 @@ test('can successfully decode 12-bit image to 8-bit precision', async (t) => {
   ]);
   initDecode(decodeWasmModule);
   const data = await decode(testImage);
+  if (!data) {
+    t.fail('Failed to decode image');
+    return;
+  }
   t.is(data.width, 128);
   t.is(data.height, 128);
   t.is(data.data.length, 4 * 128 * 128);
@@ -112,6 +120,10 @@ test('can successfully decode 10-bit image to 8-bit precision', async (t) => {
   ]);
   initDecode(decodeWasmModule);
   const data = await decode(testImage);
+  if (!data) {
+    t.fail('Failed to decode image');
+    return;
+  }
   t.is(data.width, 128);
   t.is(data.height, 128);
   t.is(data.data.length, 4 * 128 * 128);
@@ -134,6 +146,7 @@ test('can successfully encode image', async (t) => {
     data: new Uint8ClampedArray(4 * 50 * 50),
     height: 50,
     width: 50,
+    colorSpace: 'srgb' as const,
   });
   t.assert(data instanceof ArrayBuffer);
 });
@@ -180,15 +193,21 @@ test('throws error when encoding 10-bit image with non-Uint16Array data', async 
   );
   await initEncode(encodeWasmModule);
   const error = await t.throwsAsync(() =>
+    // @ts-expect-error - we're testing incorrect data type
     encode(
       {
-        data: new Uint8Array(4 * 50 * 50),
+        data: new Uint8ClampedArray(4 * 50 * 50),
         height: 50,
         width: 50,
+        colorSpace: 'srgb' as const,
       },
       { bitDepth: 10 },
     ),
   );
+  if (!error) {
+    t.fail('Expected error to be thrown');
+    return;
+  }
 
   t.is(
     error.message,
@@ -202,16 +221,21 @@ test('throws error when encoding 12-bit image with non-Uint16Array data', async 
   );
   await initEncode(encodeWasmModule);
   const error = await t.throwsAsync(() =>
+    // @ts-expect-error - we're testing incorrect data type
     encode(
       {
-        data: new Uint8Array(4 * 50 * 50),
+        data: new Uint8ClampedArray(4 * 50 * 50),
         height: 50,
         width: 50,
+        colorSpace: 'srgb' as const,
       },
       { bitDepth: 12 },
     ),
   );
-
+  if (!error) {
+    t.fail('Expected error to be thrown');
+    return;
+  }
   t.is(
     error.message,
     'Invalid image data for bit depth. Must use Uint16Array for bit depths greater than 8.',
@@ -230,6 +254,7 @@ test('can successfully encode and decode lossless image', async (t) => {
     width: 10,
     height: 10,
     data: new Uint8ClampedArray(4 * 10 * 10),
+    colorSpace: 'srgb' as const,
   };
   // Fill with some non-zero data
   for (let i = 0; i < originalImageData.data.length; i++) {
@@ -240,6 +265,10 @@ test('can successfully encode and decode lossless image', async (t) => {
   t.assert(encodedData instanceof ArrayBuffer);
 
   const decodedData = await decode(encodedData);
+  if (!decodedData) {
+    t.fail('Failed to decode image');
+    return;
+  }
 
   t.is(decodedData.width, originalImageData.width);
   t.is(decodedData.height, originalImageData.height);
@@ -262,6 +291,7 @@ test('encodes lossless even with conflicting quality option', async (t) => {
     width: 8,
     height: 8,
     data: new Uint8ClampedArray(4 * 8 * 8),
+    colorSpace: 'srgb' as const,
   };
   for (let i = 0; i < originalImageData.data.length; i++) {
     originalImageData.data[i] = (i * 5) % 256;
@@ -275,6 +305,10 @@ test('encodes lossless even with conflicting quality option', async (t) => {
   t.assert(encodedData instanceof ArrayBuffer);
 
   const decodedData = await decode(encodedData);
+  if (!decodedData) {
+    t.fail('Failed to decode image');
+    return;
+  }
 
   t.deepEqual(
     decodedData.data,
@@ -295,6 +329,7 @@ test('encodes lossless (YUV444) even with conflicting subsample option', async (
     width: 8,
     height: 8,
     data: new Uint8ClampedArray(4 * 8 * 8),
+    colorSpace: 'srgb' as const,
   };
   // Create specific colors to check subsampling didn't occur
   for (let i = 0; i < originalImageData.data.length; i += 4) {
@@ -312,6 +347,10 @@ test('encodes lossless (YUV444) even with conflicting subsample option', async (
   t.assert(encodedData instanceof ArrayBuffer);
 
   const decodedData = await decode(encodedData);
+  if (!decodedData) {
+    t.fail('Failed to decode image');
+    return;
+  }
 
   t.deepEqual(
     decodedData.data,
@@ -330,9 +369,14 @@ test('throws error for invalid bitDepth setting', async (t) => {
     data: new Uint8ClampedArray(4 * 10 * 10),
     height: 10,
     width: 10,
+    colorSpace: 'srgb' as const,
   };
 
+  // @ts-expect-error - we're testing incorrect bit depth
   const error = await t.throwsAsync(() => encode(imageData, { bitDepth: 9 }));
-
+  if (!error) {
+    t.fail('Expected error to be thrown');
+    return;
+  }
   t.is(error.message, 'Invalid bit depth. Supported values are 8, 10, or 12.');
 });
