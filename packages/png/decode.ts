@@ -46,7 +46,7 @@ export async function decode(
 ): Promise<ImageDataRGBA16>;
 export async function decode(
   data: ArrayBuffer,
-  options?: { bitDepth?: 8 },
+  options?: { bitDepth: 8 },
 ): Promise<ImageData>;
 export async function decode(
   data: ArrayBuffer,

@@ -1,5 +1,11 @@
 # Changelog
 
+## @jsquash/png@3.1.1
+
+### Fixes
+
+- Fixes the type definitions for the `encode` and `decode` methods to work correctly with the intended bitDepths.
+
 ## @jsquash/png@3.1.0
 
 ### Added
