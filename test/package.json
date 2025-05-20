@@ -12,6 +12,7 @@
     "@jsquash/qoi": "file:../packages/qoi/dist",
     "@jsquash/resize": "file:../packages/resize/dist",
     "@jsquash/webp": "file:../packages/webp/dist",
+    "@types/node": "^22.15.19",
     "ava": "^6.3.0",
     "tsimp": "^2.0.12",
     "typescript": "^5.8.3"

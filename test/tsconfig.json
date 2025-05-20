@@ -9,7 +9,9 @@
     "resolveJsonModule": true,
     "lib": ["ESNext", "DOM"],
     "noImplicitAny": false,
-    "noEmit": true
+    "noEmit": true,
+    "typeRoots": ["./node_modules/@types", "./node_modules"],
+    "types": ["node"]
   },
   "include": ["node/**/*"],
   "exclude": ["node_modules"]
