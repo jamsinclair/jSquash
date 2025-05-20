@@ -118,3 +118,6 @@ example.png
 
 # Ignore Rust build files
 target
+
+# Ignore tsimp
+.tsimp/
