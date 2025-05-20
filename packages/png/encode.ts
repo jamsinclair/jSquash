@@ -44,7 +44,7 @@ export default async function encode(
 ): Promise<ArrayBuffer>;
 export default async function encode(
   data: ImageData,
-  options?: { bitDepth: 8 },
+  options?: { bitDepth?: 8 },
 ): Promise<ArrayBuffer>;
 export default async function encode(
   data: ImageData | ImageDataRGBA16,
