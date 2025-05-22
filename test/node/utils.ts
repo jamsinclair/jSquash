@@ -8,5 +8,5 @@ export async function importWasmModule(path) {
 
 export function getFixturesImage(imagePath: string) {
   const filePath = path.resolve(`fixtures/${imagePath}`);
-  return fs.readFile(filePath).then(buffer => buffer.buffer as ArrayBuffer);
+  return fs.readFile(filePath).then((buffer) => buffer.buffer as ArrayBuffer);
 }
