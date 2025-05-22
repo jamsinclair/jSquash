@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "lint": "prettier -l \"packages/**/*.{js,ts}\" test/**/*.js && eslint \"packages/**/*.{js,ts}\"",
+    "lint": "prettier -l \"packages/**/*.{js,ts}\" test/**/*.ts && eslint \"packages/**/*.{js,ts}\"",
     "format": "prettier -lw \"packages/**/*.{js,ts}\" test/**/*.js"
   },
   "license": "Apache-2.0",
