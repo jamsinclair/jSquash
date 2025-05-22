@@ -121,3 +121,6 @@ target
 
 # Ignore tsimp
 .tsimp/
+
+# Ignore deno tests for now
+test/deno
