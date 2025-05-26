@@ -28,11 +28,11 @@ type ImageDataRGBA16 = {
   height: number;
 };
 
-let pngModule: Promise<PngModule>;
+let pngModule: PngModule;
 
 export async function init(moduleOrPath?: InitInput): Promise<PngModule> {
   if (!pngModule) {
-    pngModule = initPngModule(moduleOrPath);
+    pngModule = await initPngModule(moduleOrPath);
   }
 
   return pngModule;

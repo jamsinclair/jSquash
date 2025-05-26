@@ -26,7 +26,7 @@ import initPngModule, {
   decode_rgba16 as pngDecodeRgba16Wasm,
 } from './codec/pkg/squoosh_png.js';
 
-let pngModule: Promise<PngModule>;
+let pngModule: PngModule;
 
 export interface DecodeOptions {
   bitDepth?: 8 | 16;
@@ -34,7 +34,7 @@ export interface DecodeOptions {
 
 export async function init(moduleOrPath?: InitInput): Promise<PngModule> {
   if (!pngModule) {
-    pngModule = initPngModule(moduleOrPath);
+    pngModule = await initPngModule(moduleOrPath);
   }
 
   return pngModule;
