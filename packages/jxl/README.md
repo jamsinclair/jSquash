@@ -75,7 +75,7 @@ import { encode } from '@jsquash/jxl';
 
 const rawImageData = await loadImage('/example.png');
 // Lossless encoding can be achieved by setting the `lossless` option to `true`
-const jpegBuffer = await encode(rawImageData, { lossless: true });
+const jxlBuffer = await encode(rawImageData, { lossless: true });
 ```
 
 ## Activate Multithreading
