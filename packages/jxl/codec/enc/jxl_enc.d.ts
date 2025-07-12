@@ -7,6 +7,7 @@ export interface EncodeOptions {
   decodingSpeedTier: number;
   photonNoiseIso: number;
   lossyModular: boolean;
+  lossless: boolean;
 }
 
 export interface JXLModule extends EmscriptenWasm.Module {

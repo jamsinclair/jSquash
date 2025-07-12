@@ -88,6 +88,31 @@ export default async function encode(
 
   const module = await emscriptenModule;
   const _options = { ...defaultOptions, ...options };
+
+  if (_options.lossless) {
+    if (options.quality !== undefined && options.quality !== 100) {
+      console.warn(
+        'JXL lossless: Quality setting is ignored when lossless is enabled (quality must be 100).',
+      );
+    }
+
+    if (options.lossyModular) {
+      console.warn(
+        'JXL lossless: LossyModular setting is ignored when lossless is enabled (lossyModular must be false).',
+      );
+    }
+
+    if (options.lossyPalette) {
+      console.warn(
+        'JXL lossless: LossyPalette setting is ignored when lossless is enabled (lossyPalette must be false).',
+      );
+    }
+
+    _options.quality = 100;
+    _options.lossyModular = false;
+    _options.lossyPalette = false;
+  }
+
   const resultView = module.encode(
     data.data,
     data.width,

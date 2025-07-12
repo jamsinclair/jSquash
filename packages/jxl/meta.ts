@@ -26,4 +26,5 @@ export const defaultOptions: EncodeOptions = {
   decodingSpeedTier: 0,
   photonNoiseIso: 0,
   lossyModular: false,
+  lossless: false,
 };
