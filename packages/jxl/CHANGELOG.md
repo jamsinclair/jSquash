@@ -2,7 +2,7 @@
 
 ## @jsquash/jxl@1.3.0
 
-### Fixes
+### Adds
 
 - Adds a convenience option to set lossless encoding (`encode(imageData, { lossless: true })`)
 
