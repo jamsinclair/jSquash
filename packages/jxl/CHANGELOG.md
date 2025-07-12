@@ -1,6 +1,6 @@
 # Changelog
 
-## @jsquash/jxl@1.2.1
+## @jsquash/jxl@1.3.0
 
 ### Fixes
 
