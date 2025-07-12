@@ -69,6 +69,26 @@ const rawImageData = await loadImage('/example.png');
 const jpegBuffer = await encode(rawImageData);
 ```
 
+#### Lossless Example
+```js
+import { encode } from '@jsquash/jxl';
+
+const rawImageData = await loadImage('/example.png');
+// Lossless encoding can be achieved by setting the `lossless` option to `true`
+const jpegBuffer = await encode(rawImageData, { lossless: true });
+```
+
+## Activate Multithreading
+
+By default, the encode function will use a single thread to encode the image. If you want to speed this up you can enable multithreading with the following.
+
+1. Move your calls to `encode` into a [WebWorker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers).
+1. Configure your web server to use the following headers (this is [a security requirement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements))
+    - `Cross-Origin-Opener-Policy: same-origin`
+    - `Cross-Origin-Embedder-Policy: require-corp`
+
+This will still only take effect in browsers and devices that support multithreading. If the browser does not support it, it will fallback to single threaded mode
+
 ## Manual WASM initialisation (not recommended)
 
 In most situations there is no need to manually initialise the provided WebAssembly modules.
