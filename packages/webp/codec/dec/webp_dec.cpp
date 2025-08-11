@@ -105,6 +105,25 @@ val decodeAnimated(std::string buffer) {
       frame.set("duration", iter.duration);
       frames.call<void>("push", frame);
 
+      // Apply disposal method AFTER capturing the frame
+      if (iter.dispose_method == WEBP_MUX_DISPOSE_BACKGROUND) {
+        // Clear the frame area to transparent background (RGBA: 0,0,0,0)
+        for (int y = 0; y < frame_height; y++) {
+          for (int x = 0; x < frame_width; x++) {
+            int canvas_x = x + x_offset;
+            int canvas_y = y + y_offset;
+
+            if (canvas_x >= canvas_width || canvas_y >= canvas_height) continue;
+
+            size_t canvas_idx = (canvas_y * canvas_width + canvas_x) * 4;
+            canvas_buffer[canvas_idx + 0] = 0; // R
+            canvas_buffer[canvas_idx + 1] = 0; // G
+            canvas_buffer[canvas_idx + 2] = 0; // B
+            canvas_buffer[canvas_idx + 3] = 0; // A (transparent)
+          }
+        }
+      }
+
       free(frame_rgba);
     }
   } while (WebPDemuxNextFrame(&iter));
