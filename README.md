@@ -33,8 +33,8 @@ jSquash name is inspired by jQuery and Squoosh. It symbolizes the browser suppor
 You can use the packages directly from the Unpkg CDN and can be the easiest way to get started.
 
 ```js
-import { decode } from "https://unpkg.com/@jsquash/jpeg?module";
-import { encode } from "https://unpkg.com/@jsquash/webp?module";
+import { decode } from "https://esm.sh/@jsquash/jpeg";
+import { encode } from "https://esm.sh/@jsquash/webp";
 
 const imageResponse = await fetch("https://picsum.photos/200/300.jpg");
 const imageData = await decode(await imageResponse.arrayBuffer());
@@ -43,7 +43,7 @@ const webpImageBuffer = await encode(imageData);
 
 To target a specific version, you can use the `@version` syntax.
 ```js
-import { encode } from "https://unpkg.com/@jsquash/webp@1.2.0?module";
+import { encode } from "https://esm.sh/@jsquash/webp@1.2.0";
 ```
 
 Checkout the [with CDN](/examples/with-cdn) example for a working demo.
