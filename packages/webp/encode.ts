@@ -17,12 +17,14 @@
  * The WebP options are defaulted to defaults from the meta.ts file.
  * Also manually allow instantiation of the Wasm Module.
  */
-import type { WebPModule } from './codec/enc/webp_enc.js';
+import type { WebPModule, WebPAnimFrame } from './codec/enc/webp_enc.js';
 import type { EncodeOptions } from './meta.js';
 
 import { defaultOptions } from './meta.js';
 import { initEmscriptenModule } from './utils.js';
 import { simd } from 'wasm-feature-detect';
+
+export type { WebPAnimFrame };
 
 let emscriptenModule: Promise<WebPModule>;
 
@@ -70,6 +72,21 @@ export default async function encode(
   const _options: EncodeOptions = { ...defaultOptions, ...options };
   const module = await emscriptenModule;
   const result = module.encode(data.data, data.width, data.height, _options);
+
+  if (!result) throw new Error('Encoding error.');
+
+  return result.buffer;
+}
+
+export async function encodeAnimated(
+  frames: WebPAnimFrame[],
+  options: Partial<EncodeOptions> = {},
+): Promise<ArrayBuffer> {
+  if (!emscriptenModule) emscriptenModule = init();
+
+  const _options: EncodeOptions = { ...defaultOptions, ...options };
+  const module = await emscriptenModule;
+  const result = module.encodeAnimated(frames, _options);
 
   if (!result) throw new Error('Encoding error.');
 

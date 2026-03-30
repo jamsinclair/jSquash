@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated WebP Decoder Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+      background: #1a1a2e;
+      color: #eee;
+    }
+    h1 { color: #e94560; }
+    #drop-zone {
+      border: 3px dashed #555;
+      border-radius: 12px;
+      padding: 60px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 20px;
+    }
+    #drop-zone:hover, #drop-zone.dragover {
+      border-color: #e94560;
+      background: rgba(233, 69, 96, 0.05);
+    }
+    #status {
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: none;
+      font-size: 14px;
+    }
+    #status.info { display: block; background: #16213e; color: #a8d8ea; }
+    #status.error { display: block; background: #3d0000; color: #ff6b6b; }
+    #status.success { display: block; background: #002a00; color: #69db7c; }
+    .section { margin-bottom: 30px; display: none; }
+    .section h2 { color: #a8d8ea; margin-bottom: 12px; font-size: 18px; }
+    .section canvas {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      background: repeating-conic-gradient(#1a1a2e 0% 25%, #222244 0% 50%) 0 0 / 16px 16px;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .controls button {
+      background: #e94560;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 18px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .controls button:hover { background: #c73650; }
+    .controls input[type="range"] { flex: 1; accent-color: #e94560; }
+    .controls .frame-info {
+      color: #888;
+      font-size: 13px;
+      min-width: 140px;
+      text-align: right;
+    }
+    #frames-strip {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+    #frames-strip .thumb {
+      flex-shrink: 0;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+    }
+    #frames-strip .thumb.active { border-color: #e94560; }
+    #frames-strip .thumb canvas {
+      display: block;
+      border-radius: 2px;
+    }
+    #frames-strip .thumb .label {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      font-size: 10px;
+      padding: 1px 4px;
+      border-radius: 2px;
+    }
+    .meta { color: #888; font-size: 14px; margin-top: 8px; }
+    input[type="file"] { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Animated WebP Decoder Test</h1>
+
+  <div id="drop-zone">
+    <p>Drop a .webp file here or click to select</p>
+    <input type="file" id="file-input" accept=".webp">
+  </div>
+
+  <div id="status"></div>
+
+  <div class="section" id="static-section">
+    <h2>Static WebP — decode()</h2>
+    <canvas id="static-canvas"></canvas>
+    <div class="meta" id="static-meta"></div>
+  </div>
+
+  <div class="section" id="animated-section">
+    <h2>Animated WebP — decodeAnimated()</h2>
+    <canvas id="animated-canvas"></canvas>
+    <div class="controls">
+      <button id="play-btn">Pause</button>
+      <input type="range" id="frame-slider" min="0" value="0">
+      <span class="frame-info" id="frame-info"></span>
+    </div>
+    <div id="frames-strip"></div>
+    <div class="meta" id="animated-meta"></div>
+  </div>
+
+  <script type="module">
+    import webpDecFactory from '../../packages/webp/codec/dec/webp_dec.js';
+
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const statusEl = document.getElementById('status');
+
+    let wasmModule = null;
+
+    function setStatus(msg, type) {
+      statusEl.textContent = msg;
+      statusEl.className = type;
+    }
+
+    async function initModule() {
+      if (wasmModule) return wasmModule;
+      setStatus('Initializing WASM module...', 'info');
+      wasmModule = await webpDecFactory({ noInitialRun: true });
+      return wasmModule;
+    }
+
+    function drawImageData(canvas, imageData) {
+      canvas.width = imageData.width;
+      canvas.height = imageData.height;
+      canvas.getContext('2d').putImageData(imageData, 0, 0);
+    }
+
+    async function handleFile(file) {
+      document.getElementById('static-section').style.display = 'none';
+      document.getElementById('animated-section').style.display = 'none';
+
+      try {
+        const module = await initModule();
+        const buffer = await file.arrayBuffer();
+
+        // decode() — first frame (works for both static and animated)
+        setStatus('Decoding first frame...', 'info');
+        const t0 = performance.now();
+        const staticResult = module.decode(buffer);
+        const staticMs = (performance.now() - t0).toFixed(1);
+
+        if (!staticResult) throw new Error('decode() returned null');
+
+        drawImageData(document.getElementById('static-canvas'), staticResult);
+        document.getElementById('static-meta').textContent =
+          `${staticResult.width}×${staticResult.height} — ${(file.size / 1024).toFixed(1)} KB — decoded in ${staticMs}ms`;
+        document.getElementById('static-section').style.display = 'block';
+
+        // isAnimated()
+        const animated = module.isAnimated(buffer);
+        if (!animated) {
+          setStatus(`Static WebP decoded in ${staticMs}ms`, 'success');
+          return;
+        }
+
+        // decodeAnimated()
+        setStatus('Decoding all frames...', 'info');
+        const t1 = performance.now();
+        const frames = module.decodeAnimated(buffer);
+        const animMs = (performance.now() - t1).toFixed(1);
+
+        if (!frames || frames.length === 0) {
+          setStatus(`WebP decoded in ${staticMs}ms (animated but decodeAnimated returned ${frames ? frames.length : 'null'} frames)`, 'success');
+          return;
+        }
+
+        document.getElementById('animated-section').style.display = 'block';
+
+        // Player
+        const ac = document.getElementById('animated-canvas');
+        const slider = document.getElementById('frame-slider');
+        const frameInfo = document.getElementById('frame-info');
+        const playBtn = document.getElementById('play-btn');
+        const strip = document.getElementById('frames-strip');
+
+        slider.max = frames.length - 1;
+        slider.value = 0;
+
+        let currentFrame = 0;
+        let playing = true;
+        let timer = null;
+
+        function showFrame(idx) {
+          currentFrame = idx;
+          drawImageData(ac, frames[idx].imageData);
+          slider.value = idx;
+          frameInfo.textContent = `Frame ${idx + 1}/${frames.length} — ${frames[idx].duration}ms`;
+          strip.querySelectorAll('.thumb').forEach((el, i) =>
+            el.classList.toggle('active', i === idx));
+        }
+
+        function scheduleNext() {
+          if (!playing) return;
+          timer = setTimeout(() => {
+            showFrame((currentFrame + 1) % frames.length);
+            scheduleNext();
+          }, frames[currentFrame].duration);
+        }
+
+        function stop() { playing = false; playBtn.textContent = 'Play'; clearTimeout(timer); }
+        function start() { playing = true; playBtn.textContent = 'Pause'; scheduleNext(); }
+
+        playBtn.onclick = () => playing ? stop() : start();
+        slider.oninput = () => { stop(); showFrame(parseInt(slider.value)); };
+
+        // Thumbnail strip
+        strip.innerHTML = '';
+        const thumbSize = 64;
+        for (let i = 0; i < frames.length; i++) {
+          const div = document.createElement('div');
+          div.className = 'thumb';
+          const tc = document.createElement('canvas');
+          const f = frames[i].imageData;
+          const scale = Math.min(thumbSize / f.width, thumbSize / f.height);
+          tc.width = Math.round(f.width * scale);
+          tc.height = Math.round(f.height * scale);
+          const tmp = document.createElement('canvas');
+          tmp.width = f.width;
+          tmp.height = f.height;
+          tmp.getContext('2d').putImageData(f, 0, 0);
+          tc.getContext('2d').drawImage(tmp, 0, 0, tc.width, tc.height);
+
+          const label = document.createElement('span');
+          label.className = 'label';
+          label.textContent = `${frames[i].duration}ms`;
+
+          div.appendChild(tc);
+          div.appendChild(label);
+          div.onclick = () => { stop(); showFrame(i); };
+          strip.appendChild(div);
+        }
+
+        const totalDuration = frames.reduce((s, f) => s + f.duration, 0);
+        document.getElementById('animated-meta').textContent =
+          `${frames.length} frames — ${totalDuration}ms total — decoded in ${animMs}ms`;
+
+        showFrame(0);
+        start();
+
+        setStatus(`Animated WebP: ${frames.length} frames decoded in ${animMs}ms`, 'success');
+      } catch (err) {
+        setStatus(`Error: ${err.message}`, 'error');
+        console.error(err);
+      }
+    }
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files[0]) handleFile(e.target.files[0]);
+    });
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+    });
+  </script>
+</body>
+</html>

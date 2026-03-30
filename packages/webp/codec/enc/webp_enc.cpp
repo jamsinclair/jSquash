@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdexcept>
 #include "src/webp/encode.h"
+#include "src/webp/mux.h"
 
 using namespace emscripten;
 
@@ -45,6 +46,99 @@ val encode(std::string img, int width, int height, WebPConfig config) {
   return js_result;
 }
 
+val encodeAnimated(val frames, WebPConfig config) {
+  int frameCount = frames["length"].as<int>();
+  if (frameCount < 1) return val::null();
+
+  // Get dimensions from first frame
+  val firstFrame = frames[0];
+  val firstImageData = firstFrame["imageData"];
+  int width = firstImageData["width"].as<int>();
+  int height = firstImageData["height"].as<int>();
+
+  // Allow quality to go higher than 0.
+  config.qmax = 100;
+
+  WebPAnimEncoderOptions enc_options;
+  if (!WebPAnimEncoderOptionsInit(&enc_options)) return val::null();
+
+  WebPAnimEncoder* enc = WebPAnimEncoderNew(width, height, &enc_options);
+  if (!enc) return val::null();
+
+  int timestamp_ms = 0;
+
+  for (int i = 0; i < frameCount; i++) {
+    val frame = frames[i];
+    val imageData = frame["imageData"];
+    int duration = frame["duration"].as<int>();
+    int fw = imageData["width"].as<int>();
+    int fh = imageData["height"].as<int>();
+
+    // Get pixel data
+    std::string pixels = imageData["data"]["buffer"].as<std::string>();
+
+    WebPPicture pic;
+    if (!WebPPictureInit(&pic)) {
+      WebPAnimEncoderDelete(enc);
+      return val::null();
+    }
+
+    pic.use_argb = config.lossless || config.use_sharp_yuv || config.preprocessing > 0;
+    pic.width = fw;
+    pic.height = fh;
+
+    if (!WebPPictureImportRGBA(&pic, (const uint8_t*)pixels.c_str(), fw * 4)) {
+      WebPPictureFree(&pic);
+      WebPAnimEncoderDelete(enc);
+      return val::null();
+    }
+
+    if (!WebPAnimEncoderAdd(enc, &pic, timestamp_ms, &config)) {
+      WebPPictureFree(&pic);
+      WebPAnimEncoderDelete(enc);
+      return val::null();
+    }
+
+    WebPPictureFree(&pic);
+    timestamp_ms += duration;
+  }
+
+  // Add NULL frame to signal end
+  WebPAnimEncoderAdd(enc, NULL, timestamp_ms, NULL);
+
+  WebPData webp_data;
+  WebPDataInit(&webp_data);
+  if (!WebPAnimEncoderAssemble(enc, &webp_data)) {
+    WebPAnimEncoderDelete(enc);
+    return val::null();
+  }
+
+  WebPAnimEncoderDelete(enc);
+
+  // Set loop count to 0 (infinite) via mux
+  WebPMux* mux = WebPMuxCreate(&webp_data, 1);
+  WebPDataClear(&webp_data);
+  if (!mux) return val::null();
+
+  WebPMuxAnimParams params;
+  if (WebPMuxGetAnimationParams(mux, &params) == WEBP_MUX_OK) {
+    params.loop_count = 0;
+    WebPMuxSetAnimationParams(mux, &params);
+  }
+
+  WebPData output;
+  WebPDataInit(&output);
+  if (WebPMuxAssemble(mux, &output) != WEBP_MUX_OK) {
+    WebPMuxDelete(mux);
+    return val::null();
+  }
+
+  val result = Uint8Array.new_(typed_memory_view(output.size, output.bytes));
+  WebPDataClear(&output);
+  WebPMuxDelete(mux);
+  return result;
+}
+
 EMSCRIPTEN_BINDINGS(my_module) {
   enum_<WebPImageHint>("WebPImageHint")
       .value("WEBP_HINT_DEFAULT", WebPImageHint::WEBP_HINT_DEFAULT)
@@ -82,4 +176,5 @@ EMSCRIPTEN_BINDINGS(my_module) {
 
   function("version", &version);
   function("encode", &encode);
+  function("encodeAnimated", &encodeAnimated);
 }

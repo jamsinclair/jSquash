@@ -16,8 +16,9 @@ all: $(OUT_JS)
 # Define dependencies for all variations of build artifacts.
 $(filter enc/%,$(OUT_JS)): enc/webp_enc.o
 $(filter dec/%,$(OUT_JS)): dec/webp_dec.o
-enc/webp_enc.js dec/webp_dec.js: $(CODEC_BASELINE_BUILD_DIR)/libwebp.a
-enc/webp_enc_simd.js: $(CODEC_SIMD_BUILD_DIR)/libwebp.a
+enc/webp_enc.js: $(CODEC_BASELINE_BUILD_DIR)/libwebp.a $(CODEC_BASELINE_BUILD_DIR)/libwebpmux.a
+dec/webp_dec.js: $(CODEC_BASELINE_BUILD_DIR)/libwebp.a $(CODEC_BASELINE_BUILD_DIR)/libwebpdemux.a
+enc/webp_enc_simd.js: $(CODEC_SIMD_BUILD_DIR)/libwebp.a $(CODEC_SIMD_BUILD_DIR)/libwebpmux.a
 
 $(OUT_JS):
 	$(LD) \
@@ -38,8 +39,8 @@ $(OUT_JS):
 		-o $@ \
 		$<
 
-%/libwebp.a: %/Makefile
-	$(MAKE) -C $(@D)
+%/libwebp.a %/libwebpmux.a %/libwebpdemux.a: %/Makefile
+	$(MAKE) -C $(@D) webp libwebpmux webpdemux
 
 # Enable SIMD on a SIMD build.
 $(CODEC_SIMD_BUILD_DIR)/Makefile: CMAKE_FLAGS+=-DWEBP_ENABLE_SIMD=1
@@ -52,7 +53,7 @@ $(CODEC_SIMD_BUILD_DIR)/Makefile: CMAKE_FLAGS+=-DWEBP_ENABLE_SIMD=1
 		-DWEBP_BUILD_CWEBP=0 \
 		-DWEBP_BUILD_DWEBP=0 \
 		-DWEBP_BUILD_GIF2WEBP=0 \
-		-DWEBP_BUILD_IMG2WEBP=0 \
+		-DWEBP_BUILD_IMG2WEBP=1 \
 		-DWEBP_BUILD_VWEBP=0 \
 		-DWEBP_BUILD_WEBPINFO=0 \
 		-DWEBP_BUILD_WEBPMUX=0 \

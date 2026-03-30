@@ -28,11 +28,20 @@ export interface EncodeOptions {
   use_sharp_yuv: number;
 }
 
+export type WebPAnimFrame = {
+  imageData: ImageData;
+  duration: number;
+};
+
 export interface WebPModule extends EmscriptenWasm.Module {
   encode(
     data: BufferSource,
     width: number,
     height: number,
+    options: EncodeOptions,
+  ): Uint8Array | null;
+  encodeAnimated(
+    frames: WebPAnimFrame[],
     options: EncodeOptions,
   ): Uint8Array | null;
 }
