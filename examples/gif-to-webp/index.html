@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GIF to Animated WebP Converter</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      background: #f8f9fa;
+      color: #1a1a1a;
+    }
+
+    h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem; }
+    h1 span { color: #666; font-weight: 400; }
+
+    .subtitle {
+      color: #888;
+      font-size: 0.85rem;
+      margin: 0 0 1.5rem;
+    }
+
+    .drop-zone {
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 2.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      background: #fff;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: #4a90d9;
+      background: #f0f6ff;
+    }
+
+    .drop-zone p { margin: 0; color: #666; font-size: 0.95rem; }
+    .drop-zone input[type="file"] { display: none; }
+
+    #status {
+      margin: 1rem 0;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      background: #e8f4fd;
+      color: #1a6fa8;
+      display: none;
+    }
+
+    #status.error { background: #fde8e8; color: #a81a1a; }
+    #status.success { background: #e8fde8; color: #1a8a2e; }
+
+    .options {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+      display: none;
+    }
+
+    .options h2 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin: 0 0 0.75rem;
+    }
+
+    .options label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: #444;
+      margin-bottom: 0.5rem;
+    }
+
+    .options input[type="range"] { flex: 1; max-width: 200px; }
+    .options .value { font-variant-numeric: tabular-nums; min-width: 2.5em; }
+
+    .convert-btn {
+      padding: 0.5rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      background: #4a90d9;
+      color: #fff;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 0.5rem;
+    }
+
+    .convert-btn:hover { background: #3a7bc8; }
+    .convert-btn:disabled { background: #a0c4e8; cursor: not-allowed; }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+
+    .card h2 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin: 0 0 0.75rem;
+    }
+
+    .card-meta {
+      font-size: 0.8rem;
+      color: #888;
+      margin: 0.5rem 0 0;
+    }
+
+    .preview-wrap {
+      background: repeating-conic-gradient(#e8e8e8 0% 25%, #fff 0% 50%) 0 0 / 16px 16px;
+      border-radius: 4px;
+      padding: 0.5rem;
+      display: flex;
+      justify-content: center;
+      min-height: 100px;
+      overflow: auto;
+    }
+
+    .preview-wrap img, .preview-wrap canvas {
+      max-width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+    }
+
+    .download-btn {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.35rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.8rem;
+      text-decoration: none;
+      color: #1a1a1a;
+      transition: background 0.1s;
+    }
+
+    .download-btn:hover { background: #f3f4f6; }
+
+    @media (max-width: 640px) {
+      .comparison { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <h1>GIF <span>to</span> Animated WebP</h1>
+  <p class="subtitle">Decode GIF with Rust gif crate, encode to animated WebP with libwebp -- all in the browser via WASM</p>
+
+  <div class="drop-zone" id="drop-zone">
+    <p>Drop a GIF here or click to browse</p>
+    <input type="file" accept=".gif,image/gif">
+  </div>
+
+  <div id="status"></div>
+
+  <div class="options" id="options">
+    <h2>WebP Options</h2>
+    <label>
+      Quality
+      <input type="range" id="quality" min="0" max="100" value="75">
+      <span class="value" id="quality-value">75</span>
+    </label>
+    <label>
+      Method (0=fast, 6=best)
+      <input type="range" id="method" min="0" max="6" value="4">
+      <span class="value" id="method-value">4</span>
+    </label>
+    <button class="convert-btn" id="convert-btn" disabled>Convert to WebP</button>
+  </div>
+
+  <div class="comparison" id="comparison" style="display:none">
+    <div class="card">
+      <h2>Source GIF</h2>
+      <div class="preview-wrap">
+        <img id="gif-preview">
+      </div>
+      <p class="card-meta" id="gif-meta"></p>
+    </div>
+    <div class="card">
+      <h2>Output WebP</h2>
+      <div class="preview-wrap">
+        <img id="webp-preview">
+      </div>
+      <p class="card-meta" id="webp-meta"></p>
+      <a class="download-btn" id="download-btn" style="display:none">Download .webp</a>
+    </div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
