@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jSquash GIF Decoder Example</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      background: #f8f9fa;
+      color: #1a1a1a;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 0.25rem;
+    }
+
+    h1 span { color: #666; font-weight: 400; }
+
+    .subtitle {
+      color: #888;
+      font-size: 0.85rem;
+      margin: 0 0 1.5rem;
+    }
+
+    .drop-zone {
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 2.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      background: #fff;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: #4a90d9;
+      background: #f0f6ff;
+    }
+
+    .drop-zone p {
+      margin: 0;
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .drop-zone input[type="file"] { display: none; }
+
+    #status {
+      margin: 1rem 0;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      background: #e8f4fd;
+      color: #1a6fa8;
+      display: none;
+    }
+
+    #status.error {
+      background: #fde8e8;
+      color: #a81a1a;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+
+    .card h2 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin: 0 0 0.75rem;
+    }
+
+    .card-meta {
+      font-size: 0.8rem;
+      color: #888;
+      margin: 0.5rem 0 0;
+    }
+
+    .canvas-wrap {
+      display: flex;
+      justify-content: center;
+      background: repeating-conic-gradient(#e8e8e8 0% 25%, #fff 0% 50%) 0 0 / 16px 16px;
+      border-radius: 4px;
+      padding: 1rem;
+      overflow: auto;
+    }
+
+    .canvas-wrap canvas {
+      display: block;
+      image-rendering: pixelated;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .controls button {
+      padding: 0.35rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.1s;
+    }
+
+    .controls button:hover { background: #f3f4f6; }
+
+    #frame-info {
+      font-size: 0.8rem;
+      color: #888;
+      margin: 0;
+    }
+
+    .filmstrip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 0.75rem;
+    }
+
+    .filmstrip-frame {
+      position: relative;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: border-color 0.1s;
+      overflow: hidden;
+      background: repeating-conic-gradient(#e8e8e8 0% 25%, #fff 0% 50%) 0 0 / 8px 8px;
+    }
+
+    .filmstrip-frame:hover { border-color: #93c5fd; }
+    .filmstrip-frame.active { border-color: #4a90d9; }
+
+    .filmstrip-frame canvas {
+      display: block;
+      image-rendering: pixelated;
+    }
+
+    .filmstrip-frame .frame-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      font-size: 0.6rem;
+      text-align: center;
+      padding: 1px 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>@jsquash/gif <span>Decoder</span></h1>
+  <p class="subtitle">Rust gif crate compiled to WebAssembly via wasm-pack</p>
+
+  <div class="drop-zone" id="drop-zone">
+    <p>Drop a GIF here or click to browse</p>
+    <input type="file" accept=".gif,image/gif">
+  </div>
+
+  <div id="status"></div>
+
+  <div class="card" id="single-frame-section" hidden>
+    <h2>First Frame &mdash; decode()</h2>
+    <div class="canvas-wrap">
+      <canvas id="single-canvas"></canvas>
+    </div>
+    <p class="card-meta" id="single-info"></p>
+  </div>
+
+  <div class="card" id="animation-section" hidden>
+    <h2>Animation &mdash; decodeAnimated()</h2>
+    <div class="canvas-wrap">
+      <canvas id="anim-canvas"></canvas>
+    </div>
+    <div class="controls">
+      <button id="play-btn">Pause</button>
+      <p id="frame-info"></p>
+    </div>
+    <div class="filmstrip" id="filmstrip"></div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
