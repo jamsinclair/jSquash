@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jSquash JPEG XR Decoder Demo</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5efe3;
+      --panel: rgba(255, 252, 245, 0.92);
+      --panel-strong: #fffaf0;
+      --ink: #1e1a16;
+      --muted: #625448;
+      --accent: #b54b2f;
+      --accent-soft: #f2c38e;
+      --line: rgba(30, 26, 22, 0.12);
+      --shadow: 0 24px 80px rgba(71, 38, 17, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(255, 236, 204, 0.95), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(212, 101, 58, 0.2), transparent 28rem),
+        linear-gradient(160deg, #f7f1e7 0%, #efe5d4 50%, #f9f3e9 100%);
+    }
+
+    main {
+      width: min(1120px, calc(100vw - 2rem));
+      margin: 0 auto;
+      padding: 2rem 0 3rem;
+    }
+
+    .hero {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .eyebrow {
+      margin: 0;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 12ch;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 6vw, 5rem);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+    }
+
+    .intro {
+      margin: 0;
+      max-width: 62ch;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(19rem, 24rem) minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 1.5rem;
+      background: var(--panel);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .controls {
+      padding: 1.25rem;
+    }
+
+    .preview {
+      padding: 1rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .section {
+      display: grid;
+      gap: 0.65rem;
+      padding-bottom: 1.1rem;
+      margin-bottom: 1.1rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section:last-of-type {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .section h2 {
+      margin: 0;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    label,
+    .hint,
+    .status {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    input[type="file"],
+    input[type="url"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 0.9rem;
+      background: var(--panel-strong);
+      color: var(--ink);
+      padding: 0.9rem 1rem;
+      font: inherit;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 0.85rem 1.1rem;
+      font: inherit;
+      font-weight: 700;
+      color: #fff8ef;
+      background: linear-gradient(135deg, #b54b2f, #d5714f);
+      cursor: pointer;
+    }
+
+    button.secondary {
+      color: var(--ink);
+      background: linear-gradient(135deg, #f8ddb4, #efc586);
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.72;
+    }
+
+    .status {
+      min-height: 1.5em;
+      margin: 0;
+    }
+
+    .status[data-tone="error"] {
+      color: #a12020;
+    }
+
+    .status[data-tone="ok"] {
+      color: #2f6c44;
+    }
+
+    dl {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin: 0;
+    }
+
+    dt {
+      margin: 0 0 0.2rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    dd {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .canvas-shell {
+      display: grid;
+      place-items: center;
+      min-height: 22rem;
+      padding: 1rem;
+      border: 1px dashed var(--line);
+      border-radius: 1.1rem;
+      background:
+        linear-gradient(45deg, rgba(30, 26, 22, 0.04) 25%, transparent 25%, transparent 75%, rgba(30, 26, 22, 0.04) 75%),
+        linear-gradient(45deg, rgba(30, 26, 22, 0.04) 25%, transparent 25%, transparent 75%, rgba(30, 26, 22, 0.04) 75%);
+      background-position: 0 0, 12px 12px;
+      background-size: 24px 24px;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.75rem;
+      box-shadow: 0 18px 36px rgba(30, 26, 22, 0.18);
+      image-rendering: auto;
+    }
+
+    .empty-state {
+      max-width: 28rem;
+      margin: 0;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.95em;
+    }
+
+    @media (max-width: 840px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Browser Demo</p>
+      <h1>JPEG XR decode in the browser.</h1>
+      <p class="intro">
+        This page loads the committed <code>@jsquash/jxr</code> codec directly from the repository and decodes a
+        JPEG XR file to <code>ImageData</code> on the client side. Pick a local <code>.jxr</code>, <code>.wdp</code>,
+        or <code>.hdp</code> file, or pass <code>?src=/path/to/file.jxr</code> when serving this repo over HTTP.
+      </p>
+      <p class="intro">
+        The current decoder path also handles common HDR JPEG XR screenshots, so the preview you see here is the
+        browser-renderable SDR <code>ImageData</code> output from the wasm codec.
+      </p>
+    </section>
+
+    <section class="shell">
+      <aside class="panel controls">
+        <div class="section">
+          <h2>Choose File</h2>
+          <label for="file-input">Local JPEG XR image</label>
+          <input id="file-input" type="file" accept=".jxr,.wdp,.hdp,image/vnd.ms-photo">
+          <p class="hint">Local files stay in the browser. No upload step is involved.</p>
+        </div>
+
+        <div class="section">
+          <h2>Load by URL</h2>
+          <label for="url-input">HTTP URL or repo-relative path</label>
+          <input id="url-input" type="url" placeholder="/examples/sample.jxr">
+          <div class="actions">
+            <button id="load-url-button" type="button">Decode URL</button>
+            <button id="clear-button" class="secondary" type="button">Clear</button>
+          </div>
+          <p class="hint">Remote URLs must allow CORS.</p>
+        </div>
+
+        <div class="section">
+          <h2>Status</h2>
+          <p id="status" class="status">Waiting for a JPEG XR file.</p>
+        </div>
+
+        <div class="section">
+          <h2>Details</h2>
+          <dl>
+            <div>
+              <dt>Source</dt>
+              <dd id="meta-source">None</dd>
+            </div>
+            <div>
+              <dt>Size</dt>
+              <dd id="meta-size">-</dd>
+            </div>
+            <div>
+              <dt>Dimensions</dt>
+              <dd id="meta-dimensions">-</dd>
+            </div>
+            <div>
+              <dt>Decode Time</dt>
+              <dd id="meta-time">-</dd>
+            </div>
+          </dl>
+        </div>
+      </aside>
+
+      <section class="panel preview">
+        <div class="canvas-shell">
+          <canvas id="canvas" hidden></canvas>
+          <p id="empty-state" class="empty-state">
+            Serve this repo over HTTP, then open this page and decode a JPEG XR image. The decoded pixels will be
+            painted here using <code>CanvasRenderingContext2D.putImageData()</code>.
+          </p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script type="module">
+    import jxrDecFactory from '../../packages/jxr/codec/dec/jxr_dec.js';
+
+    const decoderPromise = jxrDecFactory({ noInitialRun: true });
+
+    const fileInput = document.querySelector('#file-input');
+    const urlInput = document.querySelector('#url-input');
+    const loadUrlButton = document.querySelector('#load-url-button');
+    const clearButton = document.querySelector('#clear-button');
+    const status = document.querySelector('#status');
+    const canvas = document.querySelector('#canvas');
+    const emptyState = document.querySelector('#empty-state');
+    const context = canvas.getContext('2d');
+
+    const metaSource = document.querySelector('#meta-source');
+    const metaSize = document.querySelector('#meta-size');
+    const metaDimensions = document.querySelector('#meta-dimensions');
+    const metaTime = document.querySelector('#meta-time');
+
+    function setStatus(message, tone = 'idle') {
+      status.textContent = message;
+      if (tone === 'idle') {
+        status.removeAttribute('data-tone');
+        return;
+      }
+      status.dataset.tone = tone;
+    }
+
+    function formatBytes(byteLength) {
+      if (!Number.isFinite(byteLength)) {
+        return '-';
+      }
+
+      if (byteLength < 1024) {
+        return `${byteLength} B`;
+      }
+
+      if (byteLength < 1024 * 1024) {
+        return `${(byteLength / 1024).toFixed(1)} KB`;
+      }
+
+      return `${(byteLength / (1024 * 1024)).toFixed(2)} MB`;
+    }
+
+    function resetPreview() {
+      canvas.hidden = true;
+      emptyState.hidden = false;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      metaSource.textContent = 'None';
+      metaSize.textContent = '-';
+      metaDimensions.textContent = '-';
+      metaTime.textContent = '-';
+      setStatus('Waiting for a JPEG XR file.');
+    }
+
+    async function decodeBuffer(buffer) {
+      const module = await decoderPromise;
+      const imageData = module.decode(buffer);
+      if (!imageData) {
+        throw new Error('The decoder returned no image data.');
+      }
+      return imageData;
+    }
+
+    async function renderDecodedImage(buffer, sourceLabel) {
+      setStatus('Decoding JPEG XR image...');
+      loadUrlButton.disabled = true;
+      clearButton.disabled = true;
+
+      try {
+        const start = performance.now();
+        const imageData = await decodeBuffer(buffer);
+        const elapsed = performance.now() - start;
+
+        canvas.width = imageData.width;
+        canvas.height = imageData.height;
+        context.putImageData(imageData, 0, 0);
+
+        canvas.hidden = false;
+        emptyState.hidden = true;
+
+        metaSource.textContent = sourceLabel;
+        metaSize.textContent = formatBytes(buffer.byteLength);
+        metaDimensions.textContent = `${imageData.width} x ${imageData.height}`;
+        metaTime.textContent = `${elapsed.toFixed(1)} ms`;
+
+        setStatus('Decode complete.', 'ok');
+      } catch (error) {
+        console.error(error);
+        resetPreview();
+        setStatus(error instanceof Error ? error.message : String(error), 'error');
+      } finally {
+        loadUrlButton.disabled = false;
+        clearButton.disabled = false;
+      }
+    }
+
+    async function loadFromUrl(rawUrl) {
+      const trimmedUrl = rawUrl.trim();
+      if (!trimmedUrl) {
+        throw new Error('Enter a URL or repo-relative path first.');
+      }
+
+      const response = await fetch(trimmedUrl);
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}.`);
+      }
+
+      const buffer = await response.arrayBuffer();
+      await renderDecodedImage(buffer, trimmedUrl);
+    }
+
+    fileInput.addEventListener('change', async (event) => {
+      const file = event.target.files?.[0];
+      if (!file) {
+        return;
+      }
+
+      const buffer = await file.arrayBuffer();
+      await renderDecodedImage(buffer, file.name);
+    });
+
+    loadUrlButton.addEventListener('click', async () => {
+      await loadFromUrl(urlInput.value);
+    });
+
+    urlInput.addEventListener('keydown', async (event) => {
+      if (event.key !== 'Enter') {
+        return;
+      }
+
+      event.preventDefault();
+      await loadFromUrl(urlInput.value);
+    });
+
+    clearButton.addEventListener('click', () => {
+      fileInput.value = '';
+      urlInput.value = '';
+      resetPreview();
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const initialSrc = params.get('src');
+
+    if (initialSrc) {
+      urlInput.value = initialSrc;
+      loadFromUrl(initialSrc).catch((error) => {
+        console.error(error);
+        setStatus(error instanceof Error ? error.message : String(error), 'error');
+      });
+    } else {
+      resetPreview();
+    }
+  </script>
+</body>
+</html>

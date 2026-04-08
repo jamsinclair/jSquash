@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "build": "docker run --rm -v \"$PWD\":/src alpine sh -c \"find /src -name '*.o' -delete\" && EMSDK_VERSION=3.1.57 DEFAULT_CFLAGS='-Oz -flto' ../../../tools/build-cpp.sh"
+  },
+  "type": "module"
+}
