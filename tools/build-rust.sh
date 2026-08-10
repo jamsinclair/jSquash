@@ -10,4 +10,10 @@ then
 fi
 IMG_NAME=squoosh-rust$IMG_SUFFIX
 docker build -t $IMG_NAME --build-arg RUST_IMG - < "$SCRIPTDIR/rust.Dockerfile"
-docker run -it --rm -v $PWD:/src $IMG_NAME "$@"
+# Only allocate a TTY when there is one, so this works under CI.
+DOCKER_FLAGS="--rm"
+if [ -t 0 ]; then
+  DOCKER_FLAGS="$DOCKER_FLAGS -it"
+fi
+
+docker run $DOCKER_FLAGS -v $PWD:/src $IMG_NAME "$@"
