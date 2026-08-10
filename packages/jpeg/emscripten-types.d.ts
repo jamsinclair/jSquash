@@ -13,8 +13,7 @@ declare namespace EmscriptenWasm {
     mainScriptUrlOrBlob?: string;
     noInitialRun?: boolean;
     locateFile?:
-      | ((path: string) => string)
-      | ((path: string, prefix: string) => string);
+      ((path: string) => string) | ((path: string, prefix: string) => string);
     onRuntimeInitialized?: () => void;
     instantiateWasm?: (
       imports: WebAssembly.Imports,
