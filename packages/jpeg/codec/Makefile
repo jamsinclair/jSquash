@@ -52,6 +52,19 @@ $(CODEC_DIR)/Makefile: $(CODEC_DIR)/configure
 
 $(CODEC_DIR)/configure: $(CODEC_DIR)/configure.ac
 	cd $(CODEC_DIR) && autoreconf -iv
+	# MozJPEG 3.3.1 relies on autoheader putting AC_INIT's PACKAGE_NAME and
+	# VERSION into the first AC_CONFIG_HEADERS file. Autoconf no longer does
+	# that for its three-header layout, so both come out as `#undef` and
+	# jcmaster.c fails to compile the version string it embeds.
+	#
+	# Patch the template autoheader has just produced, before configure turns
+	# it into config.h. config.status only rewrites `#undef` lines, so these
+	# defines survive the regeneration make triggers during the build.
+	cd $(CODEC_DIR) && sed -i \
+		-e 's|^#undef PACKAGE_NAME$$|#define PACKAGE_NAME "mozjpeg"|' \
+		-e 's|^#undef PACKAGE_VERSION$$|#define PACKAGE_VERSION "3.3.1"|' \
+		-e 's|^#undef VERSION$$|#define VERSION "3.3.1"|' \
+		config.h.in
 
 $(CODEC_DIR)/configure.ac: $(CODEC_DIR)
 
