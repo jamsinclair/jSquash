@@ -18,9 +18,9 @@ const MAGIC_KERNEL_METHODS = [
   'magicKernelSharp2021',
 ];
 
-let resizeWasmReady: Promise<unknown>;
-let hqxWasmReady: Promise<unknown>;
-let magicKernelWasmReady: Promise<unknown>;
+let resizeWasmReady: Promise<unknown> | undefined;
+let hqxWasmReady: Promise<unknown> | undefined;
+let magicKernelWasmReady: Promise<unknown> | undefined;
 
 export function initResize(moduleOrPath?: InitResizeInput) {
   if (!resizeWasmReady) {
@@ -61,6 +61,28 @@ function optsIsMagicKernelOpts(
   return MAGIC_KERNEL_METHODS.includes(opts.method);
 }
 
+/**
+ * A Uint8Array over the same bytes as the given pixel buffer.
+ *
+ * `ImageData.data` is not guaranteed to start at offset 0 of its backing
+ * ArrayBuffer — it may be a view into a larger allocation. Reading
+ * `.buffer` alone would silently pick up the wrong bytes.
+ */
+function asUint8(data: Uint8ClampedArray | Uint8Array): Uint8Array {
+  return new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+}
+
+/**
+ * A Uint32Array over the same pixels as the given buffer. Uint32Array views
+ * require 4-byte alignment, so an unaligned source is copied instead.
+ */
+function asUint32(data: Uint8ClampedArray | Uint8Array): Uint32Array {
+  if (data.byteOffset % 4 === 0 && data.byteLength % 4 === 0) {
+    return new Uint32Array(data.buffer, data.byteOffset, data.byteLength / 4);
+  }
+  return new Uint32Array(asUint8(data).slice().buffer);
+}
+
 function crop(
   data: ImageData,
   sx: number,
@@ -68,19 +90,18 @@ function crop(
   sw: number,
   sh: number,
 ): ImageData {
-  const inputPixels = new Uint32Array(data.data.buffer);
+  const source = data.data;
+  const output = new Uint8ClampedArray(sw * sh * 4);
+  const rowBytes = sw * 4;
 
-  // Copy within the same buffer for speed and memory efficiency.
+  // Copy row by row into a fresh buffer. Copying within the source buffer
+  // would be marginally cheaper but destroys the caller's ImageData.
   for (let y = 0; y < sh; y += 1) {
-    const start = (y + sy) * data.width + sx;
-    inputPixels.copyWithin(y * sw, start, start + sw);
+    const start = ((y + sy) * data.width + sx) * 4;
+    output.set(source.subarray(start, start + rowBytes), y * rowBytes);
   }
 
-  return new ImageData(
-    new Uint8ClampedArray(inputPixels.buffer.slice(0, sw * sh * 4)),
-    sw,
-    sh,
-  );
+  return new ImageData(output, sw, sh);
 }
 
 interface ClampOpts {
@@ -117,14 +138,14 @@ async function hqx(
   if (factor === 1) return input;
 
   const result = wasmHqx(
-    new Uint32Array(input.data.buffer),
+    asUint32(input.data),
     input.width,
     input.height,
     factor,
   );
 
   return new ImageData(
-    new Uint8ClampedArray(result.buffer),
+    new Uint8ClampedArray(result.buffer, result.byteOffset, result.byteLength),
     input.width * factor,
     input.height * factor,
   );
@@ -136,16 +157,14 @@ async function magicKernel(
 ): Promise<ImageData> {
   await initMagicKernel();
 
-  const result = wasmMagicKernel(
-    new Uint8Array(input.data.buffer),
+  return wasmMagicKernel(
+    asUint8(input.data),
     input.width,
     input.height,
     opts.width,
     opts.height,
     opts.method,
   );
-
-  return result;
 }
 
 export default async function resize(
@@ -161,7 +180,10 @@ export default async function resize(
   };
   let input = data;
 
-  initResize();
+  // Magic kernel resizes never touch the resize module, so only warm it up
+  // when this call will actually reach it. An hqx resize still does, because
+  // it falls through to catrom to make up the remaining difference.
+  const resizeReady = optsIsMagicKernelOpts(options) ? undefined : initResize();
 
   if (optsIsHqxOpts(options)) {
     input = await hqx(input, options);
@@ -169,21 +191,24 @@ export default async function resize(
     options = { ...options, method: 'catrom' };
   }
 
-  await resizeWasmReady;
-
   if (options.fitMethod === 'contain') {
+    // Offsets must come from the image we are about to crop, which is not
+    // necessarily the caller's — hqx has already upscaled it by this point.
     const { sx, sy, sw, sh } = getContainOffsets(
-      data.width,
-      data.height,
+      input.width,
+      input.height,
       options.width,
       options.height,
     );
+    const cropX = clamp(Math.round(sx), { min: 0, max: input.width });
+    const cropY = clamp(Math.round(sy), { min: 0, max: input.height });
+
     input = crop(
       input,
-      Math.round(sx),
-      Math.round(sy),
-      Math.round(sw),
-      Math.round(sh),
+      cropX,
+      cropY,
+      Math.min(Math.round(sw), input.width - cropX),
+      Math.min(Math.round(sh), input.height - cropY),
     );
   }
 
@@ -191,8 +216,10 @@ export default async function resize(
     return magicKernel(input, options);
   }
 
+  await resizeReady;
+
   const result = wasmResize(
-    new Uint8Array(input.data.buffer),
+    asUint8(input.data),
     input.width,
     input.height,
     options.width,
@@ -203,7 +230,7 @@ export default async function resize(
   );
 
   return new ImageData(
-    new Uint8ClampedArray(result.buffer),
+    new Uint8ClampedArray(result.buffer, result.byteOffset, result.byteLength),
     options.width,
     options.height,
   );
