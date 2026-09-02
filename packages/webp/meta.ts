@@ -46,4 +46,8 @@ export const defaultOptions: EncodeOptions = {
   near_lossless: 100,
   use_delta_palette: 0,
   use_sharp_yuv: 0,
+  // The permissible quality range. libwebp clamps `quality` into it, and
+  // searches within it when target_size or target_PSNR is set.
+  qmin: 0,
+  qmax: 100,
 };

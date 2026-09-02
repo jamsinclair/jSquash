@@ -26,9 +26,6 @@ val encode(std::string img, int width, int height, WebPConfig config) {
     return val::null();
   }
 
-  // Allow quality to go higher than 0.
-  config.qmax = 100;
-
   // Only use use_argb if we really need it, as it's slower.
   pic.use_argb = config.lossless || config.use_sharp_yuv || config.preprocessing > 0;
   pic.width = width;
@@ -74,11 +71,14 @@ EMSCRIPTEN_BINDINGS(my_module) {
       .field("partitions", &WebPConfig::partitions)
       .field("partition_limit", &WebPConfig::partition_limit)
       .field("emulate_jpeg_size", &WebPConfig::emulate_jpeg_size)
+      .field("thread_level", &WebPConfig::thread_level)
       .field("low_memory", &WebPConfig::low_memory)
       .field("near_lossless", &WebPConfig::near_lossless)
       .field("exact", &WebPConfig::exact)
       .field("use_delta_palette", &WebPConfig::use_delta_palette)
-      .field("use_sharp_yuv", &WebPConfig::use_sharp_yuv);
+      .field("use_sharp_yuv", &WebPConfig::use_sharp_yuv)
+      .field("qmin", &WebPConfig::qmin)
+      .field("qmax", &WebPConfig::qmax);
 
   function("version", &version);
   function("encode", &encode);

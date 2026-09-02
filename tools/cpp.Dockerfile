@@ -8,7 +8,7 @@ ARG DEFAULT_EMSCRIPTEN_SETTINGS="\
 -s PTHREAD_POOL_SIZE=navigator.hardwareConcurrency \
 -s FILESYSTEM=0 \
 -s ALLOW_MEMORY_GROWTH=1 \
--s TEXTDECODER=0 \
+-s TEXTDECODER=1 \
 "
 
 RUN apt-get update && apt-get install -qqy autoconf libtool pkg-config

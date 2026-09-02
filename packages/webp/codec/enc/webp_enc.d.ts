@@ -26,6 +26,8 @@ export interface EncodeOptions {
   near_lossless: number;
   use_delta_palette: number;
   use_sharp_yuv: number;
+  qmin: number;
+  qmax: number;
 }
 
 export interface WebPModule extends EmscriptenWasm.Module {

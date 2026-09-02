@@ -1,7 +1,7 @@
 # WebP decoder
 
 - Source: <https://github.com/webmproject/libwebp>
-- Version: v1.0.2
+- Version: v1.6.0
 
 ## Example
 
