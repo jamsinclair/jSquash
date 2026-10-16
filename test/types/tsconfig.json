@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": false,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": [],
+    "lib": ["ESNext", "DOM"]
+  },
+  "files": ["avif-factory.ts"]
+}

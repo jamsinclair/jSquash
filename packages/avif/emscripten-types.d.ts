@@ -10,6 +10,7 @@ declare namespace EmscriptenWasm {
   // Options object for modularized Emscripten files. Shoe-horned by @surma.
   // FIXME: This an incomplete definition!
   interface ModuleOpts {
+    wasmBinary?: ArrayBuffer | Uint8Array;
     mainScriptUrlOrBlob?: string;
     noInitialRun?: boolean;
     locateFile?:

@@ -1,3 +1,5 @@
+/// <reference path="../../emscripten-types.d.ts" />
+
 export const enum AVIFTune {
   auto,
   psnr,

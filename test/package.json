@@ -1,7 +1,7 @@
 {
   "name": "integration-tests",
   "scripts": {
-    "test": "rm -rf dist && tsc && ava dist/node/*.test.js"
+    "test": "rm -rf dist && tsc && tsc -p types/tsconfig.json && ava dist/node/*.test.js"
   },
   "devDependencies": {
     "@jsquash/avif": "file:../packages/avif/dist",
